@@ -4,28 +4,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/mainColor"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
-        android:id="@+id/firstText"
+        android:id="@+id/titleText1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="첫번째 페이지"
+        android:layout_margin="20dp"
+        android:text="@string/title"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/loginBtn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/loginBtn"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:textColor="@color/black"
+        android:text="@string/login"
+        android:textStyle="bold"
+        android:textColor="@color/mainColor"
+        android:background="@drawable/btn_rounded_shape"
         tools:ignore="MissingConstraints" />
 
     <Button
-        android:id="@+id/fBtn"
-        android:layout_width="wrap_content"
+        android:id="@+id/joinBtn"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/firstText"
+        android:layout_margin="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/loginBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="버튼1"
+        android:text="@string/join"
+        android:textStyle="bold"
+        android:textColor="@color/mainColor"
+        android:background="@drawable/btn_rounded_shape"
         tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

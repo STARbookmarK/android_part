@@ -14,14 +14,16 @@
 
         <action
             android:id="@+id/first_to_second_action"
-            app:destination="@+id/secondFragment" />
+            app:destination="@+id/secondFragment"
+            app:popEnterAnim="@anim/nav_default_enter_anim"
+            app:popExitAnim="@anim/nav_default_exit_anim"/>
     </fragment>
 
     <fragment
         android:id="@+id/secondFragment"
-        android:name="com.example.bookmarkkk.SecondPage"
+        android:name="com.example.bookmarkkk.LoginPage"
         android:label="두번째!"
-        tools:layout="@layout/second_page">
+        tools:layout="@layout/login">
 
         <action
             android:id="@+id/second_to_first_action"

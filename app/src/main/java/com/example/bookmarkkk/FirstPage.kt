@@ -7,17 +7,20 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
+import com.example.bookmarkkk.databinding.FirstPageBinding
 
 class FirstPage : Fragment() {
+    private lateinit var binding: FirstPageBinding
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.first_page, container, false)
-        view.findViewById<Button>(R.id.fBtn).setOnClickListener{
-            Navigation.findNavController(view).navigate(R.id.first_to_second_action)
+        binding= FirstPageBinding.inflate(inflater)
+        binding.loginBtn.setOnClickListener {
+            Navigation.findNavController(binding.root).navigate(R.id.first_to_second_action)
         }
-        return view
+        return binding.root
     }
 }
