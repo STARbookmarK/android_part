@@ -18,9 +18,16 @@ class FirstPage : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding= FirstPageBinding.inflate(inflater)
-        binding.loginBtn.setOnClickListener {
-            Navigation.findNavController(binding.root).navigate(R.id.first_to_second_action)
-        }
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.loginBtn.setOnClickListener {
+            Navigation.findNavController(binding.root).navigate(R.id.main_to_login_action)
+        }
+        binding.joinBtn.setOnClickListener {
+            Navigation.findNavController(binding.root).navigate(R.id.main_to_join_action)
+        }
     }
 }

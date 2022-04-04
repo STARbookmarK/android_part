@@ -9,25 +9,33 @@
     <fragment
         android:id="@+id/firstFragment"
         android:name="com.example.bookmarkkk.FirstPage"
-        android:label="첫번째!"
         tools:layout="@layout/first_page">
 
         <action
-            android:id="@+id/first_to_second_action"
-            app:destination="@+id/secondFragment"
+            android:id="@+id/main_to_login_action"
+            app:destination="@+id/loginFragment"
             app:popEnterAnim="@anim/nav_default_enter_anim"
             app:popExitAnim="@anim/nav_default_exit_anim"/>
+
+        <action
+            android:id="@+id/main_to_join_action"
+            app:destination="@id/joinFragment"/>
     </fragment>
 
     <fragment
-        android:id="@+id/secondFragment"
+        android:id="@+id/loginFragment"
         android:name="com.example.bookmarkkk.LoginPage"
-        android:label="두번째!"
         tools:layout="@layout/login">
 
         <action
-            android:id="@+id/second_to_first_action"
-            app:destination="@id/firstFragment"/>
+            android:id="@+id/login_to_join_action"
+            app:destination="@+id/joinFragment"/>
     </fragment>
 
+    <fragment
+        android:id="@+id/joinFragment"
+        android:name="com.example.bookmarkkk.JoinPage"
+        tools:layout="@layout/join">
+
+    </fragment>
 </navigation>
