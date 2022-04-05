@@ -37,5 +37,15 @@
         android:name="com.example.bookmarkkk.JoinPage"
         tools:layout="@layout/join">
 
+        <action
+            android:id="@+id/join_to_main"
+            app:destination="@id/MainFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/MainFragment"
+        android:name="com.example.bookmarkkk.MainPage"
+        tools:layout="@layout/main">
+
     </fragment>
 </navigation>
