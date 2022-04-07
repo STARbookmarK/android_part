@@ -3,5 +3,6 @@
     <string-array name="state">
         <item>즐겨찾기상태1</item>
         <item>즐겨찾기상태2</item>
+        <!--스피너 아이템은 나중에 동적으로 추가되도록 변경!-->
     </string-array>
 </resources>

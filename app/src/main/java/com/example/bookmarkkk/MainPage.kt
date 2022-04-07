@@ -27,11 +27,19 @@ class MainPage : Fragment() {
             ArrayAdapter.createFromResource(
                 it,
                 R.array.state,
-                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item
-            ).also {
-                it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                binding.stateSpinner.adapter=it
+                R.layout.state_spinner_style)
+                .also {
+                    it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    binding.stateSpinner.adapter=it
             }
+            ArrayAdapter.createFromResource(
+                it,
+                R.array.rank,
+                R.layout.rank_spinner_style)
+                .also {
+                    it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    binding.rankSpinner.adapter=it
+                }
         }
     }
 }
