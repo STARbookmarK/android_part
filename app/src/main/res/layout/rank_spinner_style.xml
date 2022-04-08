@@ -4,5 +4,5 @@
     android:layout_width="60dp"
     android:layout_height="wrap_content"
     android:textSize="14sp"
-    android:gravity="start"
+    android:gravity="center"
     android:textColor="@color/mainColor" />

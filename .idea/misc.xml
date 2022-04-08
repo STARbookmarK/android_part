@@ -12,6 +12,7 @@
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/drawable/rank_spinner_background.xml" value="0.166" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/drawable/spinner_background.xml" value="0.166" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/drawable/state_spinner_background.xml" value="0.166" />
+        <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/activity_first.xml" value="0.21784420289855072" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/first_page.xml" value="0.264" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/join.xml" value="0.21784420289855072" />
@@ -20,6 +21,8 @@
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/rank_spinner_style.xml" value="0.21784420289855072" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/second_page.xml" value="0.21784420289855072" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/spinner_item.xml" value="0.21784420289855072" />
+        <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/state_spinner_style.xml" value="0.21784420289855072" />
+        <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/menu/bottom_menu.xml" value="0.4697265625" />
       </map>
     </option>
   </component>

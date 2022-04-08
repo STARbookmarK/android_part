@@ -9,7 +9,7 @@
                 </shape>
             </item>
             <item
-                android:drawable="@drawable/ic_down_foreground"
+                android:drawable="@drawable/ic_down_white"
                 android:gravity="center|end"
                 android:width="25dp"
                 android:height="25dp" />
