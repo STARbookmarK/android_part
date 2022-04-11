@@ -5,26 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.bookmarkkk.databinding.LoginBinding
+import com.example.bookmarkkk.databinding.MainCategorizedBinding
 
-class LoginPage : Fragment() {
-    private lateinit var binding : LoginBinding
+class MainCategorizedPage : Fragment() {
+    lateinit var binding: MainCategorizedBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding= LoginBinding.inflate(inflater)
+        binding= MainCategorizedBinding.inflate(inflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        //다음 액티비티 진입 시 확인해야 할 것들(ex 개인정보, 카테고리화 유무)
+        //카테고리화 선택시 보여줄 화면
     }
 }

@@ -12,16 +12,22 @@
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/drawable/rank_spinner_background.xml" value="0.166" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/drawable/spinner_background.xml" value="0.166" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/drawable/state_spinner_background.xml" value="0.166" />
+        <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/drawable/tag_shape.xml" value="0.184" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/activity_first.xml" value="0.21784420289855072" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/bookmark_item.xml" value="0.23541666666666666" />
+        <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/category_item.xml" value="0.4" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/first_page.xml" value="0.264" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/join.xml" value="0.21784420289855072" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/login.xml" value="0.21784420289855072" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/main.xml" value="0.21784420289855072" />
+        <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/main_categorized.xml" value="0.23541666666666666" />
+        <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/main_not_categorized.xml" value="0.14583333333333334" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/rank_spinner_style.xml" value="0.21784420289855072" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/second_page.xml" value="0.21784420289855072" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/spinner_item.xml" value="0.21784420289855072" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/state_spinner_style.xml" value="0.21784420289855072" />
+        <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/layout/tag_item.xml" value="0.264" />
         <entry key="..\:/Users/hamin/AndroidStudioProjects/bookmarkkk/app/src/main/res/menu/bottom_menu.xml" value="0.4697265625" />
       </map>
     </option>

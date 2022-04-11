@@ -15,10 +15,11 @@
         <item name="android:textColor">@color/mainColor</item>
     </style>
     <style name="stateSpinnerStyle">
-        <item name="android:textSize">13sp</item>
+       <item name="android:textColor">@color/white</item>
+        <item name="android:background">@color/mainColor</item>
     </style>
     <style name="rankSpinnerStyle">
-        <item name="android:textSize">13sp</item>
         <item name="android:textColor">@color/mainColor</item>
+        <item name="android:background">@color/white</item>
     </style>
 </resources>
