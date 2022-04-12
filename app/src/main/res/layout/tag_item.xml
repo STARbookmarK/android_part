@@ -6,6 +6,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/tag_shape"
-    android:text="버튼"
+    android:text="#태그"
     android:textColor="@color/mainColor"
     tools:ignore="MissingConstraints" />
