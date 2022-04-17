@@ -3,4 +3,13 @@
     <string name="login">로그인</string>
     <string name="join">회원가입</string>
     <string name="title">STARK</string>
+    <string name="id_title">아이디</string>
+    <string name="pw_title">비밀번호</string>
+    <string name="nickname_title">닉네임</string>
+    <string name="message_title">상태 메세지</string>
+    <string name="new_pw_title">새 비밀번호</string>
+    <string name="bookmark_view">북마크 출력 방식</string>
+    <string name="hashtag">즐겨찾기 해시태그</string>
+    <string name="categorized_hashtags">즐겨찾기 해시태그 카테고리화</string>
+    <string name="modify_title">수정</string>
 </resources>

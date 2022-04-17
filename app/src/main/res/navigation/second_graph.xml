@@ -2,25 +2,21 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/mainFragment"
+    app:startDestination="@id/tagFragment"
     android:id="@+id/second_graph">
-
-    <fragment
-        android:id="@+id/mainFragment"
-        android:name="com.example.bookmarkkk.MainPage"
-        tools:layout="@layout/main_not_categorized">
-        <action
-            android:id="@+id/action_mainFragment_to_tagFragment"
-            app:destination="@id/tagFragment" />
-        <action
-            android:id="@+id/action_mainFragment_self"
-            app:destination="@id/mainFragment" />
-    </fragment>
 
     <fragment
         android:id="@+id/tagFragment"
         android:name="com.example.bookmarkkk.TagPage"
-        android:label="TagFragment" >
+        tools:layout="@layout/tag_page">
+        <action
+            android:id="@+id/action_tagFragment_to_tagModiFragment"
+            app:destination="@id/tagModiFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/tagModiFragment"
+        android:name="com.example.bookmarkkk.TagModiFage"
+        android:label="TagModiFragment" />
 
 </navigation>

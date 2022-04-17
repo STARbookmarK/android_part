@@ -10,6 +10,7 @@ import com.example.bookmarkkk.databinding.MainNotCategorizedBinding
 
 class MainPage : Fragment() {
     private lateinit var binding: MainNotCategorizedBinding
+    private lateinit var spinner: Spinner
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,24 +31,9 @@ class MainPage : Fragment() {
         //createFromResource(Context context, int textArrayResId, int textViewResId)
         //Creates a new ArrayAdapter from external resources
         context?.let {
-            //when context isn't null
-            ArrayAdapter.createFromResource(
-                it,
-                R.array.state,
-                R.layout.state_spinner_style)
-                .also {
-                    //assign value in ArrayAdapter
-                    it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    binding.stateSpinner.adapter=it
-            }
-            ArrayAdapter.createFromResource(
-                it,
-                R.array.rank,
-                R.layout.rank_spinner_style)
-                .also {
-                    it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    binding.rankSpinner.adapter=it
-                }
+            spinner= Spinner(it)
+            binding.stateSpinner.adapter=spinner.stateSpinnerSet()
+            binding.rankSpinner.adapter=spinner.rankSpinnerSet()
         }
     }
 }

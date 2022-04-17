@@ -31,11 +31,14 @@ class MainActivity : AppCompatActivity() {
                 R.id.tagShowBtn->{
                     changeFragment(TagPage())
                 }
+                R.id.myInfoBtn->{
+                    changeFragment(MyInfoPage())
+                }
             }
         }
     }
 
-    private fun changeFragment(fragment: Fragment){
+    fun changeFragment(fragment: Fragment){
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.secondContainer,fragment)
