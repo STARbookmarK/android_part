@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         runBottomBar()
+        //주석 추가
     }
 
     private fun runBottomBar(){
