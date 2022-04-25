@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.bookmarkkk.databinding.LoginBinding
@@ -18,6 +19,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.DisposableHandle
+import kotlinx.coroutines.launch
 
 
 class LoginPage : Fragment(), View.OnClickListener {
@@ -49,7 +54,14 @@ class LoginPage : Fragment(), View.OnClickListener {
         super.onStart()
         //다음 액티비티 진입 시 확인해야 할 것들(ex 개인정보, 카테고리화 유무)
         val account = context?.let { GoogleSignIn.getLastSignedInAccount(it) }
+        val email = account?.email
+
         if (account!=null){
+            CoroutineScope(Dispatchers.Main).launch {
+                if (email != null) {
+                    App.getInstance().getDataStore().setEmail(email)
+                }
+            }
             Toast.makeText(context,"자동 로그인 중...",Toast.LENGTH_SHORT).show()
             Navigation.findNavController(binding.root).navigate(R.id.login_to_main_action)
         }
@@ -66,7 +78,6 @@ class LoginPage : Fragment(), View.OnClickListener {
     private fun signIn(){
         val signInIntent = mGoogleSignInClient.signInIntent
         resultLauncher.launch(signInIntent)
-        //startActivityForResult(signInIntent, 1)
     }
 
     private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->

@@ -2,11 +2,13 @@ package com.example.bookmarkkk
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.navArgument
 import com.example.bookmarkkk.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -19,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         runBottomBar()
         //주석 추가
+
     }
 
     private fun runBottomBar(){
@@ -45,6 +48,10 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.secondContainer,fragment)
             .addToBackStack(null)
             .commit()
+    }
+
+    companion object{
+        const val TAG = "MainActivity"
     }
 
 
