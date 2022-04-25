@@ -58,4 +58,7 @@ dependencies {
 
     //animatedbottombar
     implementation 'nl.joery.animatedbottombar:library:1.1.0'
+
+    //google
+    implementation 'com.google.android.gms:play-services-auth:20.1.0'
 }

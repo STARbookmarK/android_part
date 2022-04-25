@@ -73,13 +73,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="MissingConstraints" />
 
-    <Button
+    <com.google.android.gms.common.SignInButton
         android:id="@+id/googleLoginBtn"
         android:layout_width="270dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/mainColor"
-        android:text="구글 아이디로 로그인"
-        android:textColor="@color/white"
         app:layout_constraintTop_toBottomOf="@id/loginBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

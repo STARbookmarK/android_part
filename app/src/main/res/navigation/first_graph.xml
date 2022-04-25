@@ -30,6 +30,10 @@
         <action
             android:id="@+id/login_to_join_action"
             app:destination="@+id/joinFragment"/>
+
+        <action
+            android:id="@+id/login_to_main_action"
+            app:destination="@+id/mainActivity"/>
     </fragment>
 
     <fragment
