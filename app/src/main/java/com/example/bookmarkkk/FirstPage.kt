@@ -9,6 +9,7 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.bookmarkkk.databinding.FirstPageBinding
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 
 class FirstPage : Fragment(){
     private lateinit var binding: FirstPageBinding
@@ -29,6 +30,14 @@ class FirstPage : Fragment(){
         }
         binding.joinBtn.setOnClickListener {
             Navigation.findNavController(binding.root).navigate(R.id.main_to_join_action)
+        }
+    }
+
+    override fun onStart() { // 자동 로그인(구글)위한 로그인 여부 확인
+        super.onStart()
+        val account = context?.let { GoogleSignIn.getLastSignedInAccount(it) }
+        if (account!=null){
+            Navigation.findNavController(binding.root).navigate(R.id.main_to_mainPage_action)
         }
     }
 }

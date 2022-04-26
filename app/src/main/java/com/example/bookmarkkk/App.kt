@@ -4,7 +4,7 @@ import android.app.Application
 
 class App : Application() {
 
-    private lateinit var datastore : EmailStoreModule
+    private lateinit var datastore : DataStoreModule
 
     companion object{
         private lateinit var app : App
@@ -14,8 +14,8 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         app = this
-        datastore = EmailStoreModule(this)
+        datastore = DataStoreModule(this)
     }
 
-    fun getDataStore() : EmailStoreModule = datastore
+    fun getDataStore() : DataStoreModule = datastore
 }

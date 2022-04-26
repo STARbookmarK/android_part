@@ -1,6 +1,7 @@
 package com.example.bookmarkkk
 
 import android.R.attr
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -53,39 +54,31 @@ class LoginPage : Fragment(), View.OnClickListener {
     override fun onStart() {
         super.onStart()
         //다음 액티비티 진입 시 확인해야 할 것들(ex 개인정보, 카테고리화 유무)
-        val account = context?.let { GoogleSignIn.getLastSignedInAccount(it) }
-        val email = account?.email
-
-        if (account!=null){
-            CoroutineScope(Dispatchers.Main).launch {
-                if (email != null) {
-                    App.getInstance().getDataStore().setEmail(email)
-                }
-            }
-            Toast.makeText(context,"자동 로그인 중...",Toast.LENGTH_SHORT).show()
-            Navigation.findNavController(binding.root).navigate(R.id.login_to_main_action)
-        }
+        //일반 로그인과 구글 로그인 구분할 것!!
     }
 
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.googleLoginBtn -> {
-                signIn()
+                googleSignIn()
             }
         }
     }
 
-    private fun signIn(){
+    private fun googleSignIn(){
         val signInIntent = mGoogleSignInClient.signInIntent
         resultLauncher.launch(signInIntent)
     }
 
-    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == 1) {
-            val data: Intent? = result.data
+    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) { // 로그인 성공시
+            val data: Intent? = it.data
             val task: Task<GoogleSignInAccount> =
                 GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(task)
+            CoroutineScope(Dispatchers.Main).launch {
+                App.getInstance().getDataStore().setLoginType(2)
+            }
         }
     }
 
@@ -93,13 +86,11 @@ class LoginPage : Fragment(), View.OnClickListener {
         try {
             val account = completedTask.getResult(ApiException::class.java)
             val email = account?.email.toString()
-            val familyName = account?.familyName.toString()
-
-            Log.d("account", email)
-            Log.d("familyName", familyName)
+            CoroutineScope(Dispatchers.Main).launch {
+                App.getInstance().getDataStore().setEmail(email) // 사용자 이메일 저장
+            }
         }catch (e: ApiException){
             Log.w("failed", "signInResult:failed code=" + e.statusCode)
         }
-
     }
 }

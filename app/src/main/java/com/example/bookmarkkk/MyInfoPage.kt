@@ -16,15 +16,16 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class MyInfoPage : Fragment() {
-    private lateinit var binding : MyinfoBinding
+    private lateinit var binding: MyinfoBinding
     private lateinit var spinner: Spinner
+    private var loginType = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding= MyinfoBinding.inflate(inflater)
+        binding = MyinfoBinding.inflate(inflater)
         return binding.root
     }
 
@@ -33,19 +34,22 @@ class MyInfoPage : Fragment() {
 
         CoroutineScope(Dispatchers.Main).launch {
             val email = App.getInstance().getDataStore().email.first()
-            binding.idText.text=email
+            loginType = App.getInstance().getDataStore().loginType.first()
+            binding.idText.text = email
         }
 
         context?.let {
-            spinner= Spinner(it)
-            binding.rankSpinner.adapter=spinner.rankSpinnerSet()
+            spinner = Spinner(it)
+            binding.rankSpinner.adapter = spinner.rankSpinnerSet()
         }
 
-        binding.modifyBtn.setOnClickListener{
+        binding.modifyBtn.setOnClickListener {
             val activity = activity as MainActivity
-            activity.changeFragment(ModifyInfoPage())
+            if (loginType == 1 || loginType == 0) { // 일반 로그인
+                activity.changeFragment(ModifyInfoPage())
+            } else { //구글 로그인
+                activity.changeFragment(ModifyGoogleInfoPage())
+            }
         }
-
     }
-
 }

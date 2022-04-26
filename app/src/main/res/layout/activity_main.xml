@@ -21,6 +21,16 @@
             android:text="@string/title"
             android:textColor="@color/white"
             android:textSize="25dp"/>
+
+        <Button
+            android:id="@+id/logoutBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="logout"
+            android:textColor="@color/white"
+            android:background="#00ff0000"
+            android:gravity="end"
+            android:backgroundTint="@color/mainColor"/>
     </Toolbar>
 
     <androidx.fragment.app.FragmentContainerView
