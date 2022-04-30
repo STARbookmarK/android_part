@@ -22,5 +22,6 @@ class ModifyGoogleInfoPage : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //서버랑 통신해서 닉네임 + 상태메세지 + 보기값 저장 및 가져오기
     }
 }

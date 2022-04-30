@@ -1,6 +1,5 @@
 package com.example.bookmarkkk
 
-import android.R.attr
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -8,9 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.bookmarkkk.databinding.LoginBinding
@@ -22,13 +19,18 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.DisposableHandle
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class LoginPage : Fragment(), View.OnClickListener {
     private lateinit var binding : LoginBinding
     private lateinit var mGoogleSignInClient: GoogleSignInClient
+    private val coroutineScope by lazy{ CoroutineScope(Dispatchers.IO)}
+    private lateinit var user_id : String
+    private lateinit var user_pw : String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,8 +49,8 @@ class LoginPage : Fragment(), View.OnClickListener {
             .build()
 
         mGoogleSignInClient = context?.let { GoogleSignIn.getClient(it, gso) }!!
-
         binding.googleLoginBtn.setOnClickListener(this)
+        binding.loginBtn.setOnClickListener(this)
     }
 
     override fun onStart() {
@@ -60,7 +62,10 @@ class LoginPage : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.googleLoginBtn -> {
-                googleSignIn()
+                googleSignIn() //구글 로그인
+            }
+            R.id.loginBtn -> {
+                login() //일반 로그인
             }
         }
     }
@@ -76,9 +81,7 @@ class LoginPage : Fragment(), View.OnClickListener {
             val task: Task<GoogleSignInAccount> =
                 GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(task)
-            CoroutineScope(Dispatchers.Main).launch {
-                App.getInstance().getDataStore().setLoginType(2)
-            }
+            Navigation.findNavController(binding.root).navigate(R.id.login_to_main_action)
         }
     }
 
@@ -86,11 +89,46 @@ class LoginPage : Fragment(), View.OnClickListener {
         try {
             val account = completedTask.getResult(ApiException::class.java)
             val email = account?.email.toString()
-            CoroutineScope(Dispatchers.Main).launch {
+            coroutineScope.launch {
+                App.getInstance().getDataStore().setLoginType(2)
                 App.getInstance().getDataStore().setEmail(email) // 사용자 이메일 저장
             }
         }catch (e: ApiException){
             Log.w("failed", "signInResult:failed code=" + e.statusCode)
         }
+    }
+
+    private fun login(){
+        user_id = binding.idEditText.text.toString()
+        user_pw = binding.pwEditText.text.toString()
+        //Log.e(TAG, user_id + user_pw)
+        //서버 통신 부분은 나중에 repository에 분리
+        NetworkClient.loginService.login(user_id, user_pw)
+            .enqueue(object: Callback<LoginData> {
+                override fun onResponse(call: Call<LoginData>, response: Response<LoginData>){
+                    if (response.isSuccessful.not()){
+                        Log.e(TAG, response.toString())
+                        return
+                    }else{
+                        response.body()?.let{
+                            //응답받은 데이터가 null이 아니면 로그인 성공
+                            Log.e(TAG, "로그인 성공")
+                            coroutineScope.launch {
+                                App.getInstance().getDataStore().setLoginType(1)
+                                App.getInstance().getDataStore().setEmail(user_id)
+                            }
+                            Navigation.findNavController(binding.root).navigate(R.id.login_to_main_action)
+                        }
+                    }
+                }
+                override fun onFailure(call: Call<LoginData>, t: Throwable){
+                    Log.e(TAG, "연결 실패")
+                    Log.e(TAG, t.toString())
+                }
+            })
+    }
+
+    companion object{
+        const val TAG = "LoginPage"
     }
 }

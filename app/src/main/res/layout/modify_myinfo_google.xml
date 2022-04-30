@@ -69,7 +69,7 @@
         tools:ignore="MissingConstraints" />
 
     <TextView
-        android:id="@+id/pwText"
+        android:id="@+id/nicknameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
@@ -81,14 +81,14 @@
         tools:ignore="MissingConstraints" />
 
     <EditText
-        android:id="@+id/pwEditText"
+        android:id="@+id/nickEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="15sp"
         android:textSize="15sp"
         app:layout_constraintTop_toBottomOf="@id/idEditText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/pwText"
+        app:layout_constraintStart_toEndOf="@id/nicknameText"
         android:background="@drawable/btn_rectangle_shape"
         tools:ignore="MissingConstraints" />
 
@@ -97,7 +97,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="15sp"
-        app:layout_constraintTop_toBottomOf="@id/pwEditText"
+        app:layout_constraintTop_toBottomOf="@id/nickEditText"
         app:layout_constraintStart_toStartOf="parent"
         android:text="@string/message_title"
         android:textColor="@color/black"
@@ -112,7 +112,7 @@
         android:textSize="15sp"
         app:layout_constraintTop_toBottomOf="@id/msgText"
         app:layout_constraintStart_toStartOf="@id/msgText"
-        app:layout_constraintEnd_toEndOf="@id/pwEditText"
+        app:layout_constraintEnd_toEndOf="@id/nickEditText"
         android:background="@drawable/btn_rectangle_shape"
         tools:ignore="MissingConstraints" />
 

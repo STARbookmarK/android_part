@@ -7,12 +7,16 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.lifecycleScope
 import com.example.bookmarkkk.databinding.ActivityMainBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import www.sanju.motiontoast.MotionToast
@@ -31,12 +35,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(binding.root)
         runBottomBar()
 
-        //일반 로그인과 구글 로그인을 구별하기 위해 DataStore에 변수 생성
-        CoroutineScope(Dispatchers.Main).launch {
-            val loginType = App.getInstance().getDataStore().loginType.first()
-            userLoginType = loginType
-            Log.i(TAG, userLoginType.toString())
-        }
+        Log.i(TAG, userLoginType.toString())
+
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .build()
         mGoogleSignInClient = this.let { GoogleSignIn.getClient(it, gso) }
@@ -73,6 +73,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
        when(v?.id){
            R.id.logoutBtn -> {
+               if (userLoginType==1)
+                   Toast.makeText(this, "logout", Toast.LENGTH_SHORT).show()
                if (userLoginType==2)
                    googleLogout()
            }
@@ -115,7 +117,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+            lifecycleScope.launch {
+                val loginType = App.getInstance().getDataStore().loginType.first()
+                userLoginType = loginType
+        }
+    }
+
     companion object{
         const val TAG = "MainActivity"
     }
+
 }
