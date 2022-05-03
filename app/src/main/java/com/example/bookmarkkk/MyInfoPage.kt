@@ -10,11 +10,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import kotlin.math.log
 
 class MyInfoPage : Fragment() {
     private lateinit var binding: MyinfoBinding
     private lateinit var spinner: Spinner
     private var loginType = 0
+    private val infoSaveModule : DataStoreModule by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,8 +32,10 @@ class MyInfoPage : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         CoroutineScope(Dispatchers.Main).launch {
-            val email = App.getInstance().getDataStore().email.first()
-            loginType = App.getInstance().getDataStore().loginType.first()
+//            val email = App.getInstance().getDataStore().email.first()
+//            loginType = App.getInstance().getDataStore().loginType.first()
+            val email = infoSaveModule.email.first()
+            loginType = infoSaveModule.loginType.first()
             binding.idText.text = email
         }
 

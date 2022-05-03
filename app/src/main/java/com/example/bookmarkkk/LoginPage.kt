@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,6 +32,7 @@ class LoginPage : Fragment(), View.OnClickListener {
     private val coroutineScope by lazy{ CoroutineScope(Dispatchers.IO)}
     private lateinit var user_id : String
     private lateinit var user_pw : String
+    private val infoSaveModule : DataStoreModule by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -90,8 +92,10 @@ class LoginPage : Fragment(), View.OnClickListener {
             val account = completedTask.getResult(ApiException::class.java)
             val email = account?.email.toString()
             coroutineScope.launch {
-                App.getInstance().getDataStore().setLoginType(2)
-                App.getInstance().getDataStore().setEmail(email) // 사용자 이메일 저장
+                //App.getInstance().getDataStore().setLoginType(2)
+                infoSaveModule.setLoginType(2)
+                //App.getInstance().getDataStore().setEmail(email) // 사용자 이메일 저장
+                infoSaveModule.setEmail(email)
             }
         }catch (e: ApiException){
             Log.w("failed", "signInResult:failed code=" + e.statusCode)
@@ -114,8 +118,10 @@ class LoginPage : Fragment(), View.OnClickListener {
                             //응답받은 데이터가 null이 아니면 로그인 성공
                             Log.e(TAG, "로그인 성공")
                             coroutineScope.launch {
-                                App.getInstance().getDataStore().setLoginType(1)
-                                App.getInstance().getDataStore().setEmail(user_id)
+//                                App.getInstance().getDataStore().setLoginType(1)
+//                                App.getInstance().getDataStore().setEmail(user_id)
+                                infoSaveModule.setLoginType(1)
+                                infoSaveModule.setEmail(user_id)
                             }
                             Navigation.findNavController(binding.root).navigate(R.id.login_to_main_action)
                         }

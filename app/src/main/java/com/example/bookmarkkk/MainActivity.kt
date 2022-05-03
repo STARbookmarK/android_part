@@ -19,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import www.sanju.motiontoast.MotionToast
 import www.sanju.motiontoast.MotionToastStyle
 
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     private var userLoginType : Int = 0
+    private val infoSaveModule : DataStoreModule by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,8 +86,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     //구글 로그아웃
     private fun googleLogout(){
         CoroutineScope(Dispatchers.Main).launch {
-            App.getInstance().getDataStore().setEmail("null")
-            App.getInstance().getDataStore().setLoginType(0)
+//            App.getInstance().getDataStore().setEmail("null")
+//            App.getInstance().getDataStore().setLoginType(0)
+            infoSaveModule.setEmail("null")
+            infoSaveModule.setLoginType(0)
         }
         mGoogleSignInClient.signOut()
             .addOnCompleteListener(this) {
@@ -120,7 +124,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onStart() {
         super.onStart()
             lifecycleScope.launch {
-                val loginType = App.getInstance().getDataStore().loginType.first()
+                //val loginType = App.getInstance().getDataStore().loginType.first()
+                val loginType = infoSaveModule.loginType.first()
                 userLoginType = loginType
         }
     }
