@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
@@ -32,6 +33,7 @@ class LoginPage : Fragment(), View.OnClickListener {
     private val coroutineScope by lazy{ CoroutineScope(Dispatchers.IO)}
     private lateinit var user_id : String
     private lateinit var user_pw : String
+    private var autoLogin : Boolean = false
     private val infoSaveModule : DataStoreModule by inject()
 
     override fun onCreateView(
@@ -105,11 +107,16 @@ class LoginPage : Fragment(), View.OnClickListener {
     private fun login(){
         user_id = binding.idEditText.text.toString()
         user_pw = binding.pwEditText.text.toString()
+        autoLogin = binding.loginCheckBox.isChecked
+        Log.e("autoLogin", autoLogin.toString())
+        //쿠키 ??? 바디 ???
+
         //Log.e(TAG, user_id + user_pw)
         //서버 통신 부분은 나중에 repository에 분리
-        NetworkClient.loginService.login(user_id, user_pw)
+        NetworkClient.loginService.login(user_id, user_pw, autoLogin)
             .enqueue(object: Callback<LoginData> {
                 override fun onResponse(call: Call<LoginData>, response: Response<LoginData>){
+                    Log.e(TAG, response.toString())
                     if (response.isSuccessful.not()){
                         Log.e(TAG, response.toString())
                         return
@@ -118,8 +125,6 @@ class LoginPage : Fragment(), View.OnClickListener {
                             //응답받은 데이터가 null이 아니면 로그인 성공
                             Log.e(TAG, "로그인 성공")
                             coroutineScope.launch {
-//                                App.getInstance().getDataStore().setLoginType(1)
-//                                App.getInstance().getDataStore().setEmail(user_id)
                                 infoSaveModule.setLoginType(1)
                                 infoSaveModule.setEmail(user_id)
                             }
