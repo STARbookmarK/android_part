@@ -109,21 +109,32 @@ class LoginPage : Fragment(), View.OnClickListener {
         user_pw = binding.pwEditText.text.toString()
         autoLogin = binding.loginCheckBox.isChecked
         Log.e("autoLogin", autoLogin.toString())
-        //쿠키 ??? 바디 ???
 
         //Log.e(TAG, user_id + user_pw)
         //서버 통신 부분은 나중에 repository에 분리
-        NetworkClient.loginService.login(user_id, user_pw, autoLogin)
-            .enqueue(object: Callback<LoginData> {
-                override fun onResponse(call: Call<LoginData>, response: Response<LoginData>){
-                    Log.e(TAG, response.toString())
+        NetworkClient.loginService.login(LoginData(user_id = user_id, user_pw = user_pw, autoLogin = autoLogin))
+            .enqueue(object: Callback<LoginResponse> {
+                override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>){
                     if (response.isSuccessful.not()){
                         Log.e(TAG, response.toString())
                         return
                     }else{
+                        val header = response.headers()
+                        val at = header["Set-Cookie"]?.split(";")?.get(0)
+                        val accessToken = at?.replace("accessToken=","")
+                        if (accessToken != null) {
+                            Log.e(TAG, accessToken)
+                            Log.e(TAG, header.toString())
+                            if (autoLogin){
+                                val rt = header["Set-Cookie"]?.split(";")?.get(0)
+                                val refreshToken = rt?.replace("refreshToken=","")
+                                if (refreshToken != null) {
+                                    Log.e(TAG, refreshToken)
+                                }
+                            }
+                        }
                         response.body()?.let{
                             //응답받은 데이터가 null이 아니면 로그인 성공
-                            Log.e(TAG, "로그인 성공")
                             coroutineScope.launch {
                                 infoSaveModule.setLoginType(1)
                                 infoSaveModule.setEmail(user_id)
@@ -132,7 +143,7 @@ class LoginPage : Fragment(), View.OnClickListener {
                         }
                     }
                 }
-                override fun onFailure(call: Call<LoginData>, t: Throwable){
+                override fun onFailure(call: Call<LoginResponse>, t: Throwable){
                     Log.e(TAG, "연결 실패")
                     Log.e(TAG, t.toString())
                 }

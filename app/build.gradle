@@ -76,4 +76,7 @@ dependencies {
     implementation "io.insert-koin:koin-android-compat:$koin_version"
     implementation "io.insert-koin:koin-androidx-workmanager:$koin_version"
     implementation "io.insert-koin:koin-androidx-compose:$koin_version"
+
+    implementation("com.squareup.okhttp3:okhttp-urlconnection:4.9.0")
+
 }
