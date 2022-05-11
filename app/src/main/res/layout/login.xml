@@ -73,21 +73,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="MissingConstraints" />
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/googleLoginBtn"
-        android:layout_width="270dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/loginBtn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="MissingConstraints" />
-
     <CheckBox
         android:id="@+id/loginCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/googleLoginBtn"
-        app:layout_constraintStart_toStartOf="@id/googleLoginBtn"
+        app:layout_constraintTop_toBottomOf="@id/loginBtn"
+        app:layout_constraintStart_toStartOf="@id/loginBtn"
         android:text="로그인 상태 유지"
         android:textColor="@color/black"
         tools:ignore="MissingConstraints" />
@@ -96,8 +87,8 @@
         android:id="@+id/idSaveCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/googleLoginBtn"
-        app:layout_constraintEnd_toEndOf="@id/googleLoginBtn"
+        app:layout_constraintTop_toBottomOf="@id/loginBtn"
+        app:layout_constraintEnd_toEndOf="@id/loginBtn"
         android:text="ID 저장"
         android:textColor="@color/black"
         tools:ignore="MissingConstraints" />

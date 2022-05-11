@@ -48,8 +48,6 @@ class MyInfoPage : Fragment() {
             val activity = activity as MainActivity
             if (loginType == 1 || loginType == 0) { // 일반 로그인
                 activity.changeFragment(ModifyInfoPage())
-            } else { //구글 로그인
-                activity.changeFragment(ModifyGoogleInfoPage())
             }
         }
     }

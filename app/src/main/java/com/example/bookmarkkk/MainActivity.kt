@@ -102,34 +102,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
            R.id.logoutBtn -> {
                if (userLoginType==1)
                    Toast.makeText(this, "logout", Toast.LENGTH_SHORT).show()
-               if (userLoginType==2)
-                   googleLogout()
            }
        }
-    }
-
-    //구글 로그아웃
-    private fun googleLogout(){
-        CoroutineScope(Dispatchers.Main).launch {
-//            App.getInstance().getDataStore().setEmail("null")
-//            App.getInstance().getDataStore().setLoginType(0)
-            infoSaveModule.setEmail("null")
-            infoSaveModule.setLoginType(0)
-        }
-        mGoogleSignInClient.signOut()
-            .addOnCompleteListener(this) {
-                MotionToast.createColorToast(
-                    this,
-                    "Google Logout",
-                    "로그아웃 되었습니다",
-                    MotionToastStyle.INFO,
-                    MotionToast.GRAVITY_BOTTOM,
-                    MotionToast.SHORT_DURATION,
-                    ResourcesCompat.getFont(this, www.sanju.motiontoast.R.font.helvetica_regular)
-                )
-                this.finish()
-                Log.i(TAG, "google logout")
-            }
     }
 
     //일반 로그아웃

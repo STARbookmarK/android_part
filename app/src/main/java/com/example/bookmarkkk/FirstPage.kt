@@ -1,6 +1,7 @@
 package com.example.bookmarkkk
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
@@ -10,9 +11,19 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.bookmarkkk.databinding.FirstPageBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class FirstPage : Fragment(){
     private lateinit var binding: FirstPageBinding
+    private val infoSaveModule : DataStoreModule by inject()
+    //private val token by lazy { String }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,9 +46,35 @@ class FirstPage : Fragment(){
 
     override fun onStart() { // 자동 로그인(구글)위한 로그인 여부 확인
         super.onStart()
-        val account = context?.let { GoogleSignIn.getLastSignedInAccount(it) }
-        if (account!=null){
-            Navigation.findNavController(binding.root).navigate(R.id.main_to_mainPage_action)
+        CoroutineScope(Dispatchers.IO).launch {
+            val token = infoSaveModule.refreshToken.first()
+            if(token.isNotEmpty()){
+               autoLogin(token) //token이 null이어도 자동로그인???
+            }
         }
+    }
+
+    private fun autoLogin(token: String){
+        NetworkClient.autoLoginService.autoLogin(token)
+            .enqueue(object: Callback<UserInfo> {
+                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
+                    if (response.isSuccessful.not()){
+                        Log.e("FirstPage", response.toString())
+                        return
+                    }else{
+                        response.body()?.let {
+                            Log.e("FirstPage", it.name)
+                            Log.e("FirstPage", it.id)
+                            Log.e("FirstPage", it.tokenType)
+                        }
+                        Log.e("FirstPage", response.toString())
+                        Navigation.findNavController(binding.root).navigate(R.id.main_to_mainPage_action)
+                    }
+                }
+                override fun onFailure(call: Call<UserInfo>, t: Throwable){
+                    Log.e(LoginPage.TAG, "연결 실패")
+                    Log.e(LoginPage.TAG, t.toString())
+                }
+            })
     }
 }

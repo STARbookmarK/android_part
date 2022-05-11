@@ -53,7 +53,6 @@ class LoginPage : Fragment(), View.OnClickListener {
             .build()
 
         mGoogleSignInClient = context?.let { GoogleSignIn.getClient(it, gso) }!!
-        binding.googleLoginBtn.setOnClickListener(this)
         binding.loginBtn.setOnClickListener(this)
     }
 
@@ -65,42 +64,9 @@ class LoginPage : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.googleLoginBtn -> {
-                googleSignIn() //구글 로그인
-            }
             R.id.loginBtn -> {
                 login() //일반 로그인
             }
-        }
-    }
-
-    private fun googleSignIn(){
-        val signInIntent = mGoogleSignInClient.signInIntent
-        resultLauncher.launch(signInIntent)
-    }
-
-    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if (it.resultCode == Activity.RESULT_OK) { // 로그인 성공시
-            val data: Intent? = it.data
-            val task: Task<GoogleSignInAccount> =
-                GoogleSignIn.getSignedInAccountFromIntent(data)
-            handleSignInResult(task)
-            Navigation.findNavController(binding.root).navigate(R.id.login_to_main_action)
-        }
-    }
-
-    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>){
-        try {
-            val account = completedTask.getResult(ApiException::class.java)
-            val email = account?.email.toString()
-            coroutineScope.launch {
-                //App.getInstance().getDataStore().setLoginType(2)
-                infoSaveModule.setLoginType(2)
-                //App.getInstance().getDataStore().setEmail(email) // 사용자 이메일 저장
-                infoSaveModule.setEmail(email)
-            }
-        }catch (e: ApiException){
-            Log.w("failed", "signInResult:failed code=" + e.statusCode)
         }
     }
 
@@ -113,28 +79,26 @@ class LoginPage : Fragment(), View.OnClickListener {
         //Log.e(TAG, user_id + user_pw)
         //서버 통신 부분은 나중에 repository에 분리
         NetworkClient.loginService.login(LoginData(user_id = user_id, user_pw = user_pw, autoLogin = autoLogin))
-            .enqueue(object: Callback<LoginResponse> {
-                override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>){
+            .enqueue(object: Callback<Void> {
+                override fun onResponse(call: Call<Void>, response: Response<Void>){
                     if (response.isSuccessful.not()){
                         Log.e(TAG, response.toString())
                         return
                     }else{
-                        val header = response.headers()
-                        val at = header["Set-Cookie"]?.split(";")?.get(0)
-                        val accessToken = at?.replace("accessToken=","")
-                        if (accessToken != null) {
-                            Log.e(TAG, accessToken)
-                            Log.e(TAG, header.toString())
-                            if (autoLogin){
-                                val rt = header["Set-Cookie"]?.split(";")?.get(0)
-                                val refreshToken = rt?.replace("refreshToken=","")
-                                if (refreshToken != null) {
-                                    Log.e(TAG, refreshToken)
+                        if (autoLogin){
+                            val header = response.headers()
+                            val rt = header["Set-Cookie"]?.split(";")?.get(0)
+                            val refreshToken = rt?.replace("refreshToken=","")
+                            if (refreshToken != null) {
+                                Log.e(TAG, refreshToken)
+                                coroutineScope.launch {
+                                    infoSaveModule.setToken(refreshToken)
+                                    infoSaveModule.setLoginType(1)
+                                    infoSaveModule.setEmail(user_id)
                                 }
+                                Navigation.findNavController(binding.root).navigate(R.id.login_to_main_action)
                             }
-                        }
-                        response.body()?.let{
-                            //응답받은 데이터가 null이 아니면 로그인 성공
+                        }else{
                             coroutineScope.launch {
                                 infoSaveModule.setLoginType(1)
                                 infoSaveModule.setEmail(user_id)
@@ -143,13 +107,12 @@ class LoginPage : Fragment(), View.OnClickListener {
                         }
                     }
                 }
-                override fun onFailure(call: Call<LoginResponse>, t: Throwable){
+                override fun onFailure(call: Call<Void>, t: Throwable){
                     Log.e(TAG, "연결 실패")
                     Log.e(TAG, t.toString())
                 }
             })
     }
-
     companion object{
         const val TAG = "LoginPage"
     }

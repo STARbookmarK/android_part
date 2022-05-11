@@ -10,7 +10,6 @@ data class LoginData(
 )
 
 data class LoginResponse(
-    //@SerializedName("cookies") val cookies: String,
     @SerializedName("refreshToken") val refreshToken: String,
     @SerializedName("accessToken") val accessToken: String
 )
