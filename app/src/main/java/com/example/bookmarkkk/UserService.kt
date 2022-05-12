@@ -11,8 +11,14 @@ interface LoginService {
 interface AutoLoginService {
     @GET("api/login")
     fun autoLogin(
-        @Header("token") token: String
+        //@Header("token") token: String
     ):Call<UserInfo>
+}
+
+interface LogoutService {
+    @GET("api/logout")
+    fun logout(
+    ):Call<Void>
 }
 
 

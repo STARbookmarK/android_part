@@ -46,16 +46,17 @@ class FirstPage : Fragment(){
 
     override fun onStart() { // 자동 로그인(구글)위한 로그인 여부 확인
         super.onStart()
-        CoroutineScope(Dispatchers.IO).launch {
-            val token = infoSaveModule.refreshToken.first()
-            if(token.isNotEmpty()){
-               autoLogin(token) //token이 null이어도 자동로그인???
-            }
-        }
+        autoLogin()
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val token = infoSaveModule.refreshToken.first()
+//            if(token.isNotEmpty()){
+//                autoLogin() //자동 로그인에 체크하지 않앗어도 자동 로그인 실행
+//            }
+//        }
     }
 
-    private fun autoLogin(token: String){
-        NetworkClient.autoLoginService.autoLogin(token)
+    private fun autoLogin(){
+        NetworkClient.autoLoginService.autoLogin()
             .enqueue(object: Callback<UserInfo> {
                 override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
                     if (response.isSuccessful.not()){

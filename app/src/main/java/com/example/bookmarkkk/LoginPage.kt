@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
@@ -82,27 +83,29 @@ class LoginPage : Fragment(), View.OnClickListener {
             .enqueue(object: Callback<Void> {
                 override fun onResponse(call: Call<Void>, response: Response<Void>){
                     if (response.isSuccessful.not()){
-                        Log.e(TAG, response.toString())
+                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
                         return
                     }else{
                         if (autoLogin){
-                            val header = response.headers()
-                            val rt = header["Set-Cookie"]?.split(";")?.get(0)
-                            val refreshToken = rt?.replace("refreshToken=","")
-                            if (refreshToken != null) {
-                                Log.e(TAG, refreshToken)
-                                coroutineScope.launch {
-                                    infoSaveModule.setToken(refreshToken)
-                                    infoSaveModule.setLoginType(1)
-                                    infoSaveModule.setEmail(user_id)
-                                }
-                                Navigation.findNavController(binding.root).navigate(R.id.login_to_main_action)
-                            }
+//                            val header = response.headers()
+//                            val rt = header["Set-Cookie"]?.split(";")?.get(0)
+//                            val refreshToken = rt?.replace("refreshToken=","")
+//                            if (refreshToken != null) {
+//                                Log.e(TAG, refreshToken)
+//                                coroutineScope.launch {
+//                                    infoSaveModule.setToken(refreshToken)
+//                                    infoSaveModule.setLoginType(1)
+//                                    infoSaveModule.setEmail(user_id)
+//                                }
+//                            }
+                            Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                            Navigation.findNavController(binding.root).navigate(R.id.login_to_main_action)
                         }else{
                             coroutineScope.launch {
                                 infoSaveModule.setLoginType(1)
-                                infoSaveModule.setEmail(user_id)
+                                //infoSaveModule.setEmail(user_id)
                             }
+                            Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
                             Navigation.findNavController(binding.root).navigate(R.id.login_to_main_action)
                         }
                     }

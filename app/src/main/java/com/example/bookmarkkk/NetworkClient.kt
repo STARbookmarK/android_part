@@ -27,4 +27,5 @@ object NetworkClient {
 
     val loginService: LoginService by lazy { retrofit.create(LoginService::class.java) }
     val autoLoginService : AutoLoginService by lazy { retrofit.create(AutoLoginService::class.java) }
+    val logoutService : LogoutService by lazy { retrofit.create(LogoutService::class.java) }
 }

@@ -1,5 +1,6 @@
 package com.example.bookmarkkk
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -101,14 +102,29 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
        when(v?.id){
            R.id.logoutBtn -> {
                if (userLoginType==1)
-                   Toast.makeText(this, "logout", Toast.LENGTH_SHORT).show()
+                   logout()
            }
        }
     }
 
     //일반 로그아웃
     private fun logout(){
-        //
+        NetworkClient.logoutService.logout()
+            .enqueue(object : Callback<Void>{
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (response.isSuccessful.not()){
+                        Log.e(TAG, response.toString())
+                    }else{
+                        Toast.makeText(this@MainActivity, response.message(), Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this@MainActivity, FirstActivity::class.java)
+                        startActivity(intent)
+                        finishAffinity()
+                    }
+                }
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    Log.e(TAG, t.toString())
+                }
+            })
     }
 
     override fun onBackPressed() { //뒤로가기 버튼 클릭 시 종료
