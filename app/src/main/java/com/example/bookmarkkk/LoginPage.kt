@@ -101,10 +101,10 @@ class LoginPage : Fragment(), View.OnClickListener {
                             Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
                             Navigation.findNavController(binding.root).navigate(R.id.login_to_main_action)
                         }else{
-                            coroutineScope.launch {
-                                infoSaveModule.setLoginType(1)
-                                //infoSaveModule.setEmail(user_id)
-                            }
+//                            coroutineScope.launch {
+//                                infoSaveModule.setLoginType(1)
+//                                infoSaveModule.setEmail(user_id)
+//                            }
                             Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
                             Navigation.findNavController(binding.root).navigate(R.id.login_to_main_action)
                         }

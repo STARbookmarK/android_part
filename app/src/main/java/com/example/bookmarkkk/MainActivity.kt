@@ -101,13 +101,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
        when(v?.id){
            R.id.logoutBtn -> {
-               if (userLoginType==1)
-                   logout()
+               logout()
            }
        }
     }
 
-    //일반 로그아웃
+    //로그아웃
     private fun logout(){
         NetworkClient.logoutService.logout()
             .enqueue(object : Callback<Void>{
@@ -138,11 +137,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onStart() {
         super.onStart()
-            lifecycleScope.launch {
-                //val loginType = App.getInstance().getDataStore().loginType.first()
-                val loginType = infoSaveModule.loginType.first()
-                userLoginType = loginType
-        }
+//            lifecycleScope.launch {
+//                val loginType = App.getInstance().getDataStore().loginType.first()
+//                val loginType = infoSaveModule.loginType.first()
+//                userLoginType = loginType
+//        }
     }
 
     companion object{

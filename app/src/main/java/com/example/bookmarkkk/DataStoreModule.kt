@@ -16,8 +16,8 @@ class DataStoreModule(private val context: Context) {
     private val Context.datastore by preferencesDataStore(name = "datastore")
 
     private val emailKey = stringPreferencesKey("USER_EMAIL")
-    private val loginTypeKey = intPreferencesKey("LOGIN_TYPE")
-    private val refreshTokenKey = stringPreferencesKey("REFRESH_TOKEN")
+    //private val loginTypeKey = intPreferencesKey("LOGIN_TYPE")
+    //private val refreshTokenKey = stringPreferencesKey("REFRESH_TOKEN")
 
     val email : Flow<String> = context.datastore.data
         .catch { exception ->
@@ -32,28 +32,28 @@ class DataStoreModule(private val context: Context) {
         }
 
     //일반 로그인 : 1, 로그인 X : 0
-   val loginType : Flow<Int> = context.datastore.data
-        .catch { exception ->
-            if (exception is IOException){
-                emit(emptyPreferences())
-            }else{
-                throw exception
-            }
-        }.map {
-            it[loginTypeKey]!!
-        }
+//   val loginType : Flow<Int> = context.datastore.data
+//        .catch { exception ->
+//            if (exception is IOException){
+//                emit(emptyPreferences())
+//            }else{
+//                throw exception
+//            }
+//        }.map {
+//            it[loginTypeKey]!!
+//        }
 
-    val refreshToken : Flow<String> = context.datastore.data
-        .catch { exception ->
-            if (exception is IOException){
-                emit(emptyPreferences())
-            }else{
-                throw exception
-            }
-        }
-        .map {
-            it[refreshTokenKey] ?: ""
-        }
+//    val refreshToken : Flow<String> = context.datastore.data
+//        .catch { exception ->
+//            if (exception is IOException){
+//                emit(emptyPreferences())
+//            }else{
+//                throw exception
+//            }
+//        }
+//        .map {
+//            it[refreshTokenKey] ?: ""
+//        }
 
     suspend fun setEmail(email : String){
         context.datastore.edit {
@@ -61,16 +61,16 @@ class DataStoreModule(private val context: Context) {
         }
     }
 
-    suspend fun setLoginType(type : Int){
-        context.datastore.edit {
-            it[loginTypeKey] = type
-        }
-    }
+//    suspend fun setLoginType(type : Int){
+//        context.datastore.edit {
+//            it[loginTypeKey] = type
+//        }
+//    }
 
-    suspend fun setToken(value : String){
-        context.datastore.edit {
-            it[refreshTokenKey] = value
-        }
-    }
+//    suspend fun setToken(value : String){
+//        context.datastore.edit {
+//            it[refreshTokenKey] = value
+//        }
+//    }
 
 }

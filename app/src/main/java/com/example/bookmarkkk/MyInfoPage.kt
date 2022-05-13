@@ -1,16 +1,21 @@
 package com.example.bookmarkkk
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import com.example.bookmarkkk.databinding.MyinfoBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import kotlin.math.log
 
 class MyInfoPage : Fragment() {
@@ -31,13 +36,15 @@ class MyInfoPage : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        CoroutineScope(Dispatchers.Main).launch {
+//        CoroutineScope(Dispatchers.Main).launch {
 //            val email = App.getInstance().getDataStore().email.first()
 //            loginType = App.getInstance().getDataStore().loginType.first()
-            val email = infoSaveModule.email.first()
-            loginType = infoSaveModule.loginType.first()
-            binding.idText.text = email
-        }
+//            val email = infoSaveModule.email.first()
+//            loginType = infoSaveModule.loginType.first()
+//            binding.idText.text = email
+//        }
+
+        getNickName()
 
         context?.let {
             spinner = Spinner(it)
@@ -46,9 +53,29 @@ class MyInfoPage : Fragment() {
 
         binding.modifyBtn.setOnClickListener {
             val activity = activity as MainActivity
-            if (loginType == 1 || loginType == 0) { // 일반 로그인
-                activity.changeFragment(ModifyInfoPage())
-            }
+            activity.changeFragment(ModifyInfoPage())
+//            if (loginType == 1 || loginType == 0) { // 일반 로그인
+//            }
         }
+    }
+
+    private fun getNickName() {
+        NetworkClient.autoLoginService.autoLogin()
+            .enqueue(object: Callback<UserInfo> {
+                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
+                    if (response.isSuccessful.not()){
+                        Log.e("MyInfoPage", response.toString())
+                        return
+                    }else{
+                        response.body()?.let {
+                            binding.nickNameText.text=it.name
+                        }
+                    }
+                }
+                override fun onFailure(call: Call<UserInfo>, t: Throwable){
+                    Log.e(LoginPage.TAG, "연결 실패")
+                    Log.e(LoginPage.TAG, t.toString())
+                }
+            })
     }
 }
