@@ -54,8 +54,6 @@ class MyInfoPage : Fragment() {
         binding.modifyBtn.setOnClickListener {
             val activity = activity as MainActivity
             activity.changeFragment(ModifyInfoPage())
-//            if (loginType == 1 || loginType == 0) { // 일반 로그인
-//            }
         }
     }
 

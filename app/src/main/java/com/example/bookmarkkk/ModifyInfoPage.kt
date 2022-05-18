@@ -14,7 +14,7 @@ import retrofit2.Response
 
 class ModifyInfoPage : Fragment() {
     private lateinit var binding: ModifyInfoBinding
-    private val userInfo : NetworkRepository by inject()
+    //private val userInfo : NetworkRepository by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,

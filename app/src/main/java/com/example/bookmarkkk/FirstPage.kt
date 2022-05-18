@@ -23,7 +23,6 @@ import retrofit2.Response
 class FirstPage : Fragment(){
     private lateinit var binding: FirstPageBinding
     private val infoSaveModule : DataStoreModule by inject()
-    //private val token by lazy { String }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,12 +46,6 @@ class FirstPage : Fragment(){
     override fun onStart() { // 자동 로그인(구글)위한 로그인 여부 확인
         super.onStart()
         autoLogin()
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val token = infoSaveModule.refreshToken.first()
-//            if(token.isNotEmpty()){
-//                autoLogin() //자동 로그인에 체크하지 않앗어도 자동 로그인 실행
-//            }
-//        }
     }
 
     private fun autoLogin(){

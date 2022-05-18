@@ -17,7 +17,7 @@ class DataStoreModule(private val context: Context) {
 
     private val emailKey = stringPreferencesKey("USER_EMAIL")
     //private val loginTypeKey = intPreferencesKey("LOGIN_TYPE")
-    //private val refreshTokenKey = stringPreferencesKey("REFRESH_TOKEN")
+    private val refreshTokenKey = stringPreferencesKey("REFRESH_TOKEN")
 
     val email : Flow<String> = context.datastore.data
         .catch { exception ->
@@ -43,17 +43,17 @@ class DataStoreModule(private val context: Context) {
 //            it[loginTypeKey]!!
 //        }
 
-//    val refreshToken : Flow<String> = context.datastore.data
-//        .catch { exception ->
-//            if (exception is IOException){
-//                emit(emptyPreferences())
-//            }else{
-//                throw exception
-//            }
-//        }
-//        .map {
-//            it[refreshTokenKey] ?: ""
-//        }
+    val refreshToken : Flow<String> = context.datastore.data
+        .catch { exception ->
+            if (exception is IOException){
+                emit(emptyPreferences())
+            }else{
+                throw exception
+            }
+        }
+        .map {
+            it[refreshTokenKey] ?: ""
+        }
 
     suspend fun setEmail(email : String){
         context.datastore.edit {
@@ -67,10 +67,10 @@ class DataStoreModule(private val context: Context) {
 //        }
 //    }
 
-//    suspend fun setToken(value : String){
-//        context.datastore.edit {
-//            it[refreshTokenKey] = value
-//        }
-//    }
+    suspend fun setToken(value : String){
+        context.datastore.edit {
+            it[refreshTokenKey] = value
+        }
+    }
 
 }

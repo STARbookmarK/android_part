@@ -75,9 +75,8 @@ class LoginPage : Fragment(), View.OnClickListener {
         user_id = binding.idEditText.text.toString()
         user_pw = binding.pwEditText.text.toString()
         autoLogin = binding.loginCheckBox.isChecked
-        Log.e("autoLogin", autoLogin.toString())
 
-        //Log.e(TAG, user_id + user_pw)
+        Log.e(TAG, user_id + user_pw)
         //서버 통신 부분은 나중에 repository에 분리
         NetworkClient.loginService.login(LoginData(user_id = user_id, user_pw = user_pw, autoLogin = autoLogin))
             .enqueue(object: Callback<Void> {
@@ -86,28 +85,9 @@ class LoginPage : Fragment(), View.OnClickListener {
                         Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
                         return
                     }else{
-                        if (autoLogin){
-//                            val header = response.headers()
-//                            val rt = header["Set-Cookie"]?.split(";")?.get(0)
-//                            val refreshToken = rt?.replace("refreshToken=","")
-//                            if (refreshToken != null) {
-//                                Log.e(TAG, refreshToken)
-//                                coroutineScope.launch {
-//                                    infoSaveModule.setToken(refreshToken)
-//                                    infoSaveModule.setLoginType(1)
-//                                    infoSaveModule.setEmail(user_id)
-//                                }
-//                            }
-                            Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
-                            Navigation.findNavController(binding.root).navigate(R.id.login_to_main_action)
-                        }else{
-//                            coroutineScope.launch {
-//                                infoSaveModule.setLoginType(1)
-//                                infoSaveModule.setEmail(user_id)
-//                            }
-                            Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
-                            Navigation.findNavController(binding.root).navigate(R.id.login_to_main_action)
-                        }
+                        Log.e(TAG, response.headers().toString())
+                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                        Navigation.findNavController(binding.root).navigate(R.id.login_to_main_action)
                     }
                 }
                 override fun onFailure(call: Call<Void>, t: Throwable){
