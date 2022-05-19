@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.bookmarkkk.databinding.MainNotCategorizedBinding
+import com.google.android.material.chip.Chip
 
 class MainPage : Fragment() {
     private lateinit var binding: MainNotCategorizedBinding
@@ -36,5 +38,14 @@ class MainPage : Fragment() {
             binding.stateSpinner.adapter=spinner.stateSpinnerSet()
             binding.rankSpinner.adapter=spinner.rankSpinnerSet()
         }
+
+        //태그 동적으로 추가
+        binding.tagGroup.addView(Chip(context).apply {
+            text = "ALL"
+            isCloseIconVisible = true //x 버튼
+            setTextColor(ContextCompat.getColorStateList(context, R.color.black))
+            chipBackgroundColor = ContextCompat.getColorStateList(context, R.color.lightGray)
+            setOnCloseIconClickListener{ binding.tagGroup.removeView(this)}
+        })
     }
 }

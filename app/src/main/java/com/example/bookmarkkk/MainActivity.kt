@@ -49,28 +49,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         mGoogleSignInClient = this.let { GoogleSignIn.getClient(it, gso) }
 
         binding.logoutBtn.setOnClickListener(this)
-        //getToken()
     }
-
-//    private fun getToken(){
-//        NetworkClient.tokenService.getTokens()
-//            .enqueue(object : Callback<TokenData> {
-//                override fun onResponse(call: Call<TokenData>, response: Response<TokenData>) {
-//                    if (response.isSuccessful.not()){
-//                        Log.e(TAG, "조회 실패")
-//                        Log.e(TAG, response.message())
-//                    }else{
-//                        response.body()?.let {
-//                            Log.e(TAG, it.user_id)
-//                        }
-//                    }
-//                }
-//                override fun onFailure(call: Call<TokenData>, t: Throwable) {
-//                    Log.e(TAG, "연결 실패")
-//                    Log.e(TAG, t.toString())
-//                }
-//            })
-//    }
 
     private fun runBottomBar(){
         binding.bottomBar.selectTabAt(0)

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -156,117 +157,129 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="15sp"
-        app:layout_constraintTop_toBottomOf="@id/lineImg2"
+        app:layout_constraintTop_toTopOf="@id/radioGroup"
+        app:layout_constraintBottom_toBottomOf="@id/radioGroup"
         app:layout_constraintStart_toStartOf="parent"
         android:text="@string/bookmark_view"
         android:textColor="@color/black"
         android:textStyle="bold"
         tools:ignore="MissingConstraints" />
 
-    <CheckBox
-        android:id="@+id/listCheck"
+    <RadioGroup
+        android:id="@+id/radioGroup"
         android:layout_width="wrap_content"
-        android:layout_height="25dp"
+        android:layout_height="wrap_content"
         android:layout_margin="15sp"
+        android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/lineImg2"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="리스트형"
-        android:textColor="@color/black"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints">
 
-    <CheckBox
-        android:id="@+id/gridCheck"
-        android:layout_width="wrap_content"
-        android:layout_height="25dp"
-        android:layout_margin="15sp"
-        app:layout_constraintTop_toBottomOf="@id/lineImg2"
-        app:layout_constraintEnd_toStartOf="@id/listCheck"
-        android:text="바둑형"
-        android:textColor="@color/black"
-        tools:ignore="MissingConstraints" />
+        <RadioButton
+            android:id="@+id/listCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="리스트형"
+            android:textColor="@color/black"/>
 
+        <RadioButton
+            android:id="@+id/gridCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="바둑형"
+            android:textColor="@color/black"/>
+    </RadioGroup>
 
     <TextView
         android:id="@+id/state_tagText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        app:layout_constraintTop_toTopOf="@id/visibleCheck"
+        app:layout_constraintTop_toTopOf="@id/radioGroup2"
+        app:layout_constraintBottom_toBottomOf="@id/radioGroup2"
         app:layout_constraintStart_toStartOf="parent"
         android:text="@string/hashtag"
         android:textColor="@color/black"
         android:textStyle="bold"
         tools:ignore="MissingConstraints" />
 
-    <CheckBox
-        android:id="@+id/visibleCheck"
+    <RadioGroup
+        android:id="@+id/radioGroup2"
         android:layout_width="wrap_content"
-        android:layout_height="25dp"
+        android:layout_height="wrap_content"
         android:layout_margin="15sp"
-        app:layout_constraintTop_toBottomOf="@id/listCheck"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="숨기기"
-        android:textColor="@color/black"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toBottomOf="@id/radioGroup"
+        tools:ignore="MissingConstraints">
 
-    <CheckBox
-        android:id="@+id/invisibleCheck"
-        android:layout_width="wrap_content"
-        android:layout_height="25dp"
-        android:layout_margin="15sp"
-        app:layout_constraintTop_toBottomOf="@id/gridCheck"
-        app:layout_constraintEnd_toStartOf="@id/visibleCheck"
-        android:text="보이기"
-        android:textColor="@color/black"
-        tools:ignore="MissingConstraints" />
+        <RadioButton
+            android:id="@+id/visibleCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="숨기기"
+            android:textColor="@color/black" />
+
+        <RadioButton
+            android:id="@+id/invisibleCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="보이기"
+            android:textColor="@color/black"/>
+    </RadioGroup>
 
     <TextView
         android:id="@+id/categorized_tagText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        app:layout_constraintTop_toTopOf="@id/activeCheck"
+        app:layout_constraintTop_toTopOf="@id/radioGroup3"
+        app:layout_constraintBottom_toBottomOf="@id/radioGroup3"
         app:layout_constraintStart_toStartOf="parent"
         android:text="@string/categorized_hashtags"
         android:textColor="@color/black"
         android:textStyle="bold"
         tools:ignore="MissingConstraints" />
 
-    <CheckBox
-        android:id="@+id/inactiveCheck"
+    <RadioGroup
+        android:id="@+id/radioGroup3"
         android:layout_width="wrap_content"
-        android:layout_height="25dp"
+        android:layout_height="wrap_content"
         android:layout_margin="15sp"
-        app:layout_constraintTop_toBottomOf="@id/invisibleCheck"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="비활성화"
-        android:textColor="@color/black"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toBottomOf="@id/radioGroup2"
+        tools:ignore="MissingConstraints">
 
-    <CheckBox
-        android:id="@+id/activeCheck"
-        android:layout_width="wrap_content"
-        android:layout_height="25dp"
-        android:layout_margin="15sp"
-        app:layout_constraintTop_toBottomOf="@id/visibleCheck"
-        app:layout_constraintEnd_toStartOf="@id/inactiveCheck"
-        android:text="활성화"
-        android:textColor="@color/black"
-        tools:ignore="MissingConstraints" />
+        <RadioButton
+            android:id="@+id/activeCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="활성화"
+            android:textColor="@color/black"
+            tools:ignore="MissingConstraints"/>
+
+        <RadioButton
+            android:id="@+id/inActiveCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="비활성화"
+            android:textColor="@color/black"
+            tools:ignore="MissingConstraints"/>
+    </RadioGroup>
+
 
     <Button
         android:id="@+id/viewSettingOkBtn"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        app:layout_constraintTop_toBottomOf="@id/activeCheck"
+        app:layout_constraintTop_toBottomOf="@id/radioGroup3"
         app:layout_constraintEnd_toEndOf="@id/lineImg2"
         android:backgroundTint="@color/mainColor"
         android:text="@string/modify_title"
         android:textColor="@color/white"
         tools:ignore="MissingConstraints" />
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

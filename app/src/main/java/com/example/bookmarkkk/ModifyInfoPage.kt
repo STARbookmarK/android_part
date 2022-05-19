@@ -7,14 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.bookmarkkk.databinding.ModifyInfoBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ModifyInfoPage : Fragment() {
+class ModifyInfoPage : Fragment(), View.OnClickListener {
     private lateinit var binding: ModifyInfoBinding
-    //private val userInfo : NetworkRepository by inject()
+    private val infoSaveModule : DataStoreModule by inject()
+    private val coroutineScope by lazy{ CoroutineScope(Dispatchers.IO) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,6 +36,7 @@ class ModifyInfoPage : Fragment() {
         //뷰모델이나 DataStore에 저장해서 쓰기??
         //보기 방식은 굳이 서버와 통신하지 않아도 될 것 같음
         getUserInfo()
+        binding.viewSettingOkBtn.setOnClickListener(this)
     }
 
     private fun getUserInfo() {
@@ -53,6 +58,18 @@ class ModifyInfoPage : Fragment() {
                     Log.e(LoginPage.TAG, t.toString())
                 }
             })
+    }
+
+    override fun onClick(v: View?) {
+        if (v?.id==R.id.viewSettingOkBtn){ //북마크 뷰타입 지정
+            coroutineScope.launch {
+                if (binding.listCheck.isChecked){
+                    infoSaveModule.setBookmarkType("1") //리스트형
+                }else{
+                    infoSaveModule.setBookmarkType("0") //바둑형
+                }
+            }
+        }
     }
 
 }
