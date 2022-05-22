@@ -1,7 +1,9 @@
 package com.example.bookmarkkk
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.util.TimeFormatException
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,13 +15,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class JoinPage : Fragment() {
+class JoinPage : Fragment(), View.OnClickListener {
 
     private lateinit var binding : JoinBinding
-    private lateinit var user_id : String
-    private lateinit var user_pw : String
-    private lateinit var nickName : String
-    private lateinit var stateMessage : String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,35 +31,100 @@ class JoinPage : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // 일반 회원가입 페이지
-        // 서버랑 통신해서 id, pw, 닉네임, 상태메세지 저장
 
-        binding.joinOkBtn.setOnClickListener {
-            //Navigation.findNavController(binding.root).navigate(R.id.join_to_main)
-            register()
+        binding.idOkBtn.setOnClickListener(this)
+        binding.nicknameOkBtn.setOnClickListener(this)
+        binding.joinOkBtn.setOnClickListener(this)
+    }
+
+    override fun onClick(v: View?) {
+        when(v?.id){
+            R.id.idOkBtn -> {
+                idCheck(binding.idEdit.text.toString())
+            }
+            R.id.nicknameOkBtn -> {
+                nickNameCheck(binding.nicknameEdit.text.toString())
+            }
+            R.id.joinOkBtn -> {
+                if (binding.pwEdit.text.toString().equals(binding.pwCheckEdit.text.toString())){
+                    register(
+                        binding.idEdit.text.toString(),
+                        binding.pwEdit.text.toString(),
+                        binding.nicknameEdit.text.toString(),
+                        binding.messageEdit.text.toString())
+                }else{
+                    binding.pwCheckShowText.text = "비밀번호가 일치하지 않습니다."
+                    binding.pwCheckShowText.setTextColor(Color.RED)
+                }
+            }
         }
     }
 
-    private fun register(){
-        user_id = binding.idEdit.text.toString()
-        user_pw = binding.pwEdit.text.toString()
-        nickName = binding.nicknameEdit.text.toString()
-        stateMessage = binding.messageEdit.text.toString()
+    private fun register(user_id: String, user_pw: String, nickname: String, message: String){
 
-        RegisterClient.registerService.register(RegisterData(user_id, user_pw, nickName, stateMessage))
+        NetworkClient.registerService.register(RegisterData(user_id, user_pw, nickname, message))
             .enqueue(object: Callback<Void> {
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     if (response.isSuccessful.not()){
-                        Log.e("JoinPage", response.message())
+                        Log.e("register error", response.code().toString())
                     }else{
-                        Log.e("JoinPage", response.headers().toString())
                         Toast.makeText(context, "가입", Toast.LENGTH_SHORT).show()
+                        Navigation.findNavController(binding.root).navigate(R.id.join_to_main)
                     }
                 }
-
                 override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.e("JoinPage", t.toString())
+                    Log.e("register error", t.toString() )
                 }
-
             })
     }
+
+    private fun idCheck(user_id : String){
+        NetworkClient.idCheck.idCheck(user_id)
+            .enqueue(object : Callback<IdCheckData>{
+                override fun onResponse(call: Call<IdCheckData>, response: Response<IdCheckData>) {
+                    if (response.isSuccessful.not()){
+                        Log.e("id check", response.message())
+                    }else{
+                        response.body()?.let {
+                            Log.e("id check", it.valid.toString())
+                            if (it.valid){
+                                binding.idCheckShowText.text = "사용 가능한 아이디입니다."
+                                binding.idCheckShowText.setTextColor(Color.BLACK)
+                            }else{
+                                binding.idCheckShowText.text = "사용 불가능한 아이디입니다."
+                                binding.idCheckShowText.setTextColor(Color.RED)
+                            }
+                        }
+                    }
+                }
+                override fun onFailure(call: Call<IdCheckData>, t: Throwable) {
+                   Log.e("id check", t.toString())
+                }
+            })
+    }
+
+    private fun nickNameCheck(nickname : String){
+        NetworkClient.nicknameCheck.nicknameCheck(nickname)
+            .enqueue(object : Callback<NicknameCheckData>{
+                override fun onResponse(call: Call<NicknameCheckData>, response: Response<NicknameCheckData>) {
+                    if (response.isSuccessful.not()){
+                        Log.e("nickname check", response.message())
+                    }else{
+                        response.body()?.let {
+                            if (it.valid){
+                                binding.nickCheckText.text = "사용 가능한 닉네임입니다."
+                                binding.nickCheckText.setTextColor(Color.BLACK)
+                            }else{
+                                binding.nickCheckText.text = "사용 불가능한 닉네임입니다."
+                                binding.nickCheckText.setTextColor(Color.RED)
+                            }
+                        }
+                    }
+                }
+                override fun onFailure(call: Call<NicknameCheckData>, t: Throwable) {
+                    Log.e("nickname check", t.toString())
+                }
+            })
+    }
+
 }

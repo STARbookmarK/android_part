@@ -21,8 +21,16 @@ data class UserInfo(
 
 data class RegisterData(
     @SerializedName("id") val user_id: String,
-    @SerializedName("pw") val user_pw: String,
+    @SerializedName("password") val user_pw: String,
     @SerializedName("nickname") val nickname: String,
-    @SerializedName("statemessage") val stateMessage: String
+    @SerializedName("message") val message: String
+)
+
+data class IdCheckData(
+    @SerializedName("valid") val valid: Boolean
+)
+
+data class NicknameCheckData(
+    @SerializedName("valid") val valid: Boolean
 )
 

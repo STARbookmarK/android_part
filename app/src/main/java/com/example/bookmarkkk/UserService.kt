@@ -19,6 +19,16 @@ interface RegisterService{
     fun register(@Body request: RegisterData):Call<Void>
 }
 
+interface IdCheckService{
+    @GET("api/register/id/{user_id}")
+    fun idCheck(@Path("user_id") user_id: String):Call<IdCheckData>
+}
+
+interface NicknameCheckService{
+    @GET("api/register/name/{nickname}")
+    fun nicknameCheck(@Path("nickname") nickname: String):Call<NicknameCheckData>
+}
+
 interface LogoutService {
     @GET("api/logout")
     fun logout(
