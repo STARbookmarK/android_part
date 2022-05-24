@@ -25,6 +25,7 @@ class MainCategorizedPage : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //카테고리화 선택시 보여줄 화면
+        //스피너, 태그 동적으로 추가해야함
 
         context?.let {
             spinner= Spinner(it)
@@ -32,7 +33,7 @@ class MainCategorizedPage : Fragment() {
             binding.rankSpinner.adapter=spinner.rankSpinnerSet()
         }
 
-        //태그 동적으로 추가
+        //태그
         binding.tagGroup.addView(Chip(context).apply {
             text = "태그1"
             isCloseIconVisible = true //x 버튼

@@ -17,7 +17,6 @@ object NetworkClient {
 
     var builder = OkHttpClient().newBuilder()
 
-
     var okHttpClient = builder
         .cookieJar(JavaNetCookieJar(CookieManager()))
         .build()

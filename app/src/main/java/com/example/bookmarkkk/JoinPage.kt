@@ -15,7 +15,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class JoinPage : Fragment(), View.OnClickListener {
+class JoinPage : Fragment(), View.OnClickListener { // 회원가입 페이지
 
     private lateinit var binding : JoinBinding
 
@@ -30,8 +30,7 @@ class JoinPage : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // 일반 회원가입 페이지
-
+        // 아이디 / 닉네임 중복체크는 API 변경으로 추후에 수정 예정
         binding.idOkBtn.setOnClickListener(this)
         binding.nicknameOkBtn.setOnClickListener(this)
         binding.joinOkBtn.setOnClickListener(this)
@@ -61,7 +60,6 @@ class JoinPage : Fragment(), View.OnClickListener {
     }
 
     private fun register(user_id: String, user_pw: String, nickname: String, message: String){
-
         NetworkClient.registerService.register(RegisterData(user_id, user_pw, nickname, message))
             .enqueue(object: Callback<Void> {
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
@@ -86,7 +84,7 @@ class JoinPage : Fragment(), View.OnClickListener {
                         Log.e("id check", response.message())
                     }else{
                         response.body()?.let {
-                            Log.e("id check", it.valid.toString())
+                            Log.i("id check", it.valid.toString())
                             if (it.valid){
                                 binding.idCheckShowText.text = "사용 가능한 아이디입니다."
                                 binding.idCheckShowText.setTextColor(Color.BLACK)
@@ -108,7 +106,7 @@ class JoinPage : Fragment(), View.OnClickListener {
             .enqueue(object : Callback<NicknameCheckData>{
                 override fun onResponse(call: Call<NicknameCheckData>, response: Response<NicknameCheckData>) {
                     if (response.isSuccessful.not()){
-                        Log.e("nickname check", response.message())
+                        Log.i("nickname check", response.message())
                     }else{
                         response.body()?.let {
                             if (it.valid){

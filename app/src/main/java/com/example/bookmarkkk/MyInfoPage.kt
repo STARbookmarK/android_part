@@ -71,7 +71,6 @@ class MyInfoPage : Fragment() {
                     }
                 }
                 override fun onFailure(call: Call<UserInfo>, t: Throwable){
-                    Log.e(LoginPage.TAG, "연결 실패")
                     Log.e(LoginPage.TAG, t.toString())
                 }
             })

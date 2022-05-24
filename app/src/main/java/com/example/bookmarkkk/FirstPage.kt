@@ -7,6 +7,7 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.compose.runtime.Composable
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.bookmarkkk.databinding.FirstPageBinding
@@ -20,9 +21,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class FirstPage : Fragment(){
+class FirstPage : Fragment(){ //앱 실행 시 가장 먼저 보게되는 화면으로, 로그인과 회원가입 메뉴 선택 가능(자동 로그인 설정 시 바로 메인화면으로 진입)
     private lateinit var binding: FirstPageBinding
-    private val infoSaveModule : DataStoreModule by inject()
+    //private val infoSaveModule : DataStoreModule by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,22 +54,22 @@ class FirstPage : Fragment(){
             .enqueue(object: Callback<UserInfo> {
                 override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
                     if (response.isSuccessful.not()){
-                        Log.e("FirstPage", response.toString())
+                        Log.e(TAG, response.toString())
                         return
                     }else{
                         response.body()?.let {
-                            Log.e("FirstPage", it.name)
-                            Log.e("FirstPage", it.id)
-                            Log.e("FirstPage", it.tokenType)
                         }
-                        Log.e("FirstPage", response.toString())
+                        Log.e(TAG, response.toString())
                         Navigation.findNavController(binding.root).navigate(R.id.main_to_mainPage_action)
                     }
                 }
                 override fun onFailure(call: Call<UserInfo>, t: Throwable){
-                    Log.e(LoginPage.TAG, "연결 실패")
                     Log.e(LoginPage.TAG, t.toString())
                 }
             })
+    }
+
+    companion object{
+        const val TAG = "FirstPage"
     }
 }

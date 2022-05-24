@@ -30,7 +30,6 @@ class MainPage : Fragment() {
         //기본은 리스트형
         //바둑형 선택시(서버와 통신하여 값 변경 확인) recyclerView의 레이아웃 매니저로 GridLayoutManager 전달
 
-
         //createFromResource(Context context, int textArrayResId, int textViewResId)
         //Creates a new ArrayAdapter from external resources
         context?.let {

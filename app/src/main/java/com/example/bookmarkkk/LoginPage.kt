@@ -28,7 +28,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class LoginPage : Fragment(), View.OnClickListener {
+class LoginPage : Fragment(), View.OnClickListener { //로그인 페이지
     private lateinit var binding : LoginBinding
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     private val coroutineScope by lazy{ CoroutineScope(Dispatchers.IO)}
@@ -60,13 +60,12 @@ class LoginPage : Fragment(), View.OnClickListener {
     override fun onStart() {
         super.onStart()
         //다음 액티비티 진입 시 확인해야 할 것들(ex 개인정보, 카테고리화 유무)
-        //일반 로그인과 구글 로그인 구분할 것!!
     }
 
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.loginBtn -> {
-                login() //일반 로그인
+                login()
             }
         }
     }
@@ -76,22 +75,19 @@ class LoginPage : Fragment(), View.OnClickListener {
         user_pw = binding.pwEditText.text.toString()
         autoLogin = binding.loginCheckBox.isChecked
 
-        Log.e(TAG, user_id + user_pw)
         //서버 통신 부분은 나중에 repository에 분리
         NetworkClient.loginService.login(LoginData(user_id = user_id, user_pw = user_pw, autoLogin = autoLogin))
             .enqueue(object: Callback<Void> {
                 override fun onResponse(call: Call<Void>, response: Response<Void>){
                     if (response.isSuccessful.not()){
-                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
-                        return
+                        Log.e(TAG, response.message())
                     }else{
-                        Log.e(TAG, response.headers().toString())
+                        Log.i(TAG, response.headers().toString())
                         Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
                         Navigation.findNavController(binding.root).navigate(R.id.login_to_main_action)
                     }
                 }
                 override fun onFailure(call: Call<Void>, t: Throwable){
-                    Log.e(TAG, "연결 실패")
                     Log.e(TAG, t.toString())
                 }
             })

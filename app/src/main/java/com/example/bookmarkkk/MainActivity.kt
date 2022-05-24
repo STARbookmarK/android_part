@@ -31,9 +31,8 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var mGoogleSignInClient: GoogleSignInClient
     private var userLoginType : Int = 0
-    private val infoSaveModule : DataStoreModule by inject()
+    //private val infoSaveModule : DataStoreModule by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,10 +42,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         runBottomBar()
 
         Log.i(TAG, userLoginType.toString())
-
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .build()
-        mGoogleSignInClient = this.let { GoogleSignIn.getClient(it, gso) }
 
         binding.logoutBtn.setOnClickListener(this)
     }
@@ -94,9 +89,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         Log.e(TAG, response.toString())
                     }else{
                         Toast.makeText(this@MainActivity, response.message(), Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this@MainActivity, FirstActivity::class.java)
+                        val intent = Intent(this@MainActivity, FirstActivity::class.java) // 로그아웃 시 초기화면으로 이동
                         startActivity(intent)
-                        finishAffinity()
+                        finishAffinity() // 쌓였던 모든 프래그먼트 스택 삭제
                     }
                 }
                 override fun onFailure(call: Call<Void>, t: Throwable) {
@@ -126,5 +121,4 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     companion object{
         const val TAG = "MainActivity"
     }
-
 }

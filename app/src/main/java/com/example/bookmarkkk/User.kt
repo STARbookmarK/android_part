@@ -6,8 +6,7 @@ import com.google.gson.annotations.SerializedName
 data class LoginData(
     @SerializedName("id") val user_id: String,
     @SerializedName("pw") val user_pw: String,
-    @SerializedName("autoLogin") val autoLogin : Boolean,
-    //자동로그인 autoLogin : Boolean 추가
+    @SerializedName("autoLogin") val autoLogin : Boolean
 )
 
 data class UserInfo(
