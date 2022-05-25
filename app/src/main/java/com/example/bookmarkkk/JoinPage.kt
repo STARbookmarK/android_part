@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.bookmarkkk.databinding.JoinBinding
+import io.github.muddz.styleabletoast.StyleableToast
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,7 +40,8 @@ class JoinPage : Fragment(), View.OnClickListener { // 회원가입 페이지
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.idOkBtn -> {
-                idCheck(binding.idEdit.text.toString())
+                context?.let { StyleableToast.makeText(it, "Welcome", R.style.joinToast).show() }
+                //idCheck(binding.idEdit.text.toString())
             }
             R.id.nicknameOkBtn -> {
                 nickNameCheck(binding.nicknameEdit.text.toString())
@@ -66,8 +68,9 @@ class JoinPage : Fragment(), View.OnClickListener { // 회원가입 페이지
                     if (response.isSuccessful.not()){
                         Log.e("register error", response.code().toString())
                     }else{
-                        Toast.makeText(context, "가입", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(context, "가입", Toast.LENGTH_SHORT).show()
                         Navigation.findNavController(binding.root).navigate(R.id.join_to_main)
+                        context?.let { StyleableToast.makeText(it, "Welcome", R.style.joinToast).show() }
                     }
                 }
                 override fun onFailure(call: Call<Void>, t: Throwable) {

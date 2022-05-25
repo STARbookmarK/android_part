@@ -22,4 +22,49 @@
         <item name="android:textColor">@color/mainColor</item>
         <item name="android:background">@color/white</item>
     </style>
+    <style name="loginToast">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">#fff</item>
+        <item name="stFont">@font/dosis</item>
+        <item name="stTextSize">14sp</item>
+        <item name="stColorBackground">@color/lightSkyBlue</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">#fff</item>
+        <item name="stIconStart">@drawable/favorite</item>
+        <item name="stIconEnd">@drawable/favorite</item>
+        <item name="stLength">SHORT</item> LONG or SHORT
+        <item name="stGravity">center</item> top or center
+        <item name="stRadius">20dp</item>
+    </style>
+    <style name="logoutToast">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">@color/mainColor</item>
+        <item name="stFont">@font/dosis</item>
+        <item name="stTextSize">14sp</item>
+        <item name="stColorBackground">@color/white</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">#fff</item>
+        <item name="stIconStart">@drawable/favorite</item>
+        <item name="stIconEnd">@drawable/favorite</item>
+        <item name="stLength">SHORT</item> LONG or SHORT
+        <item name="stGravity">top</item> top or center
+        <item name="stRadius">20dp</item>
+    </style>
+    <style name="joinToast">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">#fff</item>
+        <item name="stFont">@font/dosis</item>
+        <item name="stTextSize">14sp</item>
+        <item name="stColorBackground">@color/mainColor</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">#fff</item>
+        <item name="stIconStart">@drawable/wavinghand</item>
+        <item name="stIconEnd">@drawable/wavinghand</item>
+        <item name="stLength">SHORT</item> LONG or SHORT
+        <item name="stGravity">top</item> top or center
+        <item name="stRadius">20dp</item>
+    </style>
 </resources>

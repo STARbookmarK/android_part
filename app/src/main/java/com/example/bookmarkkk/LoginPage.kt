@@ -19,6 +19,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import io.github.muddz.styleabletoast.StyleableToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -83,8 +84,9 @@ class LoginPage : Fragment(), View.OnClickListener { //로그인 페이지
                         Log.e(TAG, response.message())
                     }else{
                         Log.i(TAG, response.headers().toString())
-                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
                         Navigation.findNavController(binding.root).navigate(R.id.login_to_main_action)
+                        context?.let { StyleableToast.makeText(it, "login", R.style.loginToast).show() }
                     }
                 }
                 override fun onFailure(call: Call<Void>, t: Throwable){

@@ -15,6 +15,7 @@ import com.example.bookmarkkk.databinding.ActivityMainBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import io.github.muddz.styleabletoast.StyleableToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -88,10 +89,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     if (response.isSuccessful.not()){
                         Log.e(TAG, response.toString())
                     }else{
-                        Toast.makeText(this@MainActivity, response.message(), Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(this@MainActivity, response.message(), Toast.LENGTH_SHORT).show()
                         val intent = Intent(this@MainActivity, FirstActivity::class.java) // 로그아웃 시 초기화면으로 이동
                         startActivity(intent)
                         finishAffinity() // 쌓였던 모든 프래그먼트 스택 삭제
+                        this@MainActivity.let { StyleableToast.makeText(it, "logout", R.style.logoutToast).show() }
                     }
                 }
                 override fun onFailure(call: Call<Void>, t: Throwable) {
