@@ -9,20 +9,15 @@ data class LoginData(
     @SerializedName("autoLogin") val autoLogin : Boolean
 )
 
-data class UserInfo(
-    @SerializedName("id") val id: String,
-    @SerializedName("name") val name: String,
-    @SerializedName("tokenType") val tokenType: String,
-    @SerializedName("iat") val iat: Int,
-    @SerializedName("exp") val exp: Int,
-    @SerializedName("iss") val iss: String
+data class UserId(
+    @SerializedName("id") val id: String
 )
 
 data class RegisterData(
     @SerializedName("id") val user_id: String,
     @SerializedName("password") val user_pw: String,
     @SerializedName("nickname") val nickname: String,
-    @SerializedName("message") val message: String
+    @SerializedName("info") val info: String
 )
 
 data class IdCheckData(
@@ -31,5 +26,19 @@ data class IdCheckData(
 
 data class NicknameCheckData(
     @SerializedName("valid") val valid: Boolean
+)
+
+data class UserInfo(
+    @SerializedName("nickname") val nickname: String,
+    @SerializedName("info") val info : String,
+)
+
+data class BioOfUserInfo(
+    @SerializedName("info") val info: String
+)
+
+data class Password(
+    @SerializedName("pw") val pw: String,
+    @SerializedName("newPw") val newPw: String
 )
 

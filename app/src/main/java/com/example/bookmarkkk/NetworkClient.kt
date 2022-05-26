@@ -35,6 +35,9 @@ object NetworkClient {
     val registerService : RegisterService by lazy { retrofit.create(RegisterService::class.java) }
     val idCheck : IdCheckService by lazy { retrofit.create(IdCheckService::class.java) }
     val nicknameCheck : NicknameCheckService by lazy { retrofit.create(NicknameCheckService::class.java) }
+    val infoService : InfoService by lazy { retrofit.create(InfoService::class.java) }
+    val changeBio : ChangeBioService by lazy { retrofit.create(ChangeBioService::class.java) }
+    val changePw : ChangePwService by lazy { retrofit.create(ChangePwService::class.java) }
 }
 
 //object RegisterClient {

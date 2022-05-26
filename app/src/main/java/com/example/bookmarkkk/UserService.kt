@@ -3,6 +3,8 @@ package com.example.bookmarkkk
 import retrofit2.Call
 import retrofit2.http.*
 
+// retrofit interface naming
+
 interface LoginService {
     @POST("api/login")
     fun login(@Body request: LoginData): Call<Void>
@@ -11,7 +13,7 @@ interface LoginService {
 interface AutoLoginService {
     @GET("api/login")
     fun autoLogin(
-    ):Call<UserInfo>
+    ):Call<UserId>
 }
 
 interface RegisterService{
@@ -33,6 +35,22 @@ interface LogoutService {
     @GET("api/logout")
     fun logout(
     ):Call<Void>
+}
+
+interface InfoService {
+    @GET("api/infos")
+    fun getInfo(
+    ):Call<UserInfo>
+}
+
+interface ChangeBioService {
+    @PATCH("api/infos")
+    fun changeBio(@Body bio: BioOfUserInfo):Call<Void>
+}
+
+interface ChangePwService {
+    @PATCH("api/password")
+    fun changePassword(@Body pwData: Password):Call<Void>
 }
 
 

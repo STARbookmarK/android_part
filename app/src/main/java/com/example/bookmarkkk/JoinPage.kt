@@ -40,14 +40,13 @@ class JoinPage : Fragment(), View.OnClickListener { // 회원가입 페이지
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.idOkBtn -> {
-                context?.let { StyleableToast.makeText(it, "Welcome", R.style.joinToast).show() }
-                //idCheck(binding.idEdit.text.toString())
+                idCheck(binding.idEdit.text.toString())
             }
             R.id.nicknameOkBtn -> {
                 nickNameCheck(binding.nicknameEdit.text.toString())
             }
             R.id.joinOkBtn -> {
-                if (binding.pwEdit.text.toString().equals(binding.pwCheckEdit.text.toString())){
+                if (binding.pwEdit.text.toString().equals(binding.pwCheckEdit.text.toString())){ // 비밀번호 확인 ok
                     register(
                         binding.idEdit.text.toString(),
                         binding.pwEdit.text.toString(),
@@ -61,14 +60,13 @@ class JoinPage : Fragment(), View.OnClickListener { // 회원가입 페이지
         }
     }
 
-    private fun register(user_id: String, user_pw: String, nickname: String, message: String){
-        NetworkClient.registerService.register(RegisterData(user_id, user_pw, nickname, message))
+    private fun register(user_id: String, user_pw: String, nickname: String, info: String){
+        NetworkClient.registerService.register(RegisterData(user_id, user_pw, nickname, info))
             .enqueue(object: Callback<Void> {
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     if (response.isSuccessful.not()){
                         Log.e("register error", response.code().toString())
                     }else{
-                        //Toast.makeText(context, "가입", Toast.LENGTH_SHORT).show()
                         Navigation.findNavController(binding.root).navigate(R.id.join_to_main)
                         context?.let { StyleableToast.makeText(it, "Welcome", R.style.joinToast).show() }
                     }
@@ -126,6 +124,10 @@ class JoinPage : Fragment(), View.OnClickListener { // 회원가입 페이지
                     Log.e("nickname check", t.toString())
                 }
             })
+    }
+
+    companion object{
+        const val TAG = "JoinPage"
     }
 
 }

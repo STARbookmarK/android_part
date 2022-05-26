@@ -44,7 +44,7 @@ class MyInfoPage : Fragment() {
 //            binding.idText.text = email
 //        }
 
-        getNickName()
+        //getUserInfo()
 
         context?.let {
             spinner = Spinner(it)
@@ -57,8 +57,29 @@ class MyInfoPage : Fragment() {
         }
     }
 
-    private fun getNickName() {
-        NetworkClient.autoLoginService.autoLogin()
+//    private fun getUserInfo() {
+//        NetworkClient.autoLoginService.autoLogin()
+//            .enqueue(object: Callback<UserInfo> {
+//                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
+//                    if (response.isSuccessful.not()){
+//                        Log.e("MyInfoPage", response.toString())
+//                        return
+//                    }else{
+//                        response.body()?.let {
+//                            binding.nickNameText.text = it.nickname
+//                            binding.introText.text = it.info
+//                        }
+//                    }
+//                }
+//                override fun onFailure(call: Call<UserInfo>, t: Throwable){
+//                    Log.e(LoginPage.TAG, t.toString())
+//                }
+//            })
+//    }
+
+    override fun onStart() {
+        super.onStart()
+        NetworkClient.infoService.getInfo()
             .enqueue(object: Callback<UserInfo> {
                 override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
                     if (response.isSuccessful.not()){
@@ -66,7 +87,8 @@ class MyInfoPage : Fragment() {
                         return
                     }else{
                         response.body()?.let {
-                            binding.nickNameText.text=it.name
+                            binding.nickNameText.text = it.nickname
+                            binding.introText.text = it.info
                         }
                     }
                 }

@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.bookmarkkk.databinding.ModifyInfoBinding
 import kotlinx.coroutines.CoroutineScope
@@ -37,19 +38,73 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
         //보기 방식은 굳이 서버와 통신하지 않아도 될 것 같음
         getUserInfo()
         binding.viewSettingOkBtn.setOnClickListener(this)
+        binding.infoModifyOkBtn.setOnClickListener(this)
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id){
+            R.id.viewSettingOkBtn -> {
+                coroutineScope.launch {
+                    if (binding.listCheck.isChecked){
+                        infoSaveModule.setBookmarkType("1") //리스트형
+                    }else{
+                        infoSaveModule.setBookmarkType("0") //바둑형
+                    }
+                }
+            }
+            R.id.infoModifyOkBtn -> {
+                changeBio(binding.msgEditText.text.toString())
+            }
+        }
     }
 
     private fun getUserInfo() {
         NetworkClient.autoLoginService.autoLogin()
-            .enqueue(object: Callback<UserInfo> {
-                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
+            .enqueue(object: Callback<UserId> {
+                override fun onResponse(call: Call<UserId>, response: Response<UserId>){
                     if (response.isSuccessful.not()){
                         Log.e("ModifyInfoPage", response.toString())
                         return
                     }else{
                         response.body()?.let {
                             binding.userId.text=it.id
-                            binding.nickEditText.setText(it.name)
+                        }
+                    }
+                }
+                override fun onFailure(call: Call<UserId>, t: Throwable){
+                    Log.e(LoginPage.TAG, t.toString())
+                }
+            })
+    }
+
+    private fun changeBio(info: String) {
+        NetworkClient.changeBio.changeBio(BioOfUserInfo(info))
+            .enqueue(object : Callback<Void>{
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (response.isSuccessful.not()){
+                        Log.e("ModifyInfoPage", response.toString())
+                    }else{
+                        Toast.makeText(context, "소개글 변경", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    Log.e(LoginPage.TAG, t.toString())
+                }
+            })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        NetworkClient.infoService.getInfo()
+            .enqueue(object: Callback<UserInfo> {
+                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
+                    if (response.isSuccessful.not()){
+                        Log.e("MyInfoPage", response.toString())
+                        return
+                    }else{
+                        response.body()?.let {
+                            binding.nickEditText.setText(it.nickname)
+                            binding.msgEditText.setText(it.info)
                         }
                     }
                 }
@@ -57,18 +112,6 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
                     Log.e(LoginPage.TAG, t.toString())
                 }
             })
-    }
-
-    override fun onClick(v: View?) {
-        if (v?.id==R.id.viewSettingOkBtn){ //북마크 뷰타입 지정
-            coroutineScope.launch {
-                if (binding.listCheck.isChecked){
-                    infoSaveModule.setBookmarkType("1") //리스트형
-                }else{
-                    infoSaveModule.setBookmarkType("0") //바둑형
-                }
-            }
-        }
     }
 
 }

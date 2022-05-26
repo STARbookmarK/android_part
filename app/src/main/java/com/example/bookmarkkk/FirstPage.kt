@@ -51,19 +51,17 @@ class FirstPage : Fragment(){ //앱 실행 시 가장 먼저 보게되는 화면
 
     private fun autoLogin(){
         NetworkClient.autoLoginService.autoLogin()
-            .enqueue(object: Callback<UserInfo> {
-                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
+            .enqueue(object: Callback<UserId> {
+                override fun onResponse(call: Call<UserId>, response: Response<UserId>){
                     if (response.isSuccessful.not()){
                         Log.e(TAG, response.toString())
                         return
                     }else{
-                        response.body()?.let {
-                        }
                         Log.e(TAG, response.toString())
                         Navigation.findNavController(binding.root).navigate(R.id.main_to_mainPage_action)
                     }
                 }
-                override fun onFailure(call: Call<UserInfo>, t: Throwable){
+                override fun onFailure(call: Call<UserId>, t: Throwable){
                     Log.e(LoginPage.TAG, t.toString())
                 }
             })
