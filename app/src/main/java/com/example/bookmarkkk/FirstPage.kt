@@ -50,7 +50,7 @@ class FirstPage : Fragment(){ //앱 실행 시 가장 먼저 보게되는 화면
     }
 
     private fun autoLogin(){
-        NetworkClient.autoLoginService.autoLogin()
+        NetworkClient.authenticationService.autoLogin()
             .enqueue(object: Callback<UserId> {
                 override fun onResponse(call: Call<UserId>, response: Response<UserId>){
                     if (response.isSuccessful.not()){

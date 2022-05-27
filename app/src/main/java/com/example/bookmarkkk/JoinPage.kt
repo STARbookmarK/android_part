@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.bookmarkkk.databinding.JoinBinding
 import io.github.muddz.styleabletoast.StyleableToast
+import kotlinx.coroutines.flow.combineTransform
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -46,29 +47,36 @@ class JoinPage : Fragment(), View.OnClickListener { // 회원가입 페이지
                 nickNameCheck(binding.nicknameEdit.text.toString())
             }
             R.id.joinOkBtn -> {
-                if (binding.pwEdit.text.toString().equals(binding.pwCheckEdit.text.toString())){ // 비밀번호 확인 ok
-                    register(
-                        binding.idEdit.text.toString(),
-                        binding.pwEdit.text.toString(),
-                        binding.nicknameEdit.text.toString(),
-                        binding.messageEdit.text.toString())
-                }else{
-                    binding.pwCheckShowText.text = "비밀번호가 일치하지 않습니다."
-                    binding.pwCheckShowText.setTextColor(Color.RED)
+                // empty string check
+                val id = binding.idEdit.text.toString()
+                val pw = binding.pwEdit.text.toString()
+                val pwCheck = binding.pwCheckEdit.text.toString()
+                val nickname = binding.nicknameEdit.text.toString()
+                val info = binding.messageEdit.text.toString()
+                if (id=="" || pw == "" || pwCheck == "" || nickname == ""){
+                    Toast.makeText(context, "입력 정보를 다시 확인해주세요.", Toast.LENGTH_SHORT).show()
+                } else{
+                    if (pw == pwCheck){ // 비밀번호 확인 ok
+                        register(id, pw, nickname, info)
+                    }else{
+                        binding.pwCheckShowText.text = "비밀번호가 일치하지 않습니다."
+                        binding.pwCheckShowText.setTextColor(Color.RED)
+                    }
                 }
             }
         }
     }
 
     private fun register(user_id: String, user_pw: String, nickname: String, info: String){
-        NetworkClient.registerService.register(RegisterData(user_id, user_pw, nickname, info))
+        NetworkClient.signUpService.signUp(SignUpData(user_id, user_pw, nickname, info))
             .enqueue(object: Callback<Void> {
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     if (response.isSuccessful.not()){
                         Log.e("register error", response.code().toString())
+                        Toast.makeText(context, "아이디 또는 닉네임은 중복확인이 필수입니다.", Toast.LENGTH_SHORT).show()
                     }else{
-                        Navigation.findNavController(binding.root).navigate(R.id.join_to_main)
-                        context?.let { StyleableToast.makeText(it, "Welcome", R.style.joinToast).show() }
+                        Navigation.findNavController(binding.root).navigate(R.id.join_to_first)
+                        context?.let { StyleableToast.makeText(it, "가입되었습니다. 다시 로그인 해주세요", R.style.joinToast).show() }
                     }
                 }
                 override fun onFailure(call: Call<Void>, t: Throwable) {
@@ -78,7 +86,7 @@ class JoinPage : Fragment(), View.OnClickListener { // 회원가입 페이지
     }
 
     private fun idCheck(user_id : String){
-        NetworkClient.idCheck.idCheck(user_id)
+        NetworkClient.signUpService.idCheck(user_id)
             .enqueue(object : Callback<IdCheckData>{
                 override fun onResponse(call: Call<IdCheckData>, response: Response<IdCheckData>) {
                     if (response.isSuccessful.not()){
@@ -103,7 +111,7 @@ class JoinPage : Fragment(), View.OnClickListener { // 회원가입 페이지
     }
 
     private fun nickNameCheck(nickname : String){
-        NetworkClient.nicknameCheck.nicknameCheck(nickname)
+        NetworkClient.signUpService.nicknameCheck(nickname)
             .enqueue(object : Callback<NicknameCheckData>{
                 override fun onResponse(call: Call<NicknameCheckData>, response: Response<NicknameCheckData>) {
                     if (response.isSuccessful.not()){

@@ -1,5 +1,6 @@
 package com.example.bookmarkkk
 
+import android.graphics.Paint
 import android.util.Log
 import com.google.gson.GsonBuilder
 import okhttp3.CookieJar
@@ -29,15 +30,9 @@ object NetworkClient {
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 
-    val loginService: LoginService by lazy { retrofit.create(LoginService::class.java) }
-    val autoLoginService : AutoLoginService by lazy { retrofit.create(AutoLoginService::class.java) }
-    val logoutService : LogoutService by lazy { retrofit.create(LogoutService::class.java) }
-    val registerService : RegisterService by lazy { retrofit.create(RegisterService::class.java) }
-    val idCheck : IdCheckService by lazy { retrofit.create(IdCheckService::class.java) }
-    val nicknameCheck : NicknameCheckService by lazy { retrofit.create(NicknameCheckService::class.java) }
-    val infoService : InfoService by lazy { retrofit.create(InfoService::class.java) }
-    val changeBio : ChangeBioService by lazy { retrofit.create(ChangeBioService::class.java) }
-    val changePw : ChangePwService by lazy { retrofit.create(ChangePwService::class.java) }
+    val authenticationService: AuthenticationService by lazy { retrofit.create(AuthenticationService::class.java) }
+    val signUpService : SignUpService by lazy { retrofit.create(SignUpService::class.java) }
+    val userInfoService : UserInfoService by lazy { retrofit.create(UserInfoService::class.java) }
 }
 
 //object RegisterClient {

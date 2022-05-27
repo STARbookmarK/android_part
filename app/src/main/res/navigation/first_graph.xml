@@ -48,6 +48,10 @@
         <action
             android:id="@+id/join_to_main"
             app:destination="@id/mainActivity"/>
+
+        <action
+            android:id="@+id/join_to_first"
+            app:destination="@id/firstFragment"/>
     </fragment>
 
     <activity

@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     //로그아웃
     private fun logout(){
-        NetworkClient.logoutService.logout()
+        NetworkClient.authenticationService.logout()
             .enqueue(object : Callback<Void>{
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     if (response.isSuccessful.not()){

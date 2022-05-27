@@ -13,7 +13,7 @@ data class UserId(
     @SerializedName("id") val id: String
 )
 
-data class RegisterData(
+data class SignUpData(
     @SerializedName("id") val user_id: String,
     @SerializedName("password") val user_pw: String,
     @SerializedName("nickname") val nickname: String,

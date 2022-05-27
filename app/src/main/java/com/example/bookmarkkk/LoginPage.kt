@@ -77,7 +77,7 @@ class LoginPage : Fragment(), View.OnClickListener { //로그인 페이지
         autoLogin = binding.loginCheckBox.isChecked
 
         //서버 통신 부분은 나중에 repository에 분리
-        NetworkClient.loginService.login(LoginData(user_id = user_id, user_pw = user_pw, autoLogin = autoLogin))
+        NetworkClient.authenticationService.login(LoginData(user_id = user_id, user_pw = user_pw, autoLogin = autoLogin))
             .enqueue(object: Callback<Void> {
                 override fun onResponse(call: Call<Void>, response: Response<Void>){
                     if (response.isSuccessful.not()){
@@ -85,6 +85,9 @@ class LoginPage : Fragment(), View.OnClickListener { //로그인 페이지
                     }else{
                         Log.i(TAG, response.headers().toString())
                         //Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                        coroutineScope.launch {
+                            infoSaveModule.setPassword(user_pw)
+                        }
                         Navigation.findNavController(binding.root).navigate(R.id.login_to_main_action)
                         context?.let { StyleableToast.makeText(it, "login", R.style.loginToast).show() }
                     }

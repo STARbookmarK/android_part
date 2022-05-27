@@ -17,6 +17,7 @@ class DataStoreModule(private val context: Context) {
 
     private val emailKey = stringPreferencesKey("USER_EMAIL")
     private val bookmarkTypeKey = stringPreferencesKey("BOOKMARK_TYPE")
+    private val pwKey = stringPreferencesKey("USER_PW")
 
     val email : Flow<String> = context.datastore.data
         .catch { exception ->
@@ -43,6 +44,18 @@ class DataStoreModule(private val context: Context) {
             it[bookmarkTypeKey] ?: ""
         }
 
+    val password : Flow<String> = context.datastore.data
+        .catch { exception ->
+            if (exception is IOException){
+                emit(emptyPreferences())
+            }else{
+                throw exception
+            }
+        }
+        .map {
+            it[pwKey] ?: ""
+        }
+
 
 
     suspend fun setEmail(email : String){
@@ -54,6 +67,12 @@ class DataStoreModule(private val context: Context) {
     suspend fun setBookmarkType(type : String){
         context.datastore.edit {
             it[bookmarkTypeKey] = type
+        }
+    }
+
+    suspend fun setPassword(password : String){
+        context.datastore.edit {
+            it[pwKey] = password
         }
     }
 

@@ -79,7 +79,7 @@ class MyInfoPage : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        NetworkClient.infoService.getInfo()
+        NetworkClient.userInfoService.getUserInfo()
             .enqueue(object: Callback<UserInfo> {
                 override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
                     if (response.isSuccessful.not()){
