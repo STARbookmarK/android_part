@@ -134,32 +134,15 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
 
     override fun onStart() {
         super.onStart()
-        // 아이디
-        NetworkClient.authenticationService.autoLogin()
-            .enqueue(object: Callback<UserId> {
-                override fun onResponse(call: Call<UserId>, response: Response<UserId>){
-                    if (response.isSuccessful.not()){
-                        Log.e("ModifyInfoPage", response.toString())
-                        return
-                    }else{
-                        response.body()?.let {
-                            binding.userId.text = it.id
-                        }
-                    }
-                }
-                override fun onFailure(call: Call<UserId>, t: Throwable){
-                    Log.e(LoginPage.TAG, t.toString())
-                }
-            })
-        // 닉네임, 소개글
+        // 아이디, 닉네임, 소개글
         NetworkClient.userInfoService.getUserInfo()
             .enqueue(object: Callback<UserInfo> {
                 override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
                     if (response.isSuccessful.not()){
                         Log.e("MyInfoPage", response.toString())
-                        return
                     }else{
                         response.body()?.let {
+                            binding.userId.text = it.id
                             binding.nickName.text = it.nickname
                             binding.msgEditText.setText(it.info)
                         }
@@ -173,7 +156,6 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
                 }
             })
     }
-
     companion object{
         const val TAG = "ModifyInfoPage"
     }

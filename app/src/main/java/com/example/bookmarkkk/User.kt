@@ -29,6 +29,7 @@ data class NicknameCheckData(
 )
 
 data class UserInfo(
+    @SerializedName("user_id") val id : String,
     @SerializedName("nickname") val nickname: String,
     @SerializedName("info") val info : String,
 )
