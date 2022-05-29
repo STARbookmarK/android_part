@@ -11,6 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.example.bookmarkkk.databinding.ActivityMainBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -32,7 +35,6 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityMainBinding
-    private var userLoginType : Int = 0
     //private val infoSaveModule : DataStoreModule by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,8 +43,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         runBottomBar()
-
-        Log.i(TAG, userLoginType.toString())
 
         binding.logoutBtn.setOnClickListener(this)
     }
@@ -109,15 +109,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }else{
             finishAffinity()
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-//            lifecycleScope.launch {
-//                val loginType = App.getInstance().getDataStore().loginType.first()
-//                val loginType = infoSaveModule.loginType.first()
-//                userLoginType = loginType
-//        }
     }
 
     companion object{

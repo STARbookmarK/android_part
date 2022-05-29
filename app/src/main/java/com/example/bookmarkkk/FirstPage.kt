@@ -42,6 +42,8 @@ class FirstPage : Fragment(){ //앱 실행 시 가장 먼저 보게되는 화면
         binding.joinBtn.setOnClickListener {
             Navigation.findNavController(binding.root).navigate(R.id.main_to_join_action)
         }
+
+        
     }
 
     override fun onStart() { // 자동 로그인(구글)위한 로그인 여부 확인
@@ -55,7 +57,6 @@ class FirstPage : Fragment(){ //앱 실행 시 가장 먼저 보게되는 화면
                 override fun onResponse(call: Call<UserId>, response: Response<UserId>){
                     if (response.isSuccessful.not()){
                         Log.e(TAG, response.toString())
-                        return
                     }else{
                         Log.e(TAG, response.toString())
                         Navigation.findNavController(binding.root).navigate(R.id.main_to_mainPage_action)

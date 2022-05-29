@@ -80,14 +80,14 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun changeBio(info: String) {
+    private fun changeBio(info: String) { // 소개글 변경
         NetworkClient.userInfoService.changeBio(BioOfUserInfo(info))
             .enqueue(object : Callback<Void>{
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     if (response.isSuccessful.not()){
                         Log.e("ModifyInfoPage", response.toString())
                     }else{
-                        Toast.makeText(context, "소개글 변경", Toast.LENGTH_SHORT).show()
+                        context?.let { StyleableToast.makeText(it, "소개글 변경", R.style.bioToast).show() }
                     }
                 }
                 override fun onFailure(call: Call<Void>, t: Throwable) {
@@ -96,14 +96,14 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
             })
     }
 
-    private fun changePassword(pw: String, newPw: String){
+    private fun changePassword(pw: String, newPw: String){ // 비밀번호 변경
         NetworkClient.userInfoService.changePassword(Password(pw, newPw))
             .enqueue(object : Callback<Void>{
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     if (response.isSuccessful.not()){
                         Log.e("ModifyInfoPage", response.toString())
                     }else{
-                        Toast.makeText(context, "비밀번호가 변경되었습니다. 다시 로그인해주세요.", Toast.LENGTH_SHORT).show()
+                        context?.let { StyleableToast.makeText(it, "비밀번호 변경, 다시 로그인해주세요", R.style.passwordToast).show() }
                         logout()
                     }
                 }
@@ -134,6 +134,7 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
 
     override fun onStart() {
         super.onStart()
+        // 아이디
         NetworkClient.authenticationService.autoLogin()
             .enqueue(object: Callback<UserId> {
                 override fun onResponse(call: Call<UserId>, response: Response<UserId>){
@@ -142,7 +143,7 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
                         return
                     }else{
                         response.body()?.let {
-                            binding.userId.text=it.id
+                            binding.userId.text = it.id
                         }
                     }
                 }
@@ -150,6 +151,7 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
                     Log.e(LoginPage.TAG, t.toString())
                 }
             })
+        // 닉네임, 소개글
         NetworkClient.userInfoService.getUserInfo()
             .enqueue(object: Callback<UserInfo> {
                 override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
@@ -158,11 +160,11 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
                         return
                     }else{
                         response.body()?.let {
-                            binding.nickEditText.setText(it.nickname)
+                            binding.nickName.text = it.nickname
                             binding.msgEditText.setText(it.info)
                         }
                         coroutineScope.launch {
-                            originPw = infoSaveModule.password.first()
+                            originPw = infoSaveModule.password.first() // 비밀번호 변경에 사용됨
                         }
                     }
                 }

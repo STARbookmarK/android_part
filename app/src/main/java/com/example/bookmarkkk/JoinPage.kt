@@ -53,7 +53,7 @@ class JoinPage : Fragment(), View.OnClickListener { // 회원가입 페이지
                 val pwCheck = binding.pwCheckEdit.text.toString()
                 val nickname = binding.nicknameEdit.text.toString()
                 val info = binding.messageEdit.text.toString()
-                if (id=="" || pw == "" || pwCheck == "" || nickname == ""){
+                if (id == "" || pw == "" || pwCheck == "" || nickname == ""){
                     Toast.makeText(context, "입력 정보를 다시 확인해주세요.", Toast.LENGTH_SHORT).show()
                 } else{
                     if (pw == pwCheck){ // 비밀번호 확인 ok
@@ -110,7 +110,7 @@ class JoinPage : Fragment(), View.OnClickListener { // 회원가입 페이지
             })
     }
 
-    private fun nickNameCheck(nickname : String){
+    private fun nickNameCheck(nickname : String) {
         NetworkClient.signUpService.nicknameCheck(nickname)
             .enqueue(object : Callback<NicknameCheckData>{
                 override fun onResponse(call: Call<NicknameCheckData>, response: Response<NicknameCheckData>) {

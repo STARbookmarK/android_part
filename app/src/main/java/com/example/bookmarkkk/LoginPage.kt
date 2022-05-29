@@ -50,17 +50,7 @@ class LoginPage : Fragment(), View.OnClickListener { //로그인 페이지
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .build()
-
-        mGoogleSignInClient = context?.let { GoogleSignIn.getClient(it, gso) }!!
         binding.loginBtn.setOnClickListener(this)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        //다음 액티비티 진입 시 확인해야 할 것들(ex 개인정보, 카테고리화 유무)
     }
 
     override fun onClick(v: View?) {
@@ -84,7 +74,6 @@ class LoginPage : Fragment(), View.OnClickListener { //로그인 페이지
                         Log.e(TAG, response.message())
                     }else{
                         Log.i(TAG, response.headers().toString())
-                        //Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
                         coroutineScope.launch {
                             infoSaveModule.setPassword(user_pw)
                         }
@@ -97,6 +86,12 @@ class LoginPage : Fragment(), View.OnClickListener { //로그인 페이지
                 }
             })
     }
+
+    override fun onStart() {
+        super.onStart()
+        //다음 액티비티 진입 시 확인해야 할 것들(ex 개인정보, 카테고리화 유무)
+    }
+
     companion object{
         const val TAG = "LoginPage"
     }

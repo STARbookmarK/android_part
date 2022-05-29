@@ -83,16 +83,16 @@
             android:textStyle="bold"
             tools:ignore="MissingConstraints" />
 
-        <EditText
-            android:id="@+id/nickEditText"
+        <TextView
+            android:id="@+id/nickName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="15sp"
             android:textSize="15sp"
+            android:textColor="@color/black"
             app:layout_constraintTop_toBottomOf="@id/userId"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/nickText"
-            android:background="@drawable/btn_rectangle_shape"
             tools:ignore="MissingConstraints" />
 
         <TextView
@@ -100,7 +100,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="15sp"
-            app:layout_constraintTop_toBottomOf="@id/nickEditText"
+            app:layout_constraintTop_toBottomOf="@id/nickName"
             app:layout_constraintStart_toStartOf="parent"
             android:text="@string/message_title"
             android:textColor="@color/black"
@@ -115,7 +115,7 @@
             android:textSize="15sp"
             app:layout_constraintTop_toBottomOf="@id/msgText"
             app:layout_constraintStart_toStartOf="@id/msgText"
-            app:layout_constraintEnd_toEndOf="@id/nickEditText"
+            app:layout_constraintEnd_toEndOf="@id/nickName"
             android:background="@drawable/btn_rectangle_shape"
             tools:ignore="MissingConstraints" />
 

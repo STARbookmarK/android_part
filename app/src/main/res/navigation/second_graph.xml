@@ -1,9 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/tagFragment"
+    app:startDestination="@id/mainNotCategorized"
     android:id="@+id/second_graph">
+
+    <fragment
+        android:id="@+id/mainNotCategorized"
+        android:name="com.example.bookmarkkk.MainPage"
+        tools:layout="@layout/main_not_categorized">
+
+        <action
+            android:id="@+id/action_mainNotCategorized_to_myInfoFragment"
+            app:destination="@id/myInfoFragment" />
+        <action
+            android:id="@+id/action_mainNotCategorized_to_tagFragment"
+            app:destination="@id/tagFragment" />
+        <action
+            android:id="@+id/action_mainNotCategorized_self"
+            app:destination="@id/mainNotCategorized" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/myInfoFragment"
+        android:name="com.example.bookmarkkk.MyInfoPage"
+        tools:layout="@layout/myinfo">
+
+    </fragment>
 
     <fragment
         android:id="@+id/tagFragment"

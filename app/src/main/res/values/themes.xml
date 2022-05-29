@@ -27,7 +27,7 @@
         <item name="stTextColor">#fff</item>
         <item name="stFont">@font/dosis</item>
         <item name="stTextSize">14sp</item>
-        <item name="stColorBackground">@color/lightSkyBlue</item>
+        <item name="stColorBackground">@color/mainColor</item>
         <item name="stSolidBackground">true</item>
         <item name="stStrokeWidth">3dp</item>
         <item name="stStrokeColor">#fff</item>
@@ -63,6 +63,36 @@
         <item name="stStrokeColor">#fff</item>
         <item name="stIconStart">@drawable/wavinghand</item>
         <item name="stIconEnd">@drawable/wavinghand</item>
+        <item name="stLength">SHORT</item> LONG or SHORT
+        <item name="stGravity">top</item> top or center
+        <item name="stRadius">20dp</item>
+    </style>
+    <style name="passwordToast">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">@color/white</item>
+        <item name="stFont">@font/scoredream</item>
+        <item name="stTextSize">12sp</item>
+        <item name="stColorBackground">@color/mainColor</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">@color/white</item>
+        <item name="stIconStart">@drawable/key</item>
+        <item name="stIconEnd">@drawable/key</item>
+        <item name="stLength">SHORT</item> LONG or SHORT
+        <item name="stGravity">top</item> top or center
+        <item name="stRadius">20dp</item>
+    </style>
+    <style name="bioToast">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">@color/mainColor</item>
+        <item name="stFont">@font/scoredream</item>
+        <item name="stTextSize">12sp</item>
+        <item name="stColorBackground">@color/white</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">@color/mainColor</item>
+        <item name="stIconStart">@drawable/message</item>
+        <item name="stIconEnd">@drawable/message</item>
         <item name="stLength">SHORT</item> LONG or SHORT
         <item name="stGravity">top</item> top or center
         <item name="stRadius">20dp</item>

@@ -44,8 +44,6 @@ class MyInfoPage : Fragment() {
 //            binding.idText.text = email
 //        }
 
-        //getUserInfo()
-
         context?.let {
             spinner = Spinner(it)
             binding.rankSpinner.adapter = spinner.rankSpinnerSet()
@@ -56,26 +54,6 @@ class MyInfoPage : Fragment() {
             activity.changeFragment(ModifyInfoPage())
         }
     }
-
-//    private fun getUserInfo() {
-//        NetworkClient.autoLoginService.autoLogin()
-//            .enqueue(object: Callback<UserInfo> {
-//                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
-//                    if (response.isSuccessful.not()){
-//                        Log.e("MyInfoPage", response.toString())
-//                        return
-//                    }else{
-//                        response.body()?.let {
-//                            binding.nickNameText.text = it.nickname
-//                            binding.introText.text = it.info
-//                        }
-//                    }
-//                }
-//                override fun onFailure(call: Call<UserInfo>, t: Throwable){
-//                    Log.e(LoginPage.TAG, t.toString())
-//                }
-//            })
-//    }
 
     override fun onStart() {
         super.onStart()
