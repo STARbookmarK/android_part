@@ -32,6 +32,8 @@ interface UserInfoService {
     fun changeBio(@Body bio: BioOfUserInfo):Call<Void>
     @PATCH("api/password")
     fun changePassword(@Body pwData: Password):Call<Void>
+    @PATCH("api/show")
+    fun changeViewType(@Body viewInfo: BookmarkViewInfo):Call<Void>
 }
 
 

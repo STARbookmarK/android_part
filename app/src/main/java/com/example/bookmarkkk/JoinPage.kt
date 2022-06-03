@@ -75,6 +75,7 @@ class JoinPage : Fragment(), View.OnClickListener { // 회원가입 페이지
                         Log.e("register error", response.code().toString())
                         Toast.makeText(context, "아이디 또는 닉네임은 중복확인이 필수입니다.", Toast.LENGTH_SHORT).show()
                     }else{
+                        saveViewType()
                         Navigation.findNavController(binding.root).navigate(R.id.join_to_first)
                         context?.let { StyleableToast.makeText(it, "가입되었습니다. 다시 로그인 해주세요", R.style.joinToast).show() }
                     }
@@ -115,7 +116,7 @@ class JoinPage : Fragment(), View.OnClickListener { // 회원가입 페이지
             .enqueue(object : Callback<NicknameCheckData>{
                 override fun onResponse(call: Call<NicknameCheckData>, response: Response<NicknameCheckData>) {
                     if (response.isSuccessful.not()){
-                        Log.i("nickname check", response.message())
+                        Log.e("nickname check", response.message())
                     }else{
                         response.body()?.let {
                             if (it.valid){
@@ -130,6 +131,22 @@ class JoinPage : Fragment(), View.OnClickListener { // 회원가입 페이지
                 }
                 override fun onFailure(call: Call<NicknameCheckData>, t: Throwable) {
                     Log.e("nickname check", t.toString())
+                }
+            })
+    }
+
+    private fun saveViewType(){ // 기본 보기방식 지정
+        NetworkClient.userInfoService.changeViewType(BookmarkViewInfo(true, false, false))
+            .enqueue(object : Callback<Void>{
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (response.isSuccessful.not()){
+                        Log.e(TAG, response.toString())
+                    }else{
+                        Log.i(TAG, "기본 보기방식 지정")
+                    }
+                }
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    Log.e(TAG, t.toString())
                 }
             })
     }

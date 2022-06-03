@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat.finishAffinity
+import androidx.core.app.ActivityCompat.requireViewById
 import androidx.fragment.app.Fragment
 import com.example.bookmarkkk.databinding.ModifyInfoBinding
 import io.github.muddz.styleabletoast.StyleableToast
@@ -46,23 +47,46 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
         binding.viewSettingOkBtn.setOnClickListener(this)
         binding.infoModifyOkBtn.setOnClickListener(this)
         binding.pwChangeOkBtn.setOnClickListener(this)
+        binding.viewSettingOkBtn.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when (v?.id){
-            R.id.viewSettingOkBtn -> {
-                coroutineScope.launch {
-                    if (binding.listCheck.isChecked){
-                        infoSaveModule.setBookmarkType("1") //리스트형
-                    }else{
-                        infoSaveModule.setBookmarkType("0") //바둑형
+            R.id.viewSettingOkBtn -> { // 보기방식 변경
+//                coroutineScope.launch {
+//                    if (binding.listCheck.isChecked){
+//                        infoSaveModule.setBookmarkType("1") //리스트형
+//                    }else{
+//                        infoSaveModule.setBookmarkType("0") //바둑형
+//                    }
+//                }
+                var bookmarkShow = false
+                var hashtagShow = false
+                var hashtagCategory = false
+                binding.radioGroup.setOnCheckedChangeListener { radioGroup, checkId ->
+                    when(checkId){
+                        R.id.listCheck -> { bookmarkShow=true }
+                        R.id.gridCheck -> { bookmarkShow=false }
                     }
                 }
+                binding.radioGroup2.setOnCheckedChangeListener { radioGroup, checkId ->
+                    when(checkId){
+                        R.id.visibleCheck -> { hashtagShow = true }
+                        R.id.invisibleCheck -> {hashtagShow = false }
+                    }
+                }
+                binding.radioGroup3.setOnCheckedChangeListener { radioGroup, checkId ->
+                    when(checkId){
+                        R.id.activeCheck -> { hashtagCategory = true }
+                        R.id.inActiveCheck -> { hashtagCategory = false }
+                    }
+                }
+                changeViewType(bookmarkShow, hashtagShow, hashtagCategory)
             }
-            R.id.infoModifyOkBtn -> {
+            R.id.infoModifyOkBtn -> { // 사용자 정보 수정
                 changeBio(binding.msgEditText.text.toString())
             }
-            R.id.pwChangeOkBtn -> {
+            R.id.pwChangeOkBtn -> { // 비밀번호 변경
                 // '원래 비밀번호' 잘못 입력하면 변경 안됨
                 val oldPassword = binding.oldPwEdit.text.toString()
                 val newPassword = binding.newPwEdit.text.toString()
@@ -85,7 +109,7 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
             .enqueue(object : Callback<Void>{
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     if (response.isSuccessful.not()){
-                        Log.e("ModifyInfoPage", response.toString())
+                        Log.e(TAG, response.toString())
                     }else{
                         context?.let { StyleableToast.makeText(it, "소개글 변경", R.style.bioToast).show() }
                     }
@@ -101,10 +125,26 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
             .enqueue(object : Callback<Void>{
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     if (response.isSuccessful.not()){
-                        Log.e("ModifyInfoPage", response.toString())
+                        Log.e(TAG, response.toString())
                     }else{
                         context?.let { StyleableToast.makeText(it, "비밀번호 변경, 다시 로그인해주세요", R.style.passwordToast).show() }
                         logout()
+                    }
+                }
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    Log.e(TAG, t.toString())
+                }
+            })
+    }
+
+    private fun changeViewType(bookmark: Boolean, hashtag: Boolean, category: Boolean){
+        NetworkClient.userInfoService.changeViewType(BookmarkViewInfo(bookmark, hashtag, category))
+            .enqueue(object : Callback<Void>{
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (response.isSuccessful.not()){
+                        Log.e(TAG, response.toString())
+                    }else{
+                        context?.let { StyleableToast.makeText(it, "보기방식 변경", R.style.passwordToast).show() }
                     }
                 }
                 override fun onFailure(call: Call<Void>, t: Throwable) {
@@ -139,12 +179,29 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
             .enqueue(object: Callback<UserInfo> {
                 override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
                     if (response.isSuccessful.not()){
-                        Log.e("MyInfoPage", response.toString())
+                        Log.e(TAG, response.toString())
                     }else{
                         response.body()?.let {
                             binding.userId.text = it.id
                             binding.nickName.text = it.nickname
                             binding.msgEditText.setText(it.info)
+                            if (it.bookmarkShow){
+                                binding.radioGroup.check(R.id.listCheck)
+                                //binding.listCheck.isChecked = true
+                            }else{
+                                binding.radioGroup.check(R.id.gridCheck)
+                                //binding.gridCheck.isChecked = true
+                            }
+                            if (it.hashtagShow){
+                                binding.radioGroup2.check(R.id.visibleCheck)
+                            }else{
+                                binding.radioGroup2.check(R.id.invisibleCheck)
+                            }
+                            if (it.hashtagCategory){
+                                binding.radioGroup3.check(R.id.activeCheck)
+                            }else{
+                                binding.radioGroup3.check(R.id.inActiveCheck)
+                            }
                         }
                         coroutineScope.launch {
                             originPw = infoSaveModule.password.first() // 비밀번호 변경에 사용됨
