@@ -71,7 +71,7 @@ class LoginPage : Fragment(), View.OnClickListener { //로그인 페이지
             .enqueue(object: Callback<Void> {
                 override fun onResponse(call: Call<Void>, response: Response<Void>){
                     if (response.isSuccessful.not()){
-                        Log.e(TAG, response.message())
+                        context?.let { StyleableToast.makeText(it, "아이디 또는 비밀번호가 잘못되었습니다", R.style.errorToast).show() }
                     }else{
                         Log.i(TAG, response.headers().toString())
                         coroutineScope.launch {

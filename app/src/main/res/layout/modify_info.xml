@@ -289,17 +289,19 @@
             tools:ignore="MissingConstraints">
 
             <RadioButton
+                android:id="@+id/gridCheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="격자형"
+                android:buttonTint="@color/mainColor"
+                android:textColor="@color/black"/>
+
+            <RadioButton
                 android:id="@+id/listCheck"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="리스트형"
-                android:textColor="@color/black"/>
-
-            <RadioButton
-                android:id="@+id/gridCheck"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="바둑형"
+                android:buttonTint="@color/mainColor"
                 android:textColor="@color/black"/>
         </RadioGroup>
 
@@ -330,14 +332,16 @@
                 android:id="@+id/visibleCheck"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="숨기기"
+                android:text="보이기"
+                android:buttonTint="@color/mainColor"
                 android:textColor="@color/black" />
 
             <RadioButton
                 android:id="@+id/invisibleCheck"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="보이기"
+                android:text="숨기기"
+                android:buttonTint="@color/mainColor"
                 android:textColor="@color/black"/>
         </RadioGroup>
 
@@ -370,6 +374,7 @@
                 android:layout_height="wrap_content"
                 android:text="활성화"
                 android:textColor="@color/black"
+                android:buttonTint="@color/mainColor"
                 tools:ignore="MissingConstraints"/>
 
             <RadioButton
@@ -377,6 +382,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="비활성화"
+                android:buttonTint="@color/mainColor"
                 android:textColor="@color/black"
                 tools:ignore="MissingConstraints"/>
         </RadioGroup>

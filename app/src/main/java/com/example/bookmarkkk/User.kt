@@ -32,9 +32,9 @@ data class UserInfo(
     @SerializedName("user_id") val id : String,
     @SerializedName("nickname") val nickname: String,
     @SerializedName("info") val info : String,
-    @SerializedName("bookmarkShow") val bookmarkShow: Boolean, // 북마크 출력 방식
-    @SerializedName("hashtagShow") val hashtagShow: Boolean, // 즐겨찾기 해시태그
-    @SerializedName("hashtagCategory") val hashtagCategory: Boolean // 즐겨찾기 해시태그 카테고리화
+    @SerializedName("bookmarkshow") val bookmarkShow: Int, // 북마크 출력 방식
+    @SerializedName("hashtagshow") val hashtagShow: Int, // 즐겨찾기 해시태그
+    @SerializedName("hashtagcategory") val hashtagCategory: Int // 즐겨찾기 해시태그 카테고리화
 )
 
 data class BioOfUserInfo(
@@ -47,8 +47,8 @@ data class Password(
 )
 
 data class BookmarkViewInfo(
-    @SerializedName("bookmarkShow") val bookmarkShow: Boolean, // 북마크 출력 방식
-    @SerializedName("hashtagShow") val hashtagShow: Boolean, // 즐겨찾기 해시태그
-    @SerializedName("hashtagCategory") val hashtagCategory: Boolean // 즐겨찾기 해시태그 카테고리화
+    @SerializedName("bookmarkShow") val bookmarkShow: Int, // 북마크 출력 방식
+    @SerializedName("hashtagShow") val hashtagShow: Int, // 즐겨찾기 해시태그
+    @SerializedName("hashtagCategory") val hashtagCategory: Int // 즐겨찾기 해시태그 카테고리화
 )
 

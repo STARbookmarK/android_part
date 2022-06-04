@@ -20,6 +20,7 @@ import org.koin.android.ext.android.inject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.math.BigInteger
 import kotlin.math.log
 
 class ModifyInfoPage : Fragment(), View.OnClickListener {
@@ -27,6 +28,9 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
     private lateinit var originPw : String
     private val infoSaveModule : DataStoreModule by inject()
     private val coroutineScope by lazy{ CoroutineScope(Dispatchers.IO) }
+    private var bookmarkShow = 0
+    private var hashtagShow = 0
+    private var hashtagCategory = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,34 +57,9 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id){
             R.id.viewSettingOkBtn -> { // 보기방식 변경
-//                coroutineScope.launch {
-//                    if (binding.listCheck.isChecked){
-//                        infoSaveModule.setBookmarkType("1") //리스트형
-//                    }else{
-//                        infoSaveModule.setBookmarkType("0") //바둑형
-//                    }
-//                }
-                var bookmarkShow = false
-                var hashtagShow = false
-                var hashtagCategory = false
-                binding.radioGroup.setOnCheckedChangeListener { radioGroup, checkId ->
-                    when(checkId){
-                        R.id.listCheck -> { bookmarkShow=true }
-                        R.id.gridCheck -> { bookmarkShow=false }
-                    }
-                }
-                binding.radioGroup2.setOnCheckedChangeListener { radioGroup, checkId ->
-                    when(checkId){
-                        R.id.visibleCheck -> { hashtagShow = true }
-                        R.id.invisibleCheck -> {hashtagShow = false }
-                    }
-                }
-                binding.radioGroup3.setOnCheckedChangeListener { radioGroup, checkId ->
-                    when(checkId){
-                        R.id.activeCheck -> { hashtagCategory = true }
-                        R.id.inActiveCheck -> { hashtagCategory = false }
-                    }
-                }
+                bookmarkShow = if (binding.listCheck.isChecked) 1 else 0
+                hashtagShow = if (binding.invisibleCheck.isChecked) 1 else 0
+                hashtagCategory = if (binding.inActiveCheck.isChecked) 1 else 0
                 changeViewType(bookmarkShow, hashtagShow, hashtagCategory)
             }
             R.id.infoModifyOkBtn -> { // 사용자 정보 수정
@@ -127,8 +106,8 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
                     if (response.isSuccessful.not()){
                         Log.e(TAG, response.toString())
                     }else{
-                        context?.let { StyleableToast.makeText(it, "비밀번호 변경, 다시 로그인해주세요", R.style.passwordToast).show() }
                         logout()
+                        context?.let { StyleableToast.makeText(it, "비밀번호 변경, 다시 로그인해주세요", R.style.passwordToast).show() }
                     }
                 }
                 override fun onFailure(call: Call<Void>, t: Throwable) {
@@ -137,14 +116,14 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
             })
     }
 
-    private fun changeViewType(bookmark: Boolean, hashtag: Boolean, category: Boolean){
+    private fun changeViewType(bookmark: Int, hashtag: Int, category: Int){
         NetworkClient.userInfoService.changeViewType(BookmarkViewInfo(bookmark, hashtag, category))
             .enqueue(object : Callback<Void>{
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     if (response.isSuccessful.not()){
                         Log.e(TAG, response.toString())
                     }else{
-                        context?.let { StyleableToast.makeText(it, "보기방식 변경", R.style.passwordToast).show() }
+                        context?.let { StyleableToast.makeText(it, "보기방식 변경", R.style.bioToast).show() }
                     }
                 }
                 override fun onFailure(call: Call<Void>, t: Throwable) {
@@ -174,7 +153,7 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
 
     override fun onStart() {
         super.onStart()
-        // 아이디, 닉네임, 소개글
+        // 아이디, 닉네임, 소개글, 보기방식
         NetworkClient.userInfoService.getUserInfo()
             .enqueue(object: Callback<UserInfo> {
                 override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
@@ -185,22 +164,20 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
                             binding.userId.text = it.id
                             binding.nickName.text = it.nickname
                             binding.msgEditText.setText(it.info)
-                            if (it.bookmarkShow){
+                            if (it.bookmarkShow==1){
                                 binding.radioGroup.check(R.id.listCheck)
-                                //binding.listCheck.isChecked = true
                             }else{
                                 binding.radioGroup.check(R.id.gridCheck)
-                                //binding.gridCheck.isChecked = true
                             }
-                            if (it.hashtagShow){
-                                binding.radioGroup2.check(R.id.visibleCheck)
-                            }else{
+                            if (it.hashtagShow==1){
                                 binding.radioGroup2.check(R.id.invisibleCheck)
-                            }
-                            if (it.hashtagCategory){
-                                binding.radioGroup3.check(R.id.activeCheck)
                             }else{
+                                binding.radioGroup2.check(R.id.visibleCheck)
+                            }
+                            if (it.hashtagCategory==1){
                                 binding.radioGroup3.check(R.id.inActiveCheck)
+                            }else{
+                                binding.radioGroup3.check(R.id.activeCheck)
                             }
                         }
                         coroutineScope.launch {
@@ -209,7 +186,7 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
                     }
                 }
                 override fun onFailure(call: Call<UserInfo>, t: Throwable){
-                    Log.e(LoginPage.TAG, t.toString())
+                    Log.e(TAG, t.toString())
                 }
             })
     }

@@ -13,4 +13,5 @@
     <color name="deepSkyBlue">#00BFFF</color>
     <color name="lightSkyBlue">#87CEFA</color>
     <color name="stateBlue">#6A5ACD</color>
+    <color name="crimsonRed">#DC143C</color>
 </resources>
