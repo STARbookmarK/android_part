@@ -37,7 +37,9 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityMainBinding
-    //private val infoSaveModule : DataStoreModule by inject()
+    private val coroutineScope by lazy { CoroutineScope(Dispatchers.IO) }
+    private val infoSaveModule : DataStoreModule by inject()
+    private var viewType = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +57,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding.bottomBar.onTabSelected={
             when(it.id){
                 R.id.bookmarkShowBtn->{
-                    changeFragment(MainPage())
+                    if (viewType == 1){
+                        changeFragment(MainPage())
+                    }else{
+                        changeFragment(MainCategorizedPage())
+                    }
                 }
                 R.id.tagShowBtn->{
                     changeFragment(TagPage())
@@ -99,6 +105,33 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }
                 override fun onFailure(call: Call<Void>, t: Throwable) {
+                    Log.e(TAG, t.toString())
+                }
+            })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        NetworkClient.userInfoService.getUserInfo()
+            .enqueue(object: Callback<UserInfo> {
+                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
+                    if (response.isSuccessful.not()){
+                        Log.e(TAG, response.toString())
+                    }else{
+                        response.body()?.let {
+                            if (it.hashtagCategory==1){ // 카테고리화 비활성화
+                                viewType = 1
+                                Log.e(TAG, viewType.toString())
+                                changeFragment(MainPage())
+                            }else{
+                                viewType = 0
+                                Log.e(TAG, viewType.toString())
+                                changeFragment(MainCategorizedPage())
+                            }
+                        }
+                    }
+                }
+                override fun onFailure(call: Call<UserInfo>, t: Throwable){
                     Log.e(TAG, t.toString())
                 }
             })

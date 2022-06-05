@@ -1,16 +1,23 @@
 package com.example.bookmarkkk
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bookmarkkk.databinding.MainNotCategorizedBinding
 import com.google.android.material.chip.Chip
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class MainPage : Fragment() {
+class MainPage : Fragment(), View.OnClickListener {
     private lateinit var binding: MainNotCategorizedBinding
     private lateinit var spinner: Spinner
 
@@ -46,5 +53,44 @@ class MainPage : Fragment() {
             chipBackgroundColor = ContextCompat.getColorStateList(context, R.color.lightGray)
             setOnCloseIconClickListener{ binding.tagGroup.removeView(this)}
         })
+
+        binding.bookmarkAddBtn.setOnClickListener(this)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.e(TAG, "카테고리 X")
+        NetworkClient.userInfoService.getUserInfo() // 뷰타입 지정
+            .enqueue(object: Callback<UserInfo> {
+                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
+                    if (response.isSuccessful.not()){
+                        Log.e(TAG, response.toString())
+                    }else{
+                        response.body()?.let {
+                            if (it.bookmarkShow==1){ // 리스트형
+                                binding.bookmarkView.layoutManager = LinearLayoutManager(context)
+                            }else{ // 격자형
+                                binding.bookmarkView.layoutManager = GridLayoutManager(context, 2)
+                            }
+                        }
+                    }
+                }
+                override fun onFailure(call: Call<UserInfo>, t: Throwable){
+                    Log.e(TAG, t.toString())
+                }
+            })
+    }
+
+    companion object{
+        const val TAG = "MainPage"
+    }
+
+    override fun onClick(v: View?) {
+        when(v?.id){
+            R.id.bookmarkAddBtn -> {
+                val dialog = AddBookmarkDialog()
+                dialog.show(parentFragmentManager, "AddBookmarkDialog")
+            }
+        }
     }
 }

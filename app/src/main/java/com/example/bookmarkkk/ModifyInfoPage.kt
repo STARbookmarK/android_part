@@ -124,6 +124,8 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
                         Log.e(TAG, response.toString())
                     }else{
                         context?.let { StyleableToast.makeText(it, "보기방식 변경", R.style.bioToast).show() }
+                        val intent = Intent(context, MainActivity::class.java) // 메인화면으로 이동
+                        startActivity(intent)
                     }
                 }
                 override fun onFailure(call: Call<Void>, t: Throwable) {

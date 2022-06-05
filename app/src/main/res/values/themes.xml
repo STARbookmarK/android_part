@@ -39,13 +39,15 @@
     </style>
     <style name="errorToast">
         <item name="stTextBold">true</item>
-        <item name="stTextColor">@color/white</item>
+        <item name="stTextColor">@color/crimsonRed</item>
         <item name="stFont">@font/scoredream</item>
         <item name="stTextSize">12sp</item>
-        <item name="stColorBackground">@color/crimsonRed</item>
+        <item name="stColorBackground">@color/white</item>
         <item name="stSolidBackground">true</item>
         <item name="stStrokeWidth">3dp</item>
-        <item name="stStrokeColor">@color/crimsonRed</item>
+        <item name="stStrokeColor">@color/white</item>
+        <item name="stIconStart">@drawable/close</item>
+        <item name="stIconEnd">@drawable/close</item>
         <item name="stLength">SHORT</item> LONG or SHORT
         <item name="stGravity">top</item> top or center
         <item name="stRadius">20dp</item>

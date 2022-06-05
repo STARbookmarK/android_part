@@ -56,8 +56,6 @@ class DataStoreModule(private val context: Context) {
             it[pwKey] ?: ""
         }
 
-
-
     suspend fun setEmail(email : String){
         context.datastore.edit {
             it[emailKey] = email

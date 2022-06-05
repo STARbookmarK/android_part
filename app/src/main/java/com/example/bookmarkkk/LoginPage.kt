@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.Task
 import io.github.muddz.styleabletoast.StyleableToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import retrofit2.Call
@@ -89,7 +90,8 @@ class LoginPage : Fragment(), View.OnClickListener { //로그인 페이지
 
     override fun onStart() {
         super.onStart()
-        //다음 액티비티 진입 시 확인해야 할 것들(ex 개인정보, 카테고리화 유무)
+        //다음 액티비티 진입 시 확인해야 할 것들(ex 개인정보, 리스트 or 그리드, 카테고리화 유무)
+
     }
 
     companion object{
