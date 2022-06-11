@@ -33,16 +33,17 @@ object NetworkClient {
     val authenticationService: AuthenticationService by lazy { retrofit.create(AuthenticationService::class.java) }
     val signUpService : SignUpService by lazy { retrofit.create(SignUpService::class.java) }
     val userInfoService : UserInfoService by lazy { retrofit.create(UserInfoService::class.java) }
+    val bookmarkService : BookmarkService by lazy { retrofit.create(BookmarkService::class.java)}
 }
 
-//object RegisterClient {
-//
-//    var gson = GsonBuilder().setLenient().create()
-//
-//    val retrofit = Retrofit.Builder()
-//        .baseUrl("https://44142a55-dbbf-46c1-9a3b-d10e590ee659.mock.pstmn.io/") //mock server
-//        .addConverterFactory(GsonConverterFactory.create(gson))
-//        .build()
-//
-//    val registerService: RegisterService by lazy { retrofit.create(RegisterService::class.java) }
-//}
+object TestClient {
+
+    var gson = GsonBuilder().setLenient().create()
+
+    val retrofit = Retrofit.Builder()
+        .baseUrl("https://ef184ba9-b58e-4708-83f9-68f1b18e1ce9.mock.pstmn.io/") //mock server
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .build()
+
+    val bookmarkService : BookmarkService by lazy { TestClient.retrofit.create(BookmarkService::class.java) }
+}
