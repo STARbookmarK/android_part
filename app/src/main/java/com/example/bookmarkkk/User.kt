@@ -7,28 +7,28 @@ data class UserId(
     @SerializedName("id") val id: String
 )
 
-data class LoginData(
+data class LoginData( // 로그인
     @SerializedName("id") val user_id: String,
     @SerializedName("pw") val user_pw: String,
     @SerializedName("autoLogin") val autoLogin : Boolean
 )
 
-data class SignUpData(
+data class SignUpData( // 회원가입
     @SerializedName("id") val user_id: String,
     @SerializedName("password") val user_pw: String,
     @SerializedName("nickname") val nickname: String,
     @SerializedName("info") val info: String
 )
 
-data class IdCheckData(
+data class IdCheckData( // 아이디 중복체크
     @SerializedName("valid") val valid: Boolean
 )
 
-data class NicknameCheckData(
+data class NicknameCheckData( // 닉네임 중복체크
     @SerializedName("valid") val valid: Boolean
 )
 
-data class UserInfo(
+data class UserInfo( // 회원정보
     @SerializedName("user_id") val id : String,
     @SerializedName("nickname") val nickname: String,
     @SerializedName("info") val info : String,
@@ -37,16 +37,16 @@ data class UserInfo(
     @SerializedName("hashtagcategory") val hashtagCategory: Int // 즐겨찾기 해시태그 카테고리화
 )
 
-data class BioOfUserInfo(
+data class BioOfUserInfo( // 소개글
     @SerializedName("info") val info: String
 )
 
-data class Password(
+data class Password( // 비밀번호
     @SerializedName("pw") val pw: String,
     @SerializedName("newPw") val newPw: String
 )
 
-data class BookmarkViewInfo(
+data class BookmarkViewInfo( // 북마크 보기방식
     @SerializedName("bookmarkShow") val bookmarkShow: Int, // 북마크 출력 방식
     @SerializedName("hashtagShow") val hashtagShow: Int, // 즐겨찾기 해시태그
     @SerializedName("hashtagCategory") val hashtagCategory: Int // 즐겨찾기 해시태그 카테고리화
