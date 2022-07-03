@@ -2,6 +2,7 @@ package com.example.bookmarkkk
 
 import com.google.gson.annotations.SerializedName
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.*
 
 interface AuthenticationService { // 로그인 관련
@@ -25,6 +26,8 @@ interface SignUpService{ // 회원가입 관련
 interface UserInfoService { // 사용자 정보 관련
     @GET("api/infos")
     fun getUserInfo():Call<UserInfo> // 정보 확인
+    @GET("apt/infos")
+    fun getUserInfoTest():Response<UserInfo> // 테스트용
     @PATCH("api/infos")
     fun changeBio(@Body bio: BioOfUserInfo):Call<Void> // 소개글 변경
     @PATCH("api/password")

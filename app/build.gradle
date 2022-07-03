@@ -82,4 +82,7 @@ dependencies {
 
     //styleabletoast 추가
     implementation 'io.github.muddz:styleabletoast:2.4.0'
+
+    //smooth bottombar
+    implementation 'com.github.ibrahimsn98:SmoothBottomBar:1.7.9'
 }

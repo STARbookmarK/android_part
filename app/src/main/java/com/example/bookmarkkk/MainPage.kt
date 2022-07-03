@@ -34,7 +34,6 @@ class MainPage : Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         //카테고리화를 선택하지 않았을 때 화면(기본값)
-        //기본은 리스트형
         //바둑형 선택시(서버와 통신하여 값 변경 확인) recyclerView의 레이아웃 매니저로 GridLayoutManager 전달
 
         //createFromResource(Context context, int textArrayResId, int textViewResId)
@@ -48,7 +47,7 @@ class MainPage : Fragment(), View.OnClickListener {
         //태그 동적으로 추가
         binding.tagGroup.addView(Chip(context).apply {
             text = "ALL"
-            isCloseIconVisible = true //x 버튼
+            isCloseIconVisible = true // x버튼
             setTextColor(ContextCompat.getColorStateList(context, R.color.black))
             chipBackgroundColor = ContextCompat.getColorStateList(context, R.color.lightGray)
             setOnCloseIconClickListener{ binding.tagGroup.removeView(this)}
@@ -59,8 +58,7 @@ class MainPage : Fragment(), View.OnClickListener {
 
     override fun onStart() {
         super.onStart()
-        Log.e(TAG, "카테고리 X")
-        NetworkClient.userInfoService.getUserInfo() // 뷰타입 지정
+        NetworkClient.userInfoService.getUserInfo() // 북마크 보기방식 지정
             .enqueue(object: Callback<UserInfo> {
                 override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
                     if (response.isSuccessful.not()){

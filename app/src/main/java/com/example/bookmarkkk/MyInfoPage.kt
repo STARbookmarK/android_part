@@ -36,14 +36,6 @@ class MyInfoPage : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        CoroutineScope(Dispatchers.Main).launch {
-//            val email = App.getInstance().getDataStore().email.first()
-//            loginType = App.getInstance().getDataStore().loginType.first()
-//            val email = infoSaveModule.email.first()
-//            loginType = infoSaveModule.loginType.first()
-//            binding.idText.text = email
-//        }
-
         context?.let {
             spinner = Spinner(it)
             binding.rankSpinner.adapter = spinner.rankSpinnerSet()

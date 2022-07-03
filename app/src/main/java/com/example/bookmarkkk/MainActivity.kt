@@ -37,9 +37,9 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityMainBinding
-    private val coroutineScope by lazy { CoroutineScope(Dispatchers.IO) }
-    private val infoSaveModule : DataStoreModule by inject()
-    private var viewType = 0
+    //private val coroutineScope by lazy { CoroutineScope(Dispatchers.IO) }
+    //private val infoSaveModule : DataStoreModule by inject()
+    private var categoryType = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,13 +51,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding.logoutBtn.setOnClickListener(this)
     }
 
-    private fun runBottomBar(){
+    private fun runBottomBar(){ // 하단바
         binding.bottomBar.selectTabAt(0)
-        changeFragment(MainPage())
+        //changeFragment(MainPage())
         binding.bottomBar.onTabSelected={
             when(it.id){
                 R.id.bookmarkShowBtn->{
-                    if (viewType == 1){
+                    if (categoryType == 1){ // 카테고리화 타입에 따라 화면 이동
                         changeFragment(MainPage())
                     }else{
                         changeFragment(MainCategorizedPage())
@@ -97,7 +97,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     if (response.isSuccessful.not()){
                         Log.e(TAG, response.toString())
                     }else{
-                        //Toast.makeText(this@MainActivity, response.message(), Toast.LENGTH_SHORT).show()
                         val intent = Intent(this@MainActivity, FirstActivity::class.java) // 로그아웃 시 초기화면으로 이동
                         startActivity(intent)
                         finishAffinity() // 쌓였던 모든 프래그먼트 스택 삭제
@@ -119,13 +118,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         Log.e(TAG, response.toString())
                     }else{
                         response.body()?.let {
+                            //카테고리화 활성화 유무
                             if (it.hashtagCategory==1){ // 카테고리화 비활성화
-                                viewType = 1
-                                Log.e(TAG, viewType.toString())
+                                categoryType = 1
                                 changeFragment(MainPage())
-                            }else{
-                                viewType = 0
-                                Log.e(TAG, viewType.toString())
+                            }else{ // 카테고리화 활성화
+                                categoryType = 0
                                 changeFragment(MainCategorizedPage())
                             }
                         }

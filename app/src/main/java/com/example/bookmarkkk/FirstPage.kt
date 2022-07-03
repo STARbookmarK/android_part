@@ -21,51 +21,85 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class FirstPage : Fragment(){ //앱 실행 시 가장 먼저 보게되는 화면으로, 로그인과 회원가입 메뉴 선택 가능(자동 로그인 설정 시 바로 메인화면으로 진입)
+class FirstPage : Fragment(), View.OnClickListener{ //앱 실행 시 가장 먼저 보게되는 화면으로, 로그인과 회원가입 메뉴 선택 가능(자동 로그인 설정 시 바로 메인화면으로 진입)
     private lateinit var binding: FirstPageBinding
-    //private val infoSaveModule : DataStoreModule by inject()
+    //private val viewModel : ViewModel by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding= FirstPageBinding.inflate(inflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.loginBtn.setOnClickListener {
-            Navigation.findNavController(binding.root).navigate(R.id.main_to_login_action)
-        }
-        binding.joinBtn.setOnClickListener {
-            Navigation.findNavController(binding.root).navigate(R.id.main_to_join_action)
-        }
-
-        
+        binding.loginBtn.setOnClickListener(this)
+        binding.joinBtn.setOnClickListener(this)
+//
+//        val response = viewModel.getUserInfo()
+//        if (response.isSuccessful){
+//            Log.e(TAG, "success")
+//        }else{
+//            Log.e(TAG, "failed")
+//        }
     }
 
     override fun onStart() { // 자동 로그인(구글)위한 로그인 여부 확인
         super.onStart()
-        autoLogin()
+        runAutoLogin()
     }
 
-    private fun autoLogin(){
+    private fun runAutoLogin(){
         NetworkClient.authenticationService.autoLogin()
             .enqueue(object: Callback<UserId> {
                 override fun onResponse(call: Call<UserId>, response: Response<UserId>){
                     if (response.isSuccessful.not()){
                         Log.e(TAG, response.toString())
                     }else{
-                        Log.e(TAG, response.toString())
+                        Log.i(TAG, response.toString())
                         Navigation.findNavController(binding.root).navigate(R.id.main_to_mainPage_action)
                     }
                 }
                 override fun onFailure(call: Call<UserId>, t: Throwable){
-                    Log.e(LoginPage.TAG, t.toString())
+                    Log.e(TAG, t.toString())
                 }
             })
+    }
+
+//    private fun setViewType(){
+//        NetworkClient.userInfoService.getUserInfo()
+//            .enqueue(object : Callback<UserInfo>{
+//                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>) {
+//                    if (response.isSuccessful.not()){
+//                        Log.e(TAG, response.message())
+//                    }else{
+//                        response.body()?.let {
+//                            if (it.hashtagCategory==1){
+//                                //
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<UserInfo>, t: Throwable) {
+//                    Log.e(TAG, t.toString())
+//                }
+//
+//            })
+//    }
+
+    override fun onClick(v: View?) {
+        when(v?.id){
+            R.id.loginBtn -> {
+                Navigation.findNavController(binding.root).navigate(R.id.main_to_login_action)
+            }
+            R.id.joinBtn -> {
+                Navigation.findNavController(binding.root).navigate(R.id.main_to_join_action)
+            }
+        }
     }
 
     companion object{

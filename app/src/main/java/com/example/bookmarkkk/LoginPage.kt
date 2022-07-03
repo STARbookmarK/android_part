@@ -11,6 +11,7 @@ import android.widget.CheckBox
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.example.bookmarkkk.databinding.LoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -20,10 +21,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import io.github.muddz.styleabletoast.StyleableToast
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.flow
 import org.koin.android.ext.android.inject
 import retrofit2.Call
 import retrofit2.Callback
@@ -32,8 +34,6 @@ import retrofit2.Response
 
 class LoginPage : Fragment(), View.OnClickListener { //로그인 페이지
     private lateinit var binding : LoginBinding
-    private lateinit var mGoogleSignInClient: GoogleSignInClient
-    private val coroutineScope by lazy{ CoroutineScope(Dispatchers.IO)}
     private lateinit var user_id : String
     private lateinit var user_pw : String
     private var autoLogin : Boolean = false
@@ -50,7 +50,6 @@ class LoginPage : Fragment(), View.OnClickListener { //로그인 페이지
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.loginBtn.setOnClickListener(this)
     }
 
@@ -75,7 +74,7 @@ class LoginPage : Fragment(), View.OnClickListener { //로그인 페이지
                         context?.let { StyleableToast.makeText(it, "아이디 또는 비밀번호가 잘못되었습니다", R.style.errorToast).show() }
                     }else{
                         Log.i(TAG, response.headers().toString())
-                        coroutineScope.launch {
+                        lifecycleScope.launch {
                             infoSaveModule.setPassword(user_pw)
                         }
                         Navigation.findNavController(binding.root).navigate(R.id.login_to_main_action)
@@ -91,7 +90,17 @@ class LoginPage : Fragment(), View.OnClickListener { //로그인 페이지
     override fun onStart() {
         super.onStart()
         //다음 액티비티 진입 시 확인해야 할 것들(ex 개인정보, 리스트 or 그리드, 카테고리화 유무)
+    }
 
+    override fun onStop() {
+        super.onStop()
+        // datastore 작업은 이미 완료
+//        job?.cancel()
+//        if(job?.isCompleted == true){
+//            Log.e(TAG, "job is completed") -> ok
+//        }else {
+//            Log.e(TAG, "job is not completed")
+//        }
     }
 
     companion object{

@@ -46,7 +46,6 @@ class ModifyInfoPage : Fragment(), View.OnClickListener {
         //서버랑 통신해서 닉네임 + 상태메세지 + 보기값 저장 및 가져오기
         //먼저 자동로그인이나 로그인 되면 서버랑 통신해서 사용자 정보값 다 가져온 다음에
         //뷰모델이나 DataStore에 저장해서 쓰기??
-        //보기 방식은 굳이 서버와 통신하지 않아도 될 것 같음
         //getUserInfo()
         binding.viewSettingOkBtn.setOnClickListener(this)
         binding.infoModifyOkBtn.setOnClickListener(this)

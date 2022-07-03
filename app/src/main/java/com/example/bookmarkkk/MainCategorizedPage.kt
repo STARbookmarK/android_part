@@ -23,7 +23,7 @@ class MainCategorizedPage : Fragment(), View.OnClickListener {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding= MainCategorizedBinding.inflate(inflater)
         return binding.root
     }
@@ -53,8 +53,7 @@ class MainCategorizedPage : Fragment(), View.OnClickListener {
 
     override fun onStart() {
         super.onStart()
-        Log.e("카테고리화", "onStart()")
-        NetworkClient.userInfoService.getUserInfo() // 뷰타입 지정
+        NetworkClient.userInfoService.getUserInfo() // 북마크 보기방식 지정
             .enqueue(object: Callback<UserInfo> {
                 override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
                     if (response.isSuccessful.not()){

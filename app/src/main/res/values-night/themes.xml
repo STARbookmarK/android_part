@@ -1,16 +1,116 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.Bookmarkkk" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.Bookmarkkk" parent="Theme.MaterialComponents.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryVariant">@color/mainColor</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:textColorPrimary">@color/black</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+    </style>
+    <style name="loginToast">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">#fff</item>
+        <item name="stFont">@font/dosis</item>
+        <item name="stTextSize">14sp</item>
+        <item name="stColorBackground">@color/mainColor</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">@color/mainColor</item>
+        <item name="stIconStart">@drawable/favorite</item>
+        <item name="stIconEnd">@drawable/favorite</item>
+        <item name="stLength">SHORT</item> LONG or SHORT
+        <item name="stGravity">center</item> top or center
+        <item name="stRadius">20dp</item>
+    </style>
+    <style name="errorToast">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">@color/crimsonRed</item>
+        <item name="stFont">@font/scoredream</item>
+        <item name="stTextSize">12sp</item>
+        <item name="stColorBackground">@color/white</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">@color/white</item>
+        <item name="stIconStart">@drawable/close</item>
+        <item name="stIconEnd">@drawable/close</item>
+        <item name="stLength">SHORT</item> LONG or SHORT
+        <item name="stGravity">top</item> top or center
+        <item name="stRadius">20dp</item>
+    </style>
+    <style name="logoutToast">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">@color/mainColor</item>
+        <item name="stFont">@font/dosis</item>
+        <item name="stTextSize">14sp</item>
+        <item name="stColorBackground">@color/white</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">#fff</item>
+        <item name="stIconStart">@drawable/favorite</item>
+        <item name="stIconEnd">@drawable/favorite</item>
+        <item name="stLength">SHORT</item> LONG or SHORT
+        <item name="stGravity">top</item> top or center
+        <item name="stRadius">20dp</item>
+    </style>
+    <style name="joinToast">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">#fff</item>
+        <item name="stFont">@font/dosis</item>
+        <item name="stTextSize">14sp</item>
+        <item name="stColorBackground">@color/mainColor</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">#fff</item>
+        <item name="stIconStart">@drawable/wavinghand</item>
+        <item name="stIconEnd">@drawable/wavinghand</item>
+        <item name="stLength">SHORT</item> LONG or SHORT
+        <item name="stGravity">top</item> top or center
+        <item name="stRadius">20dp</item>
+    </style>
+    <style name="passwordToast">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">@color/white</item>
+        <item name="stFont">@font/scoredream</item>
+        <item name="stTextSize">12sp</item>
+        <item name="stColorBackground">@color/mainColor</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">@color/white</item>
+        <item name="stIconStart">@drawable/key</item>
+        <item name="stIconEnd">@drawable/key</item>
+        <item name="stLength">SHORT</item> LONG or SHORT
+        <item name="stGravity">top</item> top or center
+        <item name="stRadius">20dp</item>
+    </style>
+    <style name="bioToast">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">@color/white</item>
+        <item name="stFont">@font/scoredream</item>
+        <item name="stTextSize">12sp</item>
+        <item name="stColorBackground">@color/mainColor</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">@color/mainColor</item>
+        <item name="stLength">SHORT</item> LONG or SHORT
+        <item name="stGravity">top</item> top or center
+        <item name="stRadius">20dp</item>
+    </style>
+    <style name="saveToast">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">@color/white</item>
+        <item name="stFont">@font/dosis</item>
+        <item name="stTextSize">14sp</item>
+        <item name="stColorBackground">@color/mainColor</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">@color/mainColor</item>
+        <item name="stIconStart">@drawable/favorite</item>
+        <item name="stIconEnd">@drawable/favorite</item>
+        <item name="stLength">SHORT</item> LONG or SHORT
+        <item name="stGravity">top</item> top or center
+        <item name="stRadius">20dp</item>
     </style>
 </resources>
