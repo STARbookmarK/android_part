@@ -27,7 +27,7 @@ interface UserInfoService { // 사용자 정보 관련
     @GET("api/infos")
     fun getUserInfo():Call<UserInfo> // 정보 확인
     @GET("apt/infos")
-    fun getUserInfoTest():Response<UserInfo> // 테스트용
+    suspend fun getUserInfoTest():UserInfo // 테스트용
     @PATCH("api/infos")
     fun changeBio(@Body bio: BioOfUserInfo):Call<Void> // 소개글 변경
     @PATCH("api/password")

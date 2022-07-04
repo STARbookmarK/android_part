@@ -23,7 +23,7 @@ import retrofit2.Response
 
 class FirstPage : Fragment(), View.OnClickListener{ //앱 실행 시 가장 먼저 보게되는 화면으로, 로그인과 회원가입 메뉴 선택 가능(자동 로그인 설정 시 바로 메인화면으로 진입)
     private lateinit var binding: FirstPageBinding
-    //private val viewModel : ViewModel by inject()
+    private val viewModel : ViewModel by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,13 +38,8 @@ class FirstPage : Fragment(), View.OnClickListener{ //앱 실행 시 가장 먼�
         super.onViewCreated(view, savedInstanceState)
         binding.loginBtn.setOnClickListener(this)
         binding.joinBtn.setOnClickListener(this)
-//
-//        val response = viewModel.getUserInfo()
-//        if (response.isSuccessful){
-//            Log.e(TAG, "success")
-//        }else{
-//            Log.e(TAG, "failed")
-//        }
+
+        viewModel.getUser()
     }
 
     override fun onStart() { // 자동 로그인(구글)위한 로그인 여부 확인

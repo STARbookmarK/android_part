@@ -9,6 +9,10 @@ class Repository{
 
     //private lateinit var data : UserInfo
 
+    suspend fun getUser() : UserInfo{
+        return NetworkClient.userInfoService.getUserInfoTest()
+    }
+
 //    fun getUserData() : Call<UserInfo> {
 //        return NetworkClient.userInfoService.getUserInfo()
 //    }
