@@ -4,48 +4,24 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
+import android.view.View.OnClickListener
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleCoroutineScope
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupWithNavController
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.bookmarkkk.databinding.ActivityMainBinding
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import io.github.muddz.styleabletoast.StyleableToast
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import www.sanju.motiontoast.MotionToast
-import www.sanju.motiontoast.MotionToastStyle
-import java.util.*
 
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
-    private lateinit var binding: ActivityMainBinding
-    //private val coroutineScope by lazy { CoroutineScope(Dispatchers.IO) }
-    //private val infoSaveModule : DataStoreModule by inject()
+class MainActivity : AppCompatActivity(R.layout.activity_main), OnClickListener {
+    private val binding by viewBinding(ActivityMainBinding::bind)
+    private val viewModel : ViewModel by inject()
     private var categoryType = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding= ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
         runBottomBar()
 
         binding.logoutBtn.setOnClickListener(this)
@@ -91,26 +67,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     //로그아웃
     private fun logout(){
-        NetworkClient.authenticationService.logout()
-            .enqueue(object : Callback<Void>{
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful.not()){
-                        Log.e(TAG, response.toString())
-                    }else{
-                        val intent = Intent(this@MainActivity, FirstActivity::class.java) // 로그아웃 시 초기화면으로 이동
-                        startActivity(intent)
-                        finishAffinity() // 쌓였던 모든 프래그먼트 스택 삭제
-                        this@MainActivity.let { StyleableToast.makeText(it, "logout", R.style.logoutToast).show() }
-                    }
-                }
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.e(TAG, t.toString())
-                }
-            })
+        viewModel.logout()
+        viewModel.loginResultValue.observe(this, androidx.lifecycle.Observer { value ->
+            if (value == 0){
+                val intent = Intent(this@MainActivity, FirstActivity::class.java) // 로그아웃 시 초기화면으로 이동
+                startActivity(intent)
+                finishAffinity() // 쌓였던 모든 프래그먼트 스택 삭제
+            }
+        })
     }
 
     override fun onStart() {
         super.onStart()
+
+        // livedata 사용하기에 적합하지 않음
         NetworkClient.userInfoService.getUserInfo()
             .enqueue(object: Callback<UserInfo> {
                 override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){

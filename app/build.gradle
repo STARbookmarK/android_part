@@ -75,7 +75,7 @@ dependencies {
     def koin_version= "3.1.2"
     implementation "io.insert-koin:koin-android:$koin_version"
     implementation "io.insert-koin:koin-android-compat:$koin_version"
-    implementation "io.insert-koin:koin-androidx-workmanager:$koin_version"
+    // implementation "io.insert-koin:koin-androidx-workmanager:$koin_version"
     implementation "io.insert-koin:koin-androidx-compose:$koin_version"
 
     implementation("com.squareup.okhttp3:okhttp-urlconnection:4.9.0")
@@ -85,4 +85,7 @@ dependencies {
 
     //smooth bottombar
     implementation 'com.github.ibrahimsn98:SmoothBottomBar:1.7.9'
+
+    // reflection-free flavor
+    implementation 'com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6'
 }

@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.bookmarkkk.databinding.LoginBinding
 import com.example.bookmarkkk.databinding.MainNotCategorizedBinding
 import com.google.android.material.chip.Chip
 import kotlinx.coroutines.launch
@@ -17,18 +20,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainPage : Fragment(), View.OnClickListener {
-    private lateinit var binding: MainNotCategorizedBinding
-    private lateinit var spinner: Spinner
+class MainPage : Fragment(R.layout.main_not_categorized), OnClickListener {
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding= MainNotCategorizedBinding.inflate(inflater)
-        return binding.root
-    }
+    private val binding by viewBinding(MainNotCategorizedBinding::bind)
+    private lateinit var spinner: Spinner
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

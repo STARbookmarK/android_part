@@ -3,34 +3,25 @@ package com.example.bookmarkkk
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.util.TimeFormatException
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.view.View.OnClickListener
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.bookmarkkk.databinding.JoinBinding
-import io.github.muddz.styleabletoast.StyleableToast
-import kotlinx.coroutines.flow.combineTransform
+import org.koin.android.ext.android.inject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class JoinPage : Fragment(), View.OnClickListener { // 회원가입 페이지
+class JoinPage : Fragment(R.layout.join), OnClickListener { // 회원가입 페이지
 
-    private lateinit var binding : JoinBinding
+    private val binding by viewBinding(JoinBinding::bind)
     private var idCheckValue = 0
     private var nameCheckValue = 0
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding= JoinBinding.inflate(inflater)
-        return binding.root
-    }
+    private val viewModel : ViewModel by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -74,23 +65,13 @@ class JoinPage : Fragment(), View.OnClickListener { // 회원가입 페이지
         }
     }
 
-    private fun register(user_id: String, user_pw: String, nickname: String, info: String){
-        NetworkClient.signUpService.signUp(SignUpData(user_id, user_pw, nickname, info))
-            .enqueue(object: Callback<Void> {
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful.not()){ // 이미 존재하는 아이디 또는 닉네임을 입력했을 경우
-                        Log.e("register error", response.code().toString())
-                        Toast.makeText(context, "아이디 또는 닉네임은 중복확인이 필수입니다.", Toast.LENGTH_SHORT).show()
-                    }else{
-                        //saveViewType()
-                        Navigation.findNavController(binding.root).navigate(R.id.join_to_first)
-                        context?.let { StyleableToast.makeText(it, "가입되었습니다. 다시 로그인 해주세요", R.style.joinToast).show() }
-                    }
-                }
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.e("register error", t.toString() )
-                }
-            })
+    private fun register(id: String, pw: String, nickname: String, info: String){
+        val data = SignUpData(id, pw, nickname, info)
+        viewModel.join(data)
+        viewModel.joinValue.observe(viewLifecycleOwner, Observer { value ->
+            if (value == 1)
+                Navigation.findNavController(binding.root).navigate(R.id.join_to_first)
+        })
     }
 
     private fun idCheck(user_id : String){ // id 중복체크

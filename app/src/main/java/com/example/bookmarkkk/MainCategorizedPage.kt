@@ -4,29 +4,23 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.bookmarkkk.databinding.LoginBinding
 import com.example.bookmarkkk.databinding.MainCategorizedBinding
 import com.google.android.material.chip.Chip
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainCategorizedPage : Fragment(), View.OnClickListener {
-    lateinit var binding: MainCategorizedBinding
+class MainCategorizedPage : Fragment(R.layout.main_categorized), OnClickListener {
+    private val binding by viewBinding(MainCategorizedBinding::bind)
     private lateinit var spinner: Spinner
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding= MainCategorizedBinding.inflate(inflater)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

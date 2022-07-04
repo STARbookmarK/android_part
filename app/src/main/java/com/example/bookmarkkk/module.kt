@@ -11,8 +11,14 @@ val module = module {
     }
 }
 
-val viewModel = module {
+val repositoryModule = module {
+    single {
+        Repository(get(), androidApplication())
+    }
+}
+
+val viewModelModule = module {
     viewModel {
-        ViewModel()
+        ViewModel(get())
     }
 }

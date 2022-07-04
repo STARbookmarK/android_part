@@ -6,7 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
+import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.bookmarkkk.databinding.LoginBinding
 import com.example.bookmarkkk.databinding.MyinfoBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,23 +21,19 @@ import retrofit2.Callback
 import retrofit2.Response
 import kotlin.math.log
 
-class MyInfoPage : Fragment() {
-    private lateinit var binding: MyinfoBinding
-    private lateinit var spinner: Spinner
-    private var loginType = 0
-    private val infoSaveModule : DataStoreModule by inject()
+class MyInfoPage : Fragment(R.layout.myinfo) {
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = MyinfoBinding.inflate(inflater)
-        return binding.root
-    }
+    private val binding by viewBinding(MyinfoBinding::bind)
+    private lateinit var spinner: Spinner
+    private val viewModel : ViewModel by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.userData.observe(viewLifecycleOwner, Observer {
+            binding.nickNameText.text = it.nickname
+            binding.introText.text = it.info
+        })
 
         context?.let {
             spinner = Spinner(it)
@@ -49,22 +48,5 @@ class MyInfoPage : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        NetworkClient.userInfoService.getUserInfo()
-            .enqueue(object: Callback<UserInfo> {
-                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
-                    if (response.isSuccessful.not()){
-                        Log.e("MyInfoPage", response.toString())
-                        return
-                    }else{
-                        response.body()?.let {
-                            binding.nickNameText.text = it.nickname
-                            binding.introText.text = it.info
-                        }
-                    }
-                }
-                override fun onFailure(call: Call<UserInfo>, t: Throwable){
-                    Log.e(LoginPage.TAG, t.toString())
-                }
-            })
     }
 }

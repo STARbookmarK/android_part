@@ -34,7 +34,7 @@
         <item name="stIconStart">@drawable/favorite</item>
         <item name="stIconEnd">@drawable/favorite</item>
         <item name="stLength">SHORT</item> LONG or SHORT
-        <item name="stGravity">center</item> top or center
+        <item name="stGravity">top</item> top or center
         <item name="stRadius">20dp</item>
     </style>
     <style name="errorToast">

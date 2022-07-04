@@ -5,11 +5,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.core.app.ActivityCompat.requireViewById
 import androidx.fragment.app.Fragment
+import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.bookmarkkk.databinding.LoginBinding
 import com.example.bookmarkkk.databinding.ModifyInfoBinding
 import io.github.muddz.styleabletoast.StyleableToast
 import kotlinx.coroutines.CoroutineScope
@@ -23,23 +26,15 @@ import retrofit2.Response
 import java.math.BigInteger
 import kotlin.math.log
 
-class ModifyInfoPage : Fragment(), View.OnClickListener {
-    private lateinit var binding: ModifyInfoBinding
+class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
+
+    private val binding by viewBinding(ModifyInfoBinding::bind)
     private lateinit var originPw : String
     private val infoSaveModule : DataStoreModule by inject()
     private val coroutineScope by lazy{ CoroutineScope(Dispatchers.IO) }
     private var bookmarkShow = 0
     private var hashtagShow = 0
     private var hashtagCategory = 0
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding= ModifyInfoBinding.inflate(inflater)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

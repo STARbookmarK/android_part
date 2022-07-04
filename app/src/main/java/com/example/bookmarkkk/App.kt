@@ -17,7 +17,8 @@ class App : Application() {
             androidContext(this@App)
             modules(
                 module,
-                viewModel
+                repositoryModule,
+                viewModelModule
             )
         }
     }
