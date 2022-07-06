@@ -13,7 +13,7 @@ val module = module {
 
 val repositoryModule = module {
     single {
-        Repository(get(), androidApplication())
+        UserRepository(androidApplication())
     }
 }
 

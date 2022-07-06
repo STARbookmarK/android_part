@@ -16,6 +16,8 @@ import javax.net.ssl.SSLSession
 
 object NetworkClient {
 
+    private const val BASE_URL = "http://dev.stark.r-e.kr/"
+
     var builder = OkHttpClient().newBuilder()
 
     var okHttpClient = builder
@@ -25,7 +27,7 @@ object NetworkClient {
     var gson = GsonBuilder().setLenient().create()
 
     val retrofit = Retrofit.Builder()
-        .baseUrl("http://dev.stark.r-e.kr/")
+        .baseUrl(BASE_URL)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
@@ -36,6 +38,7 @@ object NetworkClient {
     val bookmarkService : BookmarkService by lazy { retrofit.create(BookmarkService::class.java)}
 }
 
+// API 테스트용
 object TestClient {
 
     var gson = GsonBuilder().setLenient().create()

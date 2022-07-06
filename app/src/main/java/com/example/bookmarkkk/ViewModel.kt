@@ -12,36 +12,19 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 import kotlin.math.log
 
-class ViewModel(private val repository: Repository) : ViewModel() {
+class ViewModel(
+    private val repository: UserRepository
+    ) : ViewModel() {
 
     var userData : MutableLiveData<UserInfo> = MutableLiveData()
-    var loginResultValue : MutableLiveData<Int> = MutableLiveData()
-    var autoLoginValue : MutableLiveData<Int> = MutableLiveData()
-    var joinValue : MutableLiveData<Int> = MutableLiveData()
 
     init {
         repository.getUser()
         userData = repository.userData
     }
 
-    fun login(data: LoginData) {
-        repository.login(data)
-        loginResultValue = repository.loginResult
-    }
-
-    fun runAutoLogin() {
-        repository.runAutoLogin()
-        autoLoginValue = repository.autoLoginValue
-    }
-
-    fun logout() {
-        repository.logout()
-        loginResultValue = repository.loginResult
-    }
-
-    fun join(data: SignUpData) {
-        repository.join(data)
-        joinValue = repository.joinValue
+    fun changeBio(info: String){
+        repository.changeBio(info)
     }
 
 }

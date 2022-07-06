@@ -1,18 +1,16 @@
 package com.example.bookmarkkk
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat.finishAffinity
-import androidx.core.app.ActivityCompat.requireViewById
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.example.bookmarkkk.databinding.LoginBinding
 import com.example.bookmarkkk.databinding.ModifyInfoBinding
 import io.github.muddz.styleabletoast.StyleableToast
 import kotlinx.coroutines.CoroutineScope
@@ -23,14 +21,13 @@ import org.koin.android.ext.android.inject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.math.BigInteger
-import kotlin.math.log
 
 class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
 
     private val binding by viewBinding(ModifyInfoBinding::bind)
     private lateinit var originPw : String
     private val infoSaveModule : DataStoreModule by inject()
+    private val viewModel : ViewModel by inject()
     private val coroutineScope by lazy{ CoroutineScope(Dispatchers.IO) }
     private var bookmarkShow = 0
     private var hashtagShow = 0
@@ -38,10 +35,15 @@ class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //서버랑 통신해서 닉네임 + 상태메세지 + 보기값 저장 및 가져오기
-        //먼저 자동로그인이나 로그인 되면 서버랑 통신해서 사용자 정보값 다 가져온 다음에
-        //뷰모델이나 DataStore에 저장해서 쓰기??
-        //getUserInfo()
+
+        viewModel.userData.observe(viewLifecycleOwner, Observer { user ->
+            user?.let {
+                binding.userId.text = user.id
+                binding.nickName.text = user.nickname
+                binding.msgEditText.setText(user.info)
+            }
+        })
+
         binding.viewSettingOkBtn.setOnClickListener(this)
         binding.infoModifyOkBtn.setOnClickListener(this)
         binding.pwChangeOkBtn.setOnClickListener(this)
@@ -54,7 +56,8 @@ class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
                 bookmarkShow = if (binding.listCheck.isChecked) 1 else 0
                 hashtagShow = if (binding.invisibleCheck.isChecked) 1 else 0
                 hashtagCategory = if (binding.inActiveCheck.isChecked) 1 else 0
-                changeViewType(bookmarkShow, hashtagShow, hashtagCategory)
+                val data = BookmarkViewInfo(bookmarkShow, hashtagShow, hashtagCategory)
+                changeViewType(data)
             }
             R.id.infoModifyOkBtn -> { // 사용자 정보 수정
                 changeBio(binding.msgEditText.text.toString())
@@ -68,7 +71,8 @@ class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
                     if(newPassword != newPasswordCheck){
                         Toast.makeText(context, "새 비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show()
                     }else{
-                        changePassword(oldPassword, newPassword)
+                        val data = Password(oldPassword, newPassword)
+                        changePassword(data)
                     }
                 }else{
                     Toast.makeText(context, "기존 비밀번호를 다시 입력해주세요.", Toast.LENGTH_SHORT).show()
@@ -78,30 +82,18 @@ class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
     }
 
     private fun changeBio(info: String) { // 소개글 변경
-        NetworkClient.userInfoService.changeBio(BioOfUserInfo(info))
-            .enqueue(object : Callback<Void>{
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful.not()){
-                        Log.e(TAG, response.toString())
-                    }else{
-                        context?.let { StyleableToast.makeText(it, "소개글 변경", R.style.bioToast).show() }
-                    }
-                }
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.e(LoginPage.TAG, t.toString())
-                }
-            })
+        viewModel.changeBio(info)
     }
 
-    private fun changePassword(pw: String, newPw: String){ // 비밀번호 변경
-        NetworkClient.userInfoService.changePassword(Password(pw, newPw))
+    private fun changePassword(data: Password){ // 비밀번호 변경
+        NetworkClient.userInfoService.changePassword(data)
             .enqueue(object : Callback<Void>{
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     if (response.isSuccessful.not()){
                         Log.e(TAG, response.toString())
                     }else{
                         logout()
-                        context?.let { StyleableToast.makeText(it, "비밀번호 변경, 다시 로그인해주세요", R.style.passwordToast).show() }
+                        StyleableToast.makeText(requireContext(), "비밀번호 변경, 다시 로그인해주세요", R.style.passwordToast).show()
                     }
                 }
                 override fun onFailure(call: Call<Void>, t: Throwable) {
@@ -110,14 +102,15 @@ class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
             })
     }
 
-    private fun changeViewType(bookmark: Int, hashtag: Int, category: Int){
-        NetworkClient.userInfoService.changeViewType(BookmarkViewInfo(bookmark, hashtag, category))
+    private fun changeViewType(data: BookmarkViewInfo){
+        //viewModel.changeViewType(data)
+        NetworkClient.userInfoService.changeViewType(data)
             .enqueue(object : Callback<Void>{
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     if (response.isSuccessful.not()){
                         Log.e(TAG, response.toString())
                     }else{
-                        context?.let { StyleableToast.makeText(it, "보기방식 변경", R.style.bioToast).show() }
+                        StyleableToast.makeText(requireContext(), "보기방식 변경", R.style.bioToast).show()
                         val intent = Intent(context, MainActivity::class.java) // 메인화면으로 이동
                         startActivity(intent)
                     }
@@ -133,16 +126,17 @@ class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
         NetworkClient.authenticationService.logout()
             .enqueue(object : Callback<Void>{
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful.not()){
-                        Log.e(MainActivity.TAG, response.toString())
-                    }else{
-                        val intent = Intent(context, FirstActivity::class.java) // 로그아웃 시 초기화면으로 이동
+                    if (response.isSuccessful){ // 로그아웃 성공
+                        StyleableToast.makeText(requireContext(), "로그아웃", R.style.logoutToast).show()
+                        val intent = Intent(requireContext(), FirstActivity::class.java) // 로그아웃 시 초기화면으로 이동
                         startActivity(intent)
-                        activity?.finishAffinity() // 쌓였던 모든 프래그먼트 스택 삭제
+                    }else {
+                        StyleableToast.makeText(requireContext(), "로그아웃 실패", R.style.errorToast).show()
+                        Log.e(TAG, response.toString())
                     }
                 }
                 override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.e(MainActivity.TAG, t.toString())
+                    Log.e(TAG, t.toString())
                 }
             })
     }
@@ -157,9 +151,6 @@ class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
                         Log.e(TAG, response.toString())
                     }else{
                         response.body()?.let {
-                            binding.userId.text = it.id
-                            binding.nickName.text = it.nickname
-                            binding.msgEditText.setText(it.info)
                             if (it.bookmarkShow==1){
                                 binding.radioGroup.check(R.id.listCheck)
                             }else{
@@ -189,5 +180,4 @@ class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
     companion object{
         const val TAG = "ModifyInfoPage"
     }
-
 }

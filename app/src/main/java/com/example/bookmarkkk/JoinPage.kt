@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.bookmarkkk.databinding.JoinBinding
+import io.github.muddz.styleabletoast.StyleableToast
 import org.koin.android.ext.android.inject
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,9 +20,8 @@ import retrofit2.Response
 class JoinPage : Fragment(R.layout.join), OnClickListener { // 회원가입 페이지
 
     private val binding by viewBinding(JoinBinding::bind)
-    private var idCheckValue = 0
-    private var nameCheckValue = 0
-    private val viewModel : ViewModel by inject()
+    private var idCheckValue = 0 // id 중복체크를 위한 변수
+    private var nameCheckValue = 0 // 닉네임 중복체크를 위한 변수
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -40,7 +40,6 @@ class JoinPage : Fragment(R.layout.join), OnClickListener { // 회원가입 페�
                 nickNameCheck(binding.nicknameEdit.text.toString())
             }
             R.id.joinOkBtn -> {
-                // empty string check
                 val id = binding.idEdit.text.toString()
                 val pw = binding.pwEdit.text.toString()
                 val pwCheck = binding.pwCheckEdit.text.toString()
@@ -54,7 +53,8 @@ class JoinPage : Fragment(R.layout.join), OnClickListener { // 회원가입 페�
                         if (idCheckValue == 0 || nameCheckValue == 0){ // 아이디, 닉네임 중복체크 안했을 경우
                             Toast.makeText(context, "아이디 또는 닉네임은 중복확인이 필수입니다.", Toast.LENGTH_SHORT).show()
                         }else { // 입력값, 비밀번호 확인, 중복체크 모두 완료했을 경우 가입절차 실행
-                            register(id, pw, nickname, info)
+                            val data = SignUpData(id, pw, nickname, info)
+                            register(data)
                         }
                     }else{
                         binding.pwCheckShowText.text = "비밀번호가 일치하지 않습니다."
@@ -65,13 +65,21 @@ class JoinPage : Fragment(R.layout.join), OnClickListener { // 회원가입 페�
         }
     }
 
-    private fun register(id: String, pw: String, nickname: String, info: String){
-        val data = SignUpData(id, pw, nickname, info)
-        viewModel.join(data)
-        viewModel.joinValue.observe(viewLifecycleOwner, Observer { value ->
-            if (value == 1)
-                Navigation.findNavController(binding.root).navigate(R.id.join_to_first)
-        })
+    private fun register(data: SignUpData){
+        NetworkClient.signUpService.signUp(data)
+            .enqueue(object: Callback<Void> {
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (response.isSuccessful){ // 이미 존재하는 아이디 또는 닉네임을 입력했을 경우
+                        StyleableToast.makeText(requireContext(), "가입되었습니다. 다시 로그인 해주세요", R.style.joinToast).show()
+                        Navigation.findNavController(binding.root).navigate(R.id.join_to_first)
+                    }else{
+                        Toast.makeText(context, "아이디 또는 닉네임은 중복확인이 필수입니다.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    Log.e(TAG, t.toString() )
+                }
+            })
     }
 
     private fun idCheck(user_id : String){ // id 중복체크
