@@ -38,19 +38,19 @@ class AddBookmarkDialog : DialogFragment() {
             val info = binding.descriptionEdit.toString()
             val rate = binding.rateText.text.toString()
 
-            TestClient.bookmarkService.addBookmark(Bookmark(tag, url, info, rate)) // 뷰타입 지정
-                .enqueue(object: Callback<Void> {
-                    override fun onResponse(call: Call<Void>, response: Response<Void>){
-                        if (response.isSuccessful.not()){
-                            Log.e(TAG, response.toString())
-                        }else{
-                            context?.let { StyleableToast.makeText(it, "SAVE", R.style.saveToast).show() }
-                        }
-                    }
-                    override fun onFailure(call: Call<Void>, t: Throwable){
-                        Log.e(TAG, t.toString())
-                    }
-                })
+//            TestClient.bookmarkService.addBookmark(Bookmark(tag, url, info, rate)) // 뷰타입 지정
+//                .enqueue(object: Callback<Void> {
+//                    override fun onResponse(call: Call<Void>, response: Response<Void>){
+//                        if (response.isSuccessful.not()){
+//                            Log.e(TAG, response.toString())
+//                        }else{
+//                            context?.let { StyleableToast.makeText(it, "SAVE", R.style.saveToast).show() }
+//                        }
+//                    }
+//                    override fun onFailure(call: Call<Void>, t: Throwable){
+//                        Log.e(TAG, t.toString())
+//                    }
+//                })
         }
     }
 

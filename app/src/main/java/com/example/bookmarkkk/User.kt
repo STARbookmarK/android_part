@@ -47,8 +47,8 @@ data class Password( // 비밀번호
 )
 
 data class BookmarkViewInfo( // 북마크 보기방식
-    @SerializedName("bookmarkShow") val bookmarkShow: Int, // 북마크 출력 방식
-    @SerializedName("hashtagShow") val hashtagShow: Int, // 즐겨찾기 해시태그
-    @SerializedName("hashtagCategory") val hashtagCategory: Int // 즐겨찾기 해시태그 카테고리화
+    @SerializedName("bookmarkShow") var bookmarkShow: Int, // 북마크 출력 방식
+    @SerializedName("hashtagShow") var hashtagShow: Int, // 즐겨찾기 해시태그
+    @SerializedName("hashtagCategory") var hashtagCategory: Int // 즐겨찾기 해시태그 카테고리화
 )
 
