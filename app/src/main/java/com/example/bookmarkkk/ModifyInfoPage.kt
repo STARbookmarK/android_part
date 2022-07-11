@@ -103,7 +103,6 @@ class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
     }
 
     private fun changeViewType(data: BookmarkViewInfo){
-        //viewModel.changeViewType(data)
         NetworkClient.userInfoService.changeViewType(data)
             .enqueue(object : Callback<Void>{
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
