@@ -12,19 +12,19 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 import kotlin.math.log
 
-class ViewModel(
-    private val repository: UserRepository
-    ) : ViewModel() {
+class ViewModel(private val repository: UserRepository) : ViewModel() {
 
     var userData : MutableLiveData<UserInfo> = MutableLiveData()
+    var bookmarkList : MutableLiveData<List<Bookmark>> = MutableLiveData()
 
     init {
         repository.getUser()
+        repository.getBookmarks()
         userData = repository.userData
+        bookmarkList = repository.bookmarkList
     }
 
     fun changeBio(info: String){
         repository.changeBio(info)
     }
-
 }

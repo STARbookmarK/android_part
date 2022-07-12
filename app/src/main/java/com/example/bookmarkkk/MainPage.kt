@@ -1,17 +1,21 @@
 package com.example.bookmarkkk
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
+import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.bookmarkkk.databinding.MainNotCategorizedBinding
 import com.google.android.material.chip.Chip
 import io.github.muddz.styleabletoast.StyleableToast
+import org.koin.android.ext.android.inject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,31 +24,38 @@ class MainPage : Fragment(R.layout.main_not_categorized), OnClickListener { //�
 
     private val binding by viewBinding(MainNotCategorizedBinding::bind)
     private lateinit var spinner: Spinner
+    private val viewModel : ViewModel by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val adapter = BookMarkAdapter(requireContext())
-        val list = ArrayList<Bookmark>()
+        val list = arrayListOf("java", "kotlin", "android", "spring", "react") // 태그 예시
+        val states = arrayListOf("기말고사", "코딩테스트") // 즐겨찾기 상태 예시
+
         binding.listTypeBtn.setOnClickListener(this)
         binding.gridTypeBtn.setOnClickListener(this)
         binding.bookmarkAddBtn.setOnClickListener(this)
 
+        // 뷰 정렬방식(별점순, 최신순) 선택 스피너
         context?.let {
-            spinner= Spinner(it)
-            binding.stateSpinner.adapter=spinner.stateSpinnerSet()
-            binding.rankSpinner.adapter=spinner.rankSpinnerSet()
+            spinner = Spinner(it)
+            binding.rankSpinner.adapter = spinner.setRankSpinner()
         }
 
-        //태그 동적으로 추가
-        binding.tagGroup.addView(Chip(context).apply {
-            text = "ALL"
-            isCloseIconVisible = true // x버튼
-            setTextColor(ContextCompat.getColorStateList(context, R.color.black))
-            chipBackgroundColor = ContextCompat.getColorStateList(context, R.color.lightGray)
-            setOnCloseIconClickListener{ binding.tagGroup.removeView(this)}
-        })
+        // 즐겨찾기 상태 스피너에 동적으로 추가
+        val stateAdapter = ArrayAdapter(requireContext(), R.layout.state_spinner_style, states)
+        stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.stateSpinner.adapter = stateAdapter
 
+        //태그 동적으로 추가
+        list.forEach { tagName ->
+            binding.tagGroup.addView(
+                createTagChip(
+                    requireContext(),
+                    tagName)
+            )
+        }
 
         NetworkClient.userInfoService.getUserInfo() // 북마크 보기방식 지정
             .enqueue(object: Callback<UserInfo> {
@@ -67,21 +78,21 @@ class MainPage : Fragment(R.layout.main_not_categorized), OnClickListener { //�
             })
 
         // 북마크 조회
-        NetworkClient.bookmarkService.getAllBookmarks()
-            .enqueue(object : Callback<List<Bookmark>> {
-                override fun onResponse(call: Call<List<Bookmark>>, response: Response<List<Bookmark>>) {
-                    if (response.isSuccessful){
-                        response.body()?.let {
-                            list.addAll(it)
-                            adapter.addAll(list) // 어댑터에 데이터 추가
-                            binding.bookmarkView.adapter = adapter // recyclerView, adapter 연결
-                        }
-                    }
-                }
-                override fun onFailure(call: Call<List<Bookmark>>, t: Throwable) {
-                    Log.e(TAG, t.toString())
-                }
-            })
+        viewModel.bookmarkList.observe(viewLifecycleOwner, Observer { items ->
+            adapter.removeAll()
+            adapter.add(items)
+            binding.bookmarkView.adapter = adapter
+        })
+    }
+
+    private fun createTagChip(context: Context, tagName: String): Chip {
+        return Chip(context).apply {
+            text = tagName
+            isCloseIconVisible = true // x버튼
+            setTextColor(ContextCompat.getColorStateList(context, R.color.black))
+            chipBackgroundColor = ContextCompat.getColorStateList(context, R.color.lightGray)
+            setOnCloseIconClickListener{ binding.tagGroup.removeView(this)}
+        }
     }
 
     override fun onClick(v: View?) {

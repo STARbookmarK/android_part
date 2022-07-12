@@ -17,6 +17,7 @@ class MyInfoPage : Fragment(R.layout.myinfo) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // 회원정보 조회
         viewModel.userData.observe(viewLifecycleOwner, Observer { user ->
             user?.let {
                 binding.nickNameText.text = user.nickname
@@ -24,9 +25,10 @@ class MyInfoPage : Fragment(R.layout.myinfo) {
             }
         })
 
+        // 뷰 정렬방식(별점순, 최신순) 선택 스피너
         context?.let {
             spinner = Spinner(it)
-            binding.rankSpinner.adapter = spinner.rankSpinnerSet()
+            binding.rankSpinner.adapter = spinner.setRankSpinner()
         }
 
         binding.modifyBtn.setOnClickListener {

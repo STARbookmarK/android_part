@@ -31,7 +31,7 @@ class BookMarkAdapter(private val context : Context) : RecyclerView.Adapter<Book
         return bookmarkList.size
     }
 
-    fun addAll (item : List<Bookmark>){
+    fun add (item : List<Bookmark>){
         bookmarkList.addAll(item)
     }
 
