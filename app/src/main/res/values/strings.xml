@@ -13,4 +13,13 @@
     <string name="categorized_hashtags">즐겨찾기 해시태그 카테고리화</string>
     <string name="modify_title">수정</string>
     <string name="rate">Rate</string>
+    <string name="bookmark_title">제목</string>
+    <string name="tag">태그</string>
+    <string name="description">소개</string>
+    <string name="url">URL</string>
+    <string name="save">저장</string>
+    <string name="default_rate">3</string>
+    <string name="shared">공유 허용</string>
+    <string name="delete">삭제</string>
+    <string name="modify">변경</string>
 </resources>

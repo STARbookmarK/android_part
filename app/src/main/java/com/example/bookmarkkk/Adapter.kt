@@ -1,20 +1,26 @@
 package com.example.bookmarkkk
 
+import android.app.Activity
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.bookmarkkk.databinding.GridBookmarkItemBinding
 import com.example.bookmarkkk.databinding.ListBookmarkItemBinding
 
 class BookMarkAdapter(private val context : Context) : RecyclerView.Adapter<BookMarkAdapter.Holder>() {
 
     private val bookmarkList = ArrayList<Bookmark>()
-    // list, grid view type 분리
     private lateinit var listBinding : ListBookmarkItemBinding
-    private lateinit var gridBinding : GridBookmarkItemBinding
+
+    interface ItemClick{
+        fun onClick(v: View, pos: Int, list: ArrayList<Bookmark>)
+    }
+    var itemClick : ItemClick? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val inflater = LayoutInflater.from(context)
@@ -23,8 +29,12 @@ class BookMarkAdapter(private val context : Context) : RecyclerView.Adapter<Book
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        //
         holder.onBind(bookmarkList[position])
+        if (itemClick!=null){
+            holder.view.setOnClickListener { v ->
+                itemClick?.onClick(v, position, bookmarkList)
+            }
+        }
     }
 
     override fun getItemCount(): Int {
@@ -43,22 +53,18 @@ class BookMarkAdapter(private val context : Context) : RecyclerView.Adapter<Book
         bookmarkList.clear()
     }
 
-    inner class Holder(private val view: View) : RecyclerView.ViewHolder(view) {
+    inner class Holder(val view: View) : RecyclerView.ViewHolder(view) {
 
         fun onBind(item: Bookmark){
             listBinding.bookmark = item
             listBinding.rate.text = item.rate.toString()
+            listBinding.deleteBtn.setOnClickListener {
+                Log.e("Adapter", item.id.toString())
+                val dialog = MenuDialog(item.id)
+                (context as AppCompatActivity).let {
+                    dialog.show(it.supportFragmentManager, "MenuDialog")
+                }
+            }
         }
-    }
-
-//    inner class GridHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-//        fun onBind(item: Bookmark){
-//            gridBinding.bookmark = item
-//        }
-//    }
-
-    companion object{
-        const val LIST_TYPE = 1
-        const val GRID_TYPE = 0
     }
 }

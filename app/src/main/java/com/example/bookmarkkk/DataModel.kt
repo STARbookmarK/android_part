@@ -1,6 +1,5 @@
 package com.example.bookmarkkk
 
-import android.provider.ContactsContract
 import com.google.gson.annotations.SerializedName
 
 data class UserId(
@@ -50,5 +49,28 @@ data class BookmarkViewInfo( // 북마크 보기방식
     @SerializedName("bookmarkShow") var bookmarkShow: Int, // 북마크 출력 방식
     @SerializedName("hashtagShow") var hashtagShow: Int, // 즐겨찾기 해시태그
     @SerializedName("hashtagCategory") var hashtagCategory: Int // 즐겨찾기 해시태그 카테고리화
+)
+
+data class Bookmark( // 북마크
+    @SerializedName("id") val id : Int,
+    @SerializedName("title") val title : String,
+    @SerializedName("address") val address : String,
+    @SerializedName("image") val image : String,
+    @SerializedName("description") val description : String,
+    @SerializedName("rate") val rate : Int,
+    @SerializedName("hashtags") val tags : String
+)
+
+data class BookmarkForAdd( // 북마크 추가
+    @SerializedName("title") val title : String,
+    @SerializedName("address") val address: String,
+    @SerializedName("description") val description: String,
+    @SerializedName("rate") val rate : Int,
+    @SerializedName("shared") val shared : Boolean,
+    @SerializedName("hashtags") val hashtags : List<String>
+)
+
+data class BookmarkId( // 아이디 중복체크
+    @SerializedName("id") val id: Int
 )
 

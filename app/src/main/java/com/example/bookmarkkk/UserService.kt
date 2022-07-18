@@ -38,10 +38,12 @@ interface UserInfoService { // 사용자 정보 관련
 interface BookmarkService { // 북마크 관련
     @GET("api/bookmarks")
     fun getAllBookmarks():Call<List<Bookmark>> // 모든 북마크 조회
-//    @POST("api/bookmarks")
-//    fun addBookmark(@Body data: Bookmark):Call<Void> // 북마크 추가
-//    @DELETE("api/bookmarks/{bookmarks_id}")
-//    fun deleteBookmark(@Path("bookmarks_id") id: String):Call<Void> // 북마크 삭제
+    @POST("api/bookmarks")
+    fun addBookmark(@Body item: BookmarkForAdd):Call<Void>
+    @HTTP(method = "DELETE", path = "api/bookmarks", hasBody = true)
+    fun deleteBookmark(@Body item: BookmarkId):Call<Void> // 북마크 삭제
+//    @DELETE("api/bookmarks")
+//    fun deleteBookmark(@Body item: BookmarkId):Call<Void> // 북마크 삭제
 //    @PUT("api/bookmarks/{bookmarks_id}")
 //    fun updateBookmark(@Path("bookmarks_id") id: String):Call<Void> // 북마크 편집
 }

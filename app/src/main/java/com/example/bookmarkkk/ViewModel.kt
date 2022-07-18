@@ -24,6 +24,14 @@ class ViewModel(private val repository: UserRepository) : ViewModel() {
         bookmarkList = repository.bookmarkList
     }
 
+    fun addBookmark(item: BookmarkForAdd){
+        repository.addBookmark(item)
+    }
+
+    fun deleteBookmark(id : BookmarkId){
+        repository.deleteBookmark(id)
+    }
+
     fun changeBio(info: String){
         repository.changeBio(info)
     }

@@ -1,6 +1,8 @@
 package com.example.bookmarkkk
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -22,20 +24,24 @@ import retrofit2.Response
 
 class MainPage : Fragment(R.layout.main_not_categorized), OnClickListener { //카테고리화를 선택하지 않았을 때 화면(기본값)
 
-    private val binding by viewBinding(MainNotCategorizedBinding::bind)
+    private val binding by viewBinding(MainNotCategorizedBinding::bind,
+        onViewDestroyed = { binding ->
+            binding.bookmarkView.adapter = null
+        }
+    )
     private lateinit var spinner: Spinner
     private val viewModel : ViewModel by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = BookMarkAdapter(requireContext())
-        val list = arrayListOf("java", "kotlin", "android", "spring", "react") // 태그 예시
-        val states = arrayListOf("기말고사", "코딩테스트") // 즐겨찾기 상태 예시
-
         binding.listTypeBtn.setOnClickListener(this)
         binding.gridTypeBtn.setOnClickListener(this)
         binding.bookmarkAddBtn.setOnClickListener(this)
+
+        val adapter = BookMarkAdapter(requireContext())
+        val list = arrayListOf("java", "kotlin") // 태그 예시
+        //val states = arrayListOf("기말고사", "코딩테스트") // 즐겨찾기 상태 예시
 
         // 뷰 정렬방식(별점순, 최신순) 선택 스피너
         context?.let {
@@ -44,9 +50,9 @@ class MainPage : Fragment(R.layout.main_not_categorized), OnClickListener { //�
         }
 
         // 즐겨찾기 상태 스피너에 동적으로 추가
-        val stateAdapter = ArrayAdapter(requireContext(), R.layout.state_spinner_style, states)
-        stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.stateSpinner.adapter = stateAdapter
+//        val stateAdapter = ArrayAdapter(requireContext(), R.layout.state_spinner_style, states)
+//        stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//        binding.stateSpinner.adapter = stateAdapter
 
         //태그 동적으로 추가
         list.forEach { tagName ->
@@ -55,6 +61,14 @@ class MainPage : Fragment(R.layout.main_not_categorized), OnClickListener { //�
                     requireContext(),
                     tagName)
             )
+        }
+
+        // 북마크 클릭 시 해당 주소로 이동
+        adapter.itemClick = object : BookMarkAdapter.ItemClick{
+            override fun onClick(v: View, pos: Int, list: ArrayList<Bookmark>) {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(list[pos].address))
+                startActivity(intent)
+            }
         }
 
         NetworkClient.userInfoService.getUserInfo() // 북마크 보기방식 지정
@@ -112,6 +126,12 @@ class MainPage : Fragment(R.layout.main_not_categorized), OnClickListener { //�
 
     override fun onStart() {
         super.onStart()
+        Log.e(TAG, "onStart()")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.e(TAG, "onPause()")
     }
 
     companion object{
