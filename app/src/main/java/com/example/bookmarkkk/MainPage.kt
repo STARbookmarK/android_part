@@ -11,16 +11,25 @@ import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.withCreated
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.bumptech.glide.Glide
 import com.example.bookmarkkk.databinding.MainNotCategorizedBinding
 import com.google.android.material.chip.Chip
+import com.haroldadmin.opengraphKt.getOpenGraphTags
 import io.github.muddz.styleabletoast.StyleableToast
+import kotlinx.coroutines.*
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.IOException
+import java.net.MalformedURLException
+import java.net.URL
+import kotlin.coroutines.coroutineContext
 
 class MainPage : Fragment(R.layout.main_not_categorized), OnClickListener { //카테고리화를 선택하지 않았을 때 화면(기본값)
 
@@ -30,7 +39,8 @@ class MainPage : Fragment(R.layout.main_not_categorized), OnClickListener { //�
         }
     )
     private lateinit var spinner: Spinner
-    private val viewModel : ViewModel by inject()
+    private val viewModel : ViewModel by viewModel()
+    private var tagUrl = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -42,6 +52,12 @@ class MainPage : Fragment(R.layout.main_not_categorized), OnClickListener { //�
         val adapter = BookMarkAdapter(requireContext())
         val list = arrayListOf("java", "kotlin") // 태그 예시
         //val states = arrayListOf("기말고사", "코딩테스트") // 즐겨찾기 상태 예시
+
+//        viewModel.bookmarkList.observe(viewLifecycleOwner, Observer { items ->
+//            items.forEach { bookmark ->
+//                Log.e(TAG, bookmark.tags.toString())
+//            }
+//        })
 
         // 뷰 정렬방식(별점순, 최신순) 선택 스피너
         context?.let {
@@ -121,6 +137,22 @@ class MainPage : Fragment(R.layout.main_not_categorized), OnClickListener { //�
             R.id.grid_type_btn -> {
                 binding.bookmarkView.layoutManager = GridLayoutManager(context, 2)
             }
+        }
+    }
+
+    private fun getImg() = runBlocking {
+        try {
+            val url = URL("https://www.naver.com/")
+            tagUrl = url.getOpenGraphTags().image.toString()
+            //Log.e(TAG, url.getOpenGraphTags().image.toString())
+//            withContext(Dispatchers.Main){
+//                Glide.with(requireContext()).load(url.getOpenGraphTags().image).into(binding.bookmarkImgView)
+//            }
+        } catch (ex: MalformedURLException) {
+            println("Invalid URL: ${ex.localizedMessage}")
+        } catch (ex: IOException) {
+            println("Something went wrong.")
+            ex.printStackTrace()
         }
     }
 

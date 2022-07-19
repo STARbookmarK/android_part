@@ -42,10 +42,12 @@ interface BookmarkService { // 북마크 관련
     fun addBookmark(@Body item: BookmarkForAdd):Call<Void>
     @HTTP(method = "DELETE", path = "api/bookmarks", hasBody = true)
     fun deleteBookmark(@Body item: BookmarkId):Call<Void> // 북마크 삭제
+    @GET("api/hashtags")
+    fun getTags():Call<List<HashTag>>
 //    @DELETE("api/bookmarks")
 //    fun deleteBookmark(@Body item: BookmarkId):Call<Void> // 북마크 삭제
-//    @PUT("api/bookmarks/{bookmarks_id}")
-//    fun updateBookmark(@Path("bookmarks_id") id: String):Call<Void> // 북마크 편집
+    @PATCH("api/bookmarks")
+    fun updateBookmark(@Body item: BookmarkForModify):Call<Void> // 북마크 편집
 }
 
 

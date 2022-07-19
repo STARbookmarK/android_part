@@ -18,6 +18,7 @@ class UserRepository(private val context: Context) {
 
     val userData : MutableLiveData<UserInfo> = MutableLiveData()
     val bookmarkList : MutableLiveData<List<Bookmark>> = MutableLiveData()
+    val tagList : MutableLiveData<List<HashTag>> = MutableLiveData()
 
     fun getUser(){ // 회원정보 조회
         NetworkClient.userInfoService.getUserInfo()
@@ -70,6 +71,46 @@ class UserRepository(private val context: Context) {
                 }
             })
     }
+
+    fun getHashTags(){
+        NetworkClient.bookmarkService.getTags()
+            .enqueue(object : Callback<List<HashTag>>{
+                override fun onResponse(call: Call<List<HashTag>>, response: Response<List<HashTag>>) {
+                    if (response.isSuccessful){
+                        response.body()?.let {
+                            tagList.value = it
+                        }
+                    }else{
+                        Log.e("repo - getTag", response.toString())
+                    }
+                }
+                override fun onFailure(call: Call<List<HashTag>>, t: Throwable) {
+                    Log.e("repo - getTag", t.toString())
+                }
+            })
+    }
+
+//    fun getImageUrl(){ // 북마크 url 조회
+//        NetworkClient.bookmarkService.getAllBookmarks()
+//            .enqueue(object : Callback<List<Bookmark>> {
+//                override fun onResponse(call: Call<List<Bookmark>>, response: Response<List<Bookmark>>) {
+//                    if (response.isSuccessful){
+//                        response.body()?.let {
+//                            val list = mutableListOf<String>()
+//                            it.forEach { bookmark ->
+//                                list.add(bookmark.address)
+//                            }
+//                            urlList.value = list
+//                        }
+//                    }else{
+//                        Log.e(TAG, response.toString())
+//                    }
+//                }
+//                override fun onFailure(call: Call<List<Bookmark>>, t: Throwable) {
+//                    Log.e(TAG, t.toString())
+//                }
+//            })
+//    }
 
     fun addBookmark(item : BookmarkForAdd) {
         NetworkClient.bookmarkService.addBookmark(item)

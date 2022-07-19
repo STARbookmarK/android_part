@@ -7,12 +7,13 @@ import androidx.lifecycle.Observer
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.bookmarkkk.databinding.MyinfoBinding
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MyInfoPage : Fragment(R.layout.myinfo) {
 
     private val binding by viewBinding(MyinfoBinding::bind)
     private lateinit var spinner: Spinner
-    private val viewModel : ViewModel by inject()
+    private val viewModel : ViewModel by viewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

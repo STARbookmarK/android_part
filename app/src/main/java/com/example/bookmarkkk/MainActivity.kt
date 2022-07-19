@@ -23,7 +23,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), OnClickListener 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         runBottomBar()
-
         binding.logoutBtn.setOnClickListener(this)
     }
 

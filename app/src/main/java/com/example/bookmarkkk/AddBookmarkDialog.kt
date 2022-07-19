@@ -1,6 +1,7 @@
 package com.example.bookmarkkk
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -90,7 +91,6 @@ class AddBookmarkDialog : DialogFragment(), OnClickListener{
                 val list = binding.tagGroup.children.map {
                     (it as Chip).text.toString()
                 }.toList()
-
                 val item = BookmarkForAdd(
                     binding.titleEdit.text.toString(),
                     binding.urlEdit.text.toString(),
@@ -99,9 +99,10 @@ class AddBookmarkDialog : DialogFragment(), OnClickListener{
                     binding.sharedBtn.isChecked,
                     list
                 )
-
-                //Log.e(TAG, item.toString())
                 viewModel.addBookmark(item)
+                this.dismiss()
+                val intent = Intent(context, MainActivity::class.java) // 메인화면으로 이동
+                startActivity(intent)
             }
         }
     }

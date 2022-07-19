@@ -16,12 +16,15 @@ class ViewModel(private val repository: UserRepository) : ViewModel() {
 
     var userData : MutableLiveData<UserInfo> = MutableLiveData()
     var bookmarkList : MutableLiveData<List<Bookmark>> = MutableLiveData()
+    var tagList : MutableLiveData<List<HashTag>> = MutableLiveData()
 
     init {
         repository.getUser()
         repository.getBookmarks()
+        repository.getHashTags()
         userData = repository.userData
         bookmarkList = repository.bookmarkList
+        tagList = repository.tagList
     }
 
     fun addBookmark(item: BookmarkForAdd){
@@ -35,4 +38,5 @@ class ViewModel(private val repository: UserRepository) : ViewModel() {
     fun changeBio(info: String){
         repository.changeBio(info)
     }
+
 }

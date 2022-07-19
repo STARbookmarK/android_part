@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,7 +28,7 @@ class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
     private val binding by viewBinding(ModifyInfoBinding::bind)
     private lateinit var originPw : String
     private val infoSaveModule : DataStoreModule by inject()
-    private val viewModel : ViewModel by inject()
+    private val viewModel : ViewModel by viewModel()
     private val coroutineScope by lazy{ CoroutineScope(Dispatchers.IO) }
     private var bookmarkShow = 0
     private var hashtagShow = 0
@@ -36,6 +37,11 @@ class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.viewSettingOkBtn.setOnClickListener(this)
+        binding.infoModifyOkBtn.setOnClickListener(this)
+        binding.pwChangeOkBtn.setOnClickListener(this)
+        binding.viewSettingOkBtn.setOnClickListener(this)
+
         viewModel.userData.observe(viewLifecycleOwner, Observer { user ->
             user?.let {
                 binding.userId.text = user.id
@@ -43,11 +49,6 @@ class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
                 binding.msgEditText.setText(user.info)
             }
         })
-
-        binding.viewSettingOkBtn.setOnClickListener(this)
-        binding.infoModifyOkBtn.setOnClickListener(this)
-        binding.pwChangeOkBtn.setOnClickListener(this)
-        binding.viewSettingOkBtn.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
