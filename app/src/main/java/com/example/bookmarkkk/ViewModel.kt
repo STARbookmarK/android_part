@@ -12,15 +12,27 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 import kotlin.math.log
 
-class ViewModel(
-    private val repository: UserRepository
-    ) : ViewModel() {
+class ViewModel(private val repository: UserRepository) : ViewModel() {
 
     var userData : MutableLiveData<UserInfo> = MutableLiveData()
+    var bookmarkList : MutableLiveData<List<Bookmark>> = MutableLiveData()
+    var tagList : MutableLiveData<List<HashTag>> = MutableLiveData()
 
     init {
         repository.getUser()
+        repository.getBookmarks()
+        repository.getHashTags()
         userData = repository.userData
+        bookmarkList = repository.bookmarkList
+        tagList = repository.tagList
+    }
+
+    fun addBookmark(item: BookmarkForAdd){
+        repository.addBookmark(item)
+    }
+
+    fun deleteBookmark(id : BookmarkId){
+        repository.deleteBookmark(id)
     }
 
     fun changeBio(info: String){

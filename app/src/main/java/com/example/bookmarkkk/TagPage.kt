@@ -24,10 +24,12 @@ class TagPage : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        context?.let {
-            spinner= Spinner(it)
-            binding.stateSpinner.adapter=spinner.stateSpinnerSet()
-        }
+        val states = arrayListOf("기말고사", "코딩테스트") // 즐겨찾기 상태 예시
+
+        // 즐겨찾기 상태 스피너 동적으로 추가
+        val stateAdapter = ArrayAdapter(requireContext(), R.layout.state_spinner_style, states)
+        stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.stateSpinner.adapter = stateAdapter
 
         //태그 관리 화면으로
         binding.manageTagBtn.setOnClickListener {
