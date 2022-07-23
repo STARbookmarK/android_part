@@ -15,9 +15,6 @@
         android:theme="@style/Theme.Bookmarkkk"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".MainActivity2"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity

@@ -95,4 +95,5 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
 
     implementation "com.github.haroldadmin:opengraphKt:1.0.0"
+    implementation "com.github.skydoves:retrofit-adapters-result:1.0.1"
 }

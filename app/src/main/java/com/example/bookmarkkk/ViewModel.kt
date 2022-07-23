@@ -15,28 +15,50 @@ import kotlin.math.log
 class ViewModel(private val repository: UserRepository) : ViewModel() {
 
     var userData : MutableLiveData<UserInfo> = MutableLiveData()
+    //var bookmarkList : MutableLiveData<List<Bookmark>> = MutableLiveData()
     var bookmarkList : MutableLiveData<List<Bookmark>> = MutableLiveData()
     var tagList : MutableLiveData<List<HashTag>> = MutableLiveData()
+    var urlList : MutableLiveData<List<String>> = MutableLiveData()
 
     init {
         repository.getUser()
-        repository.getBookmarks()
+        viewModelScope.launch {
+            repository.getBookmarks()
+            repository.getImageUrl()
+        }
         repository.getHashTags()
         userData = repository.userData
         bookmarkList = repository.bookmarkList
         tagList = repository.tagList
+        urlList = repository.urlList
     }
 
     fun addBookmark(item: BookmarkForAdd){
-        repository.addBookmark(item)
+        viewModelScope.launch {
+            repository.addBookmark(item)
+        }
     }
 
-    fun deleteBookmark(id : BookmarkId){
-        repository.deleteBookmark(id)
+    fun modifyBookmark(item: BookmarkForModify) {
+        viewModelScope.launch {
+            repository.modifyBookmark(item)
+        }
     }
 
-    fun changeBio(info: String){
-        repository.changeBio(info)
+    fun deleteBookmark(id: BookmarkId) {
+        viewModelScope.launch {
+            repository.deleteBookmark(id)
+        }
+    }
+
+//    fun changeBio(info: String){
+//        repository.changeBio(info)
+//    }
+
+    fun changeBio(info: String) {
+        viewModelScope.launch {
+            repository.changeBio(info)
+        }
     }
 
 }

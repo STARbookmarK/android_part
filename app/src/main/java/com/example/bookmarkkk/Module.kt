@@ -5,6 +5,10 @@ import org.koin.android.java.KoinAndroidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
+
+
+// Retrofit 객체 모듈화
+
 val module = module {
     single {
         DataStoreModule(androidApplication())

@@ -7,10 +7,14 @@ import android.view.View
 import android.view.View.OnClickListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.bookmarkkk.databinding.ActivityMainBinding
 import io.github.muddz.styleabletoast.StyleableToast
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,6 +22,7 @@ import retrofit2.Response
 
 class MainActivity : AppCompatActivity(R.layout.activity_main), OnClickListener {
     private val binding by viewBinding(ActivityMainBinding::bind)
+    private val viewModel : ViewModel by viewModel()
     private var categoryType = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,7 +92,15 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), OnClickListener 
 
     override fun onStart() {
         super.onStart()
-
+//        viewModel.userData.observe(this, Observer { info ->
+//            if (info.hashtagCategory == 1){
+//                categoryType = 1
+//                changeFragment(MainPage())
+//            }else {
+//                categoryType = 0
+//                changeFragment(MainCategorizedPage())
+//            }
+//        })
         // livedata 사용하기에 적합하지 않음
         NetworkClient.userInfoService.getUserInfo()
             .enqueue(object: Callback<UserInfo> {

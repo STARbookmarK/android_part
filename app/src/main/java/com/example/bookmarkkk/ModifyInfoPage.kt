@@ -144,38 +144,58 @@ class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
     override fun onStart() {
         super.onStart()
         // 아이디, 닉네임, 소개글, 보기방식
-        NetworkClient.userInfoService.getUserInfo()
-            .enqueue(object: Callback<UserInfo> {
-                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
-                    if (response.isSuccessful.not()){
-                        Log.e(TAG, response.toString())
-                    }else{
-                        response.body()?.let {
-                            if (it.bookmarkShow==1){
-                                binding.radioGroup.check(R.id.listCheck)
-                            }else{
-                                binding.radioGroup.check(R.id.gridCheck)
-                            }
-                            if (it.hashtagShow==1){
-                                binding.radioGroup2.check(R.id.invisibleCheck)
-                            }else{
-                                binding.radioGroup2.check(R.id.visibleCheck)
-                            }
-                            if (it.hashtagCategory==1){
-                                binding.radioGroup3.check(R.id.inActiveCheck)
-                            }else{
-                                binding.radioGroup3.check(R.id.activeCheck)
-                            }
-                        }
-                        coroutineScope.launch {
-                            originPw = infoSaveModule.password.first() // 비밀번호 변경에 사용됨
-                        }
-                    }
-                }
-                override fun onFailure(call: Call<UserInfo>, t: Throwable){
-                    Log.e(TAG, t.toString())
-                }
-            })
+        viewModel.userData.observe(viewLifecycleOwner, Observer { info ->
+            if (info.bookmarkShow == 1){
+                binding.radioGroup.check(R.id.listCheck)
+            }else {
+                binding.radioGroup.check(R.id.gridCheck)
+            }
+            if (info.hashtagShow == 1){
+                binding.radioGroup2.check(R.id.invisibleCheck)
+            }else {
+                binding.radioGroup2.check(R.id.visibleCheck)
+            }
+            if (info.hashtagCategory == 1){
+                binding.radioGroup3.check(R.id.inActiveCheck)
+            }else {
+                binding.radioGroup3.check(R.id.activeCheck)
+            }
+        })
+        coroutineScope.launch {
+            originPw = infoSaveModule.password.first() // 비밀번호 변경에 사용됨
+        }
+//        NetworkClient.userInfoService.getUserInfo()
+//            .enqueue(object: Callback<UserInfo> {
+//                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
+//                    if (response.isSuccessful.not()){
+//                        Log.e(TAG, response.toString())
+//                    }else{
+//                        response.body()?.let {
+//                            if (it.bookmarkShow==1){
+//                                binding.radioGroup.check(R.id.listCheck)
+//                            }else{
+//                                binding.radioGroup.check(R.id.gridCheck)
+//                            }
+//                            if (it.hashtagShow==1){
+//                                binding.radioGroup2.check(R.id.invisibleCheck)
+//                            }else{
+//                                binding.radioGroup2.check(R.id.visibleCheck)
+//                            }
+//                            if (it.hashtagCategory==1){
+//                                binding.radioGroup3.check(R.id.inActiveCheck)
+//                            }else{
+//                                binding.radioGroup3.check(R.id.activeCheck)
+//                            }
+//                        }
+//                        coroutineScope.launch {
+//                            originPw = infoSaveModule.password.first() // 비밀번호 변경에 사용됨
+//                        }
+//                    }
+//                }
+//                override fun onFailure(call: Call<UserInfo>, t: Throwable){
+//                    Log.e(TAG, t.toString())
+//                }
+//            })
     }
     companion object{
         const val TAG = "ModifyInfoPage"

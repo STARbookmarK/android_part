@@ -2,28 +2,23 @@ package com.example.bookmarkkk
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.bookmarkkk.databinding.MenuDialogBinding
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
-class MenuDialog() : DialogFragment(), View.OnClickListener {
+class MenuDialog(
+    private val data: BookmarkForModify
+    ) : DialogFragment(), OnClickListener {
 
     private val binding by viewBinding(MenuDialogBinding::bind)
     private val viewModel : ViewModel by viewModel()
-    var bookmarkId = id
-    var tags = ""
-    var description = ""
-    var rate = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,19 +36,17 @@ class MenuDialog() : DialogFragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.deleteBookmarkBtn -> {
-                viewModel.deleteBookmark(BookmarkId(bookmarkId))
+            R.id.deleteBookmarkBtn -> { // 삭제
+                //viewModel.deleteBookmark(BookmarkId(data.id))
+                lifecycleScope.launch {
+                    viewModel.deleteBookmark(BookmarkId(data.id))
+                }
                 this.dismiss()
                 val intent = Intent(context, MainActivity::class.java) // 메인화면으로 이동
                 startActivity(intent)
             }
-            R.id.modifyBookmarkBtn -> {
-                val dialog = BookmarkModifyDialog().apply {
-                    m_bookmarkId = bookmarkId
-                    m_tags = tags
-                    m_description = description
-                    m_rate = rate
-                }
+            R.id.modifyBookmarkBtn -> { // 내용 수정
+                val dialog = BookmarkModifyDialog(data)
                 dialog.show(parentFragmentManager, "MenuDialog")
             }
         }

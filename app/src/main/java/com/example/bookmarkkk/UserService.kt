@@ -7,10 +7,14 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface AuthenticationService { // 로그인 관련
+//    @POST("api/login")
+//    fun login(@Body request: LoginData): Call<Void> // 로그인
+//    @GET("api/login")
+//    fun autoLogin():Call<UserId> // 자동로그인
     @POST("api/login")
-    fun login(@Body request: LoginData): Call<Void> // 로그인
+    suspend fun login(@Body request: LoginData): Response<Void> // 로그인
     @GET("api/login")
-    fun autoLogin():Call<UserId> // 자동로그인
+    suspend fun autoLogin(): Result<UserId>
     @GET("api/logout")
     fun logout():Call<Void> // 로그아웃
 }
@@ -27,8 +31,13 @@ interface SignUpService{ // 회원가입 관련
 interface UserInfoService { // 사용자 정보 관련
     @GET("api/infos")
     fun getUserInfo():Call<UserInfo> // 정보 확인
+//    @PATCH("api/infos")
+//    fun changeBio(@Body bio: BioOfUserInfo):Call<Void> // 소개글 변경
+
+//    @GET("api/infos")
+//    suspend fun getUserInfo():Response<UserInfo> // 정보 확인
     @PATCH("api/infos")
-    fun changeBio(@Body bio: BioOfUserInfo):Call<Void> // 소개글 변경
+    suspend fun changeBio(@Body bio: BioOfUserInfo):Response<Void> // 소개글 변경
     @PATCH("api/password")
     fun changePassword(@Body pwData: Password):Call<Void> // 패스워드 변경
     @PATCH("api/show")
@@ -36,18 +45,33 @@ interface UserInfoService { // 사용자 정보 관련
 }
 
 interface BookmarkService { // 북마크 관련
+//    @GET("api/bookmarks")
+//    fun getAllBookmarks():Call<List<Bookmark>> // 모든 북마크 조회
     @GET("api/bookmarks")
-    fun getAllBookmarks():Call<List<Bookmark>> // 모든 북마크 조회
+    suspend fun getAllBookmarks():Response<List<Bookmark>> // 모든 북마크 조회
+
+//    @POST("api/bookmarks")
+//    fun addBookmark(@Body item: BookmarkForAdd):Call<Void>
     @POST("api/bookmarks")
-    fun addBookmark(@Body item: BookmarkForAdd):Call<Void>
+    suspend fun addBookmark(@Body item: BookmarkForAdd):Result<Void>
+
+
+
+//    @HTTP(method = "DELETE", path = "api/bookmarks", hasBody = true)
+//    fun deleteBookmark(@Body item: BookmarkId):Call<Void> // 북마크 삭제
+
     @HTTP(method = "DELETE", path = "api/bookmarks", hasBody = true)
-    fun deleteBookmark(@Body item: BookmarkId):Call<Void> // 북마크 삭제
+    suspend fun deleteBookmark(@Body item: BookmarkId):Result<Void> // 북마크 삭제
+
     @GET("api/hashtags")
     fun getTags():Call<List<HashTag>>
-//    @DELETE("api/bookmarks")
-//    fun deleteBookmark(@Body item: BookmarkId):Call<Void> // 북마크 삭제
+
+
+//    @PATCH("api/bookmarks")
+//    fun updateBookmark(@Body item: BookmarkForModify):Call<Void> // 북마크 편집
+
     @PATCH("api/bookmarks")
-    fun updateBookmark(@Body item: BookmarkForModify):Call<Void> // 북마크 편집
+    suspend fun updateBookmark(@Body item: BookmarkForModify):Result<Void> // 북마크 편집
 }
 
 

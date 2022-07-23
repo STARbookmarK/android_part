@@ -13,12 +13,15 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 
 class UserRepository(private val context: Context) {
 
     val userData : MutableLiveData<UserInfo> = MutableLiveData()
-    val bookmarkList : MutableLiveData<List<Bookmark>> = MutableLiveData()
+    //val bookmarkList : MutableLiveData<List<Bookmark>> = MutableLiveData()
     val tagList : MutableLiveData<List<HashTag>> = MutableLiveData()
+    val urlList : MutableLiveData<List<String>> = MutableLiveData()
+    val bookmarkList : MutableLiveData<List<Bookmark>> = MutableLiveData()
 
     fun getUser(){ // 회원정보 조회
         NetworkClient.userInfoService.getUserInfo()
@@ -38,40 +41,55 @@ class UserRepository(private val context: Context) {
             })
     }
 
-    fun changeBio(info: String) { // 소개글 변경
-        NetworkClient.userInfoService.changeBio(BioOfUserInfo(info))
-            .enqueue(object : Callback<Void>{
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful){
-                        StyleableToast.makeText(context, "소개글 변경", R.style.bioToast).show()
-                    }else{
-                        Log.e(TAG, response.toString())
-                    }
-                }
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.e(TAG, t.toString())
-                }
-            })
+//    suspend fun getUser() {
+//        try {
+//            val response = NetworkClient.userInfoService.getUserInfo()
+//            val body = response.body()
+//            if (body != null){
+//                userData.value = body
+//            }
+//        }catch (e: Exception) {
+//            Log.e(TAG, e.toString())
+//        }
+//    }
+
+    suspend fun changeBio(info: String) {
+        try {
+            NetworkClient.userInfoService.changeBio(BioOfUserInfo(info))
+            StyleableToast.makeText(context, "소개글 변경", R.style.bioToast).show()
+        }catch (e : Exception){
+            Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show()
+        }
     }
 
-    fun getBookmarks(){ // 북마크 조회
-        NetworkClient.bookmarkService.getAllBookmarks()
-            .enqueue(object : Callback<List<Bookmark>> {
-                override fun onResponse(call: Call<List<Bookmark>>, response: Response<List<Bookmark>>) {
-                    if (response.isSuccessful){
-                        response.body()?.let {
-                            bookmarkList.value = it
-                        }
-                    }else{
-                        Log.e(TAG, response.toString())
-                    }
-                }
-                override fun onFailure(call: Call<List<Bookmark>>, t: Throwable) {
-                    Log.e(TAG, t.toString())
-                }
-            })
+    suspend fun getBookmarks() {
+        try {
+            val response = NetworkClient.bookmarkService.getAllBookmarks()
+            val body = response.body()
+            if (body != null)
+                bookmarkList.value = body
+        }catch (e : Exception){
+            Log.e(TAG, "get bookmarks error")
+        }
     }
 
+    suspend fun getImageUrl() {
+        try {
+            val response = NetworkClient.bookmarkService.getAllBookmarks()
+            val body = response.body()
+            if (body != null){
+                val list = mutableListOf<String>()
+                body.forEach { bookmark ->
+                    list.add(bookmark.address)
+                }
+                urlList.value = list
+            }
+        }catch (e: Exception){
+            Log.e(TAG, "get imageUrl error")
+        }
+    }
+
+    // return null
     fun getHashTags(){
         NetworkClient.bookmarkService.getTags()
             .enqueue(object : Callback<List<HashTag>>{
@@ -90,65 +108,31 @@ class UserRepository(private val context: Context) {
             })
     }
 
-//    fun getImageUrl(){ // 북마크 url 조회
-//        NetworkClient.bookmarkService.getAllBookmarks()
-//            .enqueue(object : Callback<List<Bookmark>> {
-//                override fun onResponse(call: Call<List<Bookmark>>, response: Response<List<Bookmark>>) {
-//                    if (response.isSuccessful){
-//                        response.body()?.let {
-//                            val list = mutableListOf<String>()
-//                            it.forEach { bookmark ->
-//                                list.add(bookmark.address)
-//                            }
-//                            urlList.value = list
-//                        }
-//                    }else{
-//                        Log.e(TAG, response.toString())
-//                    }
-//                }
-//                override fun onFailure(call: Call<List<Bookmark>>, t: Throwable) {
-//                    Log.e(TAG, t.toString())
-//                }
-//            })
-//    }
-
-    fun addBookmark(item : BookmarkForAdd) {
-        NetworkClient.bookmarkService.addBookmark(item)
-            .enqueue(object : Callback<Void> {
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful){
-                        Toast.makeText(context, "북마크 추가", Toast.LENGTH_SHORT).show()
-                    }else {
-                        when (response.code()){
-                            401 -> {
-                                Toast.makeText(context, "토큰 만료", Toast.LENGTH_SHORT).show()
-                            }
-                            412 -> {
-                                Toast.makeText(context, "중복된 URL은 입력 불가", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }
-                }
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.e(TAG, t.toString())
-                }
-            })
+    suspend fun addBookmark(item : BookmarkForAdd) {
+        val result = NetworkClient.bookmarkService.addBookmark(item)
+        if (result.isSuccess){
+            Toast.makeText(context, "북마크 추가", Toast.LENGTH_SHORT).show()
+        }else {
+            Log.e(TAG, result.toString())
+        }
     }
 
-    fun deleteBookmark(id : BookmarkId){
-        NetworkClient.bookmarkService.deleteBookmark(id)
-            .enqueue(object : Callback<Void> {
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful){
-                        Toast.makeText(context, "삭제", Toast.LENGTH_SHORT).show()
-                    }else {
-                        Log.e(TAG, response.code().toString())
-                    }
-                }
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.e(TAG, t.toString())
-                }
-            })
+    suspend fun deleteBookmark(id : BookmarkId) {
+        val result = NetworkClient.bookmarkService.deleteBookmark(id)
+        if (result.isSuccess){
+            Toast.makeText(context, "북마크 삭제", Toast.LENGTH_SHORT).show()
+        }else {
+            Log.e(TAG, result.toString())
+        }
+    }
+
+    suspend fun modifyBookmark(item: BookmarkForModify) {
+        val result = NetworkClient.bookmarkService.updateBookmark(item)
+        if (result.isSuccess){
+            Toast.makeText(context, "북마크 수정", Toast.LENGTH_SHORT).show()
+        }else {
+            Log.e(TAG, result.toString())
+        }
     }
 
     companion object{

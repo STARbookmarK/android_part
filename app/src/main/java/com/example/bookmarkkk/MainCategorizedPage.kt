@@ -61,25 +61,33 @@ class MainCategorizedPage : Fragment(R.layout.main_categorized), OnClickListener
             }
         }
 
-        NetworkClient.userInfoService.getUserInfo() // 북마크 보기방식 지정
-            .enqueue(object: Callback<UserInfo> {
-                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
-                    if (response.isSuccessful){
-                        response.body()?.let {
-                            if (it.bookmarkShow==1){ // 리스트형
-                                binding.bookmarkView.layoutManager = LinearLayoutManager(context)
-                            }else{ // 격자형
-                                binding.bookmarkView.layoutManager = GridLayoutManager(context, 2)
-                            }
-                        }
-                    }else{
-                        Log.e(TAG, response.toString())
-                    }
-                }
-                override fun onFailure(call: Call<UserInfo>, t: Throwable){
-                    Log.e(TAG, t.toString())
-                }
-            })
+//        NetworkClient.userInfoService.getUserInfo() // 북마크 보기방식 지정
+//            .enqueue(object: Callback<UserInfo> {
+//                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
+//                    if (response.isSuccessful){
+//                        response.body()?.let {
+//                            if (it.bookmarkShow==1){ // 리스트형
+//                                binding.bookmarkView.layoutManager = LinearLayoutManager(context)
+//                            }else{ // 격자형
+//                                binding.bookmarkView.layoutManager = GridLayoutManager(context, 2)
+//                            }
+//                        }
+//                    }else{
+//                        Log.e(TAG, response.toString())
+//                    }
+//                }
+//                override fun onFailure(call: Call<UserInfo>, t: Throwable){
+//                    Log.e(TAG, t.toString())
+//                }
+//            })
+        //북마크 보기방식 지정
+//        viewModel.userData.observe(viewLifecycleOwner, Observer { info ->
+//            if (info.bookmarkShow == 1){
+//                binding.bookmarkView.layoutManager = LinearLayoutManager(context)
+//            }else {
+//                binding.bookmarkView.layoutManager = GridLayoutManager(context, 2)
+//            }
+//        })
 
         // 북마크 조회
         viewModel.bookmarkList.observe(viewLifecycleOwner, Observer { items ->
@@ -116,25 +124,26 @@ class MainCategorizedPage : Fragment(R.layout.main_categorized), OnClickListener
 
     override fun onStart() {
         super.onStart()
-//        NetworkClient.userInfoService.getUserInfo() // 북마크 보기방식 지정
-//            .enqueue(object: Callback<UserInfo> {
-//                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
-//                    if (response.isSuccessful){
-//                        response.body()?.let {
-//                            if (it.bookmarkShow==1){ // 리스트형
-//                                binding.bookmarkView.layoutManager = LinearLayoutManager(context)
-//                            }else{ // 격자형
-//                                binding.bookmarkView.layoutManager = GridLayoutManager(context, 2)
-//                            }
-//                        }
-//                    }else{
-//                        Log.e(TAG, response.toString())
-//                    }
-//                }
-//                override fun onFailure(call: Call<UserInfo>, t: Throwable){
-//                    Log.e(TAG, t.toString())
-//                }
-//            })
+        //북마크 보기방식 지정
+        NetworkClient.userInfoService.getUserInfo() // 북마크 보기방식 지정
+            .enqueue(object: Callback<UserInfo> {
+                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
+                    if (response.isSuccessful){
+                        response.body()?.let {
+                            if (it.bookmarkShow==1){ // 리스트형
+                                binding.bookmarkView.layoutManager = LinearLayoutManager(context)
+                            }else{ // 격자형
+                                binding.bookmarkView.layoutManager = GridLayoutManager(context, 2)
+                            }
+                        }
+                    }else{
+                        Log.e(TAG, response.toString())
+                    }
+                }
+                override fun onFailure(call: Call<UserInfo>, t: Throwable){
+                    Log.e(TAG, t.toString())
+                }
+            })
     }
 
     companion object{

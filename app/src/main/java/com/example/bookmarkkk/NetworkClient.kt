@@ -3,6 +3,7 @@ package com.example.bookmarkkk
 import android.graphics.Paint
 import android.util.Log
 import com.google.gson.GsonBuilder
+import com.skydoves.retrofit.adapters.result.ResultCallAdapterFactory
 import okhttp3.CookieJar
 import okhttp3.JavaNetAuthenticator
 import okhttp3.JavaNetCookieJar
@@ -30,6 +31,7 @@ object NetworkClient {
         .baseUrl(BASE_URL)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create(gson))
+        .addCallAdapterFactory(ResultCallAdapterFactory.create())
         .build()
 
     val authenticationService: AuthenticationService by lazy { retrofit.create(AuthenticationService::class.java) }
@@ -46,6 +48,7 @@ object TestClient {
     val retrofit = Retrofit.Builder()
         .baseUrl("https://ef184ba9-b58e-4708-83f9-68f1b18e1ce9.mock.pstmn.io/") //mock server
         .addConverterFactory(GsonConverterFactory.create(gson))
+        .addCallAdapterFactory(ResultCallAdapterFactory.create())
         .build()
 
     val bookmarkService : BookmarkService by lazy { TestClient.retrofit.create(BookmarkService::class.java) }

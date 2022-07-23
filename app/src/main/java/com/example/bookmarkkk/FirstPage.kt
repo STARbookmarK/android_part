@@ -7,9 +7,11 @@ import android.view.View
 import android.view.View.OnClickListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.bookmarkkk.databinding.FirstPageBinding
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import retrofit2.Call
 import retrofit2.Callback
@@ -44,20 +46,14 @@ class FirstPage : Fragment(R.layout.first_page), OnClickListener{
     }
 
     private fun runAutoLogin(){ // 자동 로그인
-        NetworkClient.authenticationService.autoLogin()
-            .enqueue(object: Callback<UserId> {
-                override fun onResponse(call: Call<UserId>, response: Response<UserId>){
-                    if (response.isSuccessful){ // 자동 로그인 성공
-                        Log.e(TAG, response.toString())
-                        Navigation.findNavController(binding.root).navigate(R.id.main_to_mainPage_action)
-                    }else{
-                        Log.i(TAG, response.toString())
-                    }
-                }
-                override fun onFailure(call: Call<UserId>, t: Throwable){
-                    Log.e(TAG, t.toString())
-                }
-            })
+        lifecycleScope.launch{
+            val result = NetworkClient.authenticationService.autoLogin()
+            if (result.isSuccess){
+                Navigation.findNavController(binding.root).navigate(R.id.main_to_mainPage_action)
+            }else {
+                Log.e(TAG, result.toString())
+            }
+        }
     }
 
     companion object{
