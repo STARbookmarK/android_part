@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.bookmarkkk.databinding.ModifyInfoBinding
 import io.github.muddz.styleabletoast.StyleableToast
@@ -22,6 +23,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 
 class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
 
@@ -29,7 +31,6 @@ class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
     private lateinit var originPw : String
     private val infoSaveModule : DataStoreModule by inject()
     private val viewModel : ViewModel by viewModel()
-    private val coroutineScope by lazy{ CoroutineScope(Dispatchers.IO) }
     private var bookmarkShow = 0
     private var hashtagShow = 0
     private var hashtagCategory = 0
@@ -123,45 +124,48 @@ class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
 
     //로그아웃
     private fun logout(){
-        NetworkClient.authenticationService.logout()
-            .enqueue(object : Callback<Void>{
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful){ // 로그아웃 성공
-                        StyleableToast.makeText(requireContext(), "로그아웃", R.style.logoutToast).show()
-                        val intent = Intent(requireContext(), FirstActivity::class.java) // 로그아웃 시 초기화면으로 이동
-                        startActivity(intent)
-                    }else {
-                        StyleableToast.makeText(requireContext(), "로그아웃 실패", R.style.errorToast).show()
-                        Log.e(TAG, response.toString())
-                    }
+        lifecycleScope.launch {
+            try {
+                val response = NetworkClient.authenticationService.logout()
+                if (response.isSuccessful) {
+                    StyleableToast.makeText(requireContext(), "로그아웃", R.style.logoutToast).show()
+                    val intent = Intent(requireContext(), FirstActivity::class.java) // 로그아웃 시 초기화면으로 이동
+                    startActivity(intent)
+                }else {
+                    StyleableToast.makeText(requireContext(), "로그아웃 실패", R.style.errorToast).show()
+                    Log.e(TAG, response.toString())
                 }
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.e(TAG, t.toString())
-                }
-            })
+            }catch (e: Exception){
+                Log.e(TAG, e.toString())
+            }
+        }
     }
 
     override fun onStart() {
         super.onStart()
         // 아이디, 닉네임, 소개글, 보기방식
-        viewModel.userData.observe(viewLifecycleOwner, Observer { info ->
-            if (info.bookmarkShow == 1){
-                binding.radioGroup.check(R.id.listCheck)
-            }else {
-                binding.radioGroup.check(R.id.gridCheck)
+        lifecycleScope.launch {
+            val result = NetworkClient.userInfoService.getUserInfo()
+            if (result.isSuccess) {
+                val body = result.getOrNull()
+                body?.let {
+                    if (it.bookmarkShow==1){
+                        binding.radioGroup.check(R.id.listCheck)
+                    }else{
+                        binding.radioGroup.check(R.id.gridCheck)
+                    }
+                    if (it.hashtagShow==1){
+                        binding.radioGroup2.check(R.id.invisibleCheck)
+                    }else{
+                        binding.radioGroup2.check(R.id.visibleCheck)
+                    }
+                    if (it.hashtagCategory==1){
+                        binding.radioGroup3.check(R.id.inActiveCheck)
+                    }else{
+                        binding.radioGroup3.check(R.id.activeCheck)
+                    }
+                }
             }
-            if (info.hashtagShow == 1){
-                binding.radioGroup2.check(R.id.invisibleCheck)
-            }else {
-                binding.radioGroup2.check(R.id.visibleCheck)
-            }
-            if (info.hashtagCategory == 1){
-                binding.radioGroup3.check(R.id.inActiveCheck)
-            }else {
-                binding.radioGroup3.check(R.id.activeCheck)
-            }
-        })
-        coroutineScope.launch {
             originPw = infoSaveModule.password.first() // 비밀번호 변경에 사용됨
         }
 //        NetworkClient.userInfoService.getUserInfo()

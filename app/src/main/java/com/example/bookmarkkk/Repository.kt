@@ -23,23 +23,36 @@ class UserRepository(private val context: Context) {
     val urlList : MutableLiveData<List<String>> = MutableLiveData()
     val bookmarkList : MutableLiveData<List<Bookmark>> = MutableLiveData()
 
-    fun getUser(){ // 회원정보 조회
-        NetworkClient.userInfoService.getUserInfo()
-            .enqueue(object: Callback<UserInfo> {
-                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
-                    if (response.isSuccessful){
-                        response.body()?.let {
-                            userData.value = it
-                        }
-                    }else {
-                        Log.e(TAG, response.toString())
-                    }
-                }
-                override fun onFailure(call: Call<UserInfo>, t: Throwable){
-                    Log.e(TAG, t.toString())
-                }
-            })
+    suspend fun getUser() {
+        val result = NetworkClient.userInfoService.getUserInfo()
+        if (result.isSuccess){
+            val body = result.getOrNull()
+            body?.let {
+                userData.value = it
+            }
+        }else {
+            Log.e(TAG, result.toString())
+        }
     }
+
+    // Retrofit result vs Call<>
+//    fun getUser(){ // 회원정보 조회
+//        NetworkClient.userInfoService.getUserInfo()
+//            .enqueue(object: Callback<UserInfo> {
+//                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
+//                    if (response.isSuccessful){
+//                        response.body()?.let {
+//                            userData.value = it
+//                        }
+//                    }else {
+//                        Log.e(TAG, response.toString())
+//                    }
+//                }
+//                override fun onFailure(call: Call<UserInfo>, t: Throwable){
+//                    Log.e(TAG, t.toString())
+//                }
+//            })
+//    }
 
 //    suspend fun getUser() {
 //        try {
@@ -53,6 +66,7 @@ class UserRepository(private val context: Context) {
 //        }
 //    }
 
+    //  body가 필요한 경우 vs body가 필요없는 경우
     suspend fun changeBio(info: String) {
         try {
             NetworkClient.userInfoService.changeBio(BioOfUserInfo(info))

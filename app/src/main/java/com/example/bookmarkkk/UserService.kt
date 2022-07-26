@@ -16,21 +16,21 @@ interface AuthenticationService { // 로그인 관련
     @GET("api/login")
     suspend fun autoLogin(): Result<UserId>
     @GET("api/logout")
-    fun logout():Call<Void> // 로그아웃
+    suspend fun logout():Response<Void> // 로그아웃
 }
 
 interface SignUpService{ // 회원가입 관련
     @POST("api/register")
-    fun signUp(@Body request: SignUpData):Call<Void> // 회원가입
+    suspend fun signUp(@Body request: SignUpData):Response<Void> // 회원가입
     @GET("api/register/id/{user_id}")
-    fun idCheck(@Path("user_id") user_id: String):Call<IdCheckData> // id 중복확인
+    suspend fun idCheck(@Path("user_id") user_id: String):Result<IdCheckData> // id 중복확인
     @GET("api/register/name/{nickname}")
-    fun nicknameCheck(@Path("nickname") nickname: String):Call<NicknameCheckData> // 닉네임 중복확인
+    suspend fun nicknameCheck(@Path("nickname") nickname: String):Result<NicknameCheckData> // 닉네임 중복확인
 }
 
 interface UserInfoService { // 사용자 정보 관련
     @GET("api/infos")
-    fun getUserInfo():Call<UserInfo> // 정보 확인
+    suspend fun getUserInfo():Result<UserInfo> // 정보 확인
 //    @PATCH("api/infos")
 //    fun changeBio(@Body bio: BioOfUserInfo):Call<Void> // 소개글 변경
 

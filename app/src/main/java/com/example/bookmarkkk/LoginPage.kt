@@ -43,6 +43,7 @@ class LoginPage : Fragment(R.layout.login), OnClickListener { //로그인 페이
         }
     }
 
+    // 결과값이 Void인 경우는 response를 쓰는게 좋을 듯 하다
     private fun login() {
         id = binding.idEditText.text.toString()
         pw = binding.pwEditText.text.toString()
@@ -51,25 +52,33 @@ class LoginPage : Fragment(R.layout.login), OnClickListener { //로그인 페이
 
         lifecycleScope.launch {
             try {
-                NetworkClient.authenticationService.login(data)
-                StyleableToast.makeText(requireContext(), "login", R.style.loginToast).show()
-                withContext(Dispatchers.IO) {
-                    infoSaveModule.setPassword(data.user_pw)
+                val response = NetworkClient.authenticationService.login(data)
+                if (response.isSuccessful){
+                    StyleableToast.makeText(requireContext(), "login", R.style.loginToast).show()
+                    withContext(Dispatchers.IO) {
+                        infoSaveModule.setPassword(data.user_pw) // 비밀번호 저장
+                    }
+                    Navigation.findNavController(binding.root).navigate(R.id.login_to_main_action) // MainActivity 이동
+                }else {
+                    StyleableToast.makeText(requireContext(), "아이디 또는 비밀번호가 잘못되었습니다", R.style.errorToast).show()
                 }
-                Navigation.findNavController(binding.root).navigate(R.id.login_to_main_action) // MainActivity 이동
             }catch (e: Exception){
-                Log.e(UserRepository.TAG, "get imageUrl error")
+                Log.e(TAG, e.toString())
             }
         }
-    }
 
-    override fun onStart() {
-        super.onStart()
-        //다음 액티비티 진입 시 확인해야 할 것들(ex 개인정보, 리스트 or 그리드, 카테고리화 유무)
-    }
-
-    override fun onStop() {
-        super.onStop()
+//        lifecycleScope.launch {
+//            try {
+//                NetworkClient.authenticationService.login(data)
+//                StyleableToast.makeText(requireContext(), "login", R.style.loginToast).show()
+//                withContext(Dispatchers.IO) {
+//                    infoSaveModule.setPassword(data.user_pw) // 비밀번호 저장
+//                }
+//                Navigation.findNavController(binding.root).navigate(R.id.login_to_main_action) // MainActivity 이동
+//            }catch (e: Exception){
+//                Log.e(TAG, e.toString())
+//            }
+//        }
     }
 
     companion object{

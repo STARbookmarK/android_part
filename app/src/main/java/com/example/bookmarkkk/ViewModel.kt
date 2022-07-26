@@ -21,8 +21,8 @@ class ViewModel(private val repository: UserRepository) : ViewModel() {
     var urlList : MutableLiveData<List<String>> = MutableLiveData()
 
     init {
-        repository.getUser()
         viewModelScope.launch {
+            repository.getUser()
             repository.getBookmarks()
             repository.getImageUrl()
         }
@@ -50,10 +50,6 @@ class ViewModel(private val repository: UserRepository) : ViewModel() {
             repository.deleteBookmark(id)
         }
     }
-
-//    fun changeBio(info: String){
-//        repository.changeBio(info)
-//    }
 
     fun changeBio(info: String) {
         viewModelScope.launch {

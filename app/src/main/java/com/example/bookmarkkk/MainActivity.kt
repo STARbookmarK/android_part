@@ -8,16 +8,19 @@ import android.view.View.OnClickListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.bookmarkkk.databinding.ActivityMainBinding
 import io.github.muddz.styleabletoast.StyleableToast
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 
 
 class MainActivity : AppCompatActivity(R.layout.activity_main), OnClickListener {
@@ -71,29 +74,64 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), OnClickListener 
 
     //로그아웃
     private fun logout(){
-        NetworkClient.authenticationService.logout()
-            .enqueue(object : Callback<Void>{
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful){ // 로그아웃 성공(일단 토스트 먼저 띄우기)
-                        StyleableToast.makeText(this@MainActivity, "로그아웃", R.style.logoutToast).show()
-                        val intent = Intent(this@MainActivity, FirstActivity::class.java) // 로그아웃 시 초기화면으로 이동
-                        startActivity(intent)
-                        finishAffinity() // 쌓였던 모든 프래그먼트 스택 삭제
-                    }else {
-                        StyleableToast.makeText(this@MainActivity, "로그아웃 실패", R.style.errorToast).show()
-                        Log.e(TAG, response.toString())
-                    }
+        lifecycleScope.launch {
+            try {
+                val response = NetworkClient.authenticationService.logout()
+                if (response.isSuccessful) {
+                    StyleableToast.makeText(this@MainActivity, "로그아웃", R.style.logoutToast).show()
+                    val intent = Intent(this@MainActivity, FirstActivity::class.java) // 로그아웃 시 초기화면으로 이동
+                    startActivity(intent)
+                    finishAffinity() // 쌓였던 모든 프래그먼트 스택 삭제
+                }else {
+                    StyleableToast.makeText(this@MainActivity, "로그아웃 실패", R.style.errorToast).show()
+                    Log.e(TAG, response.toString())
                 }
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.e(TAG, t.toString())
-                }
-            })
+            }catch (e: Exception){
+                Log.e(TAG, e.toString())
+            }
+        }
+//        NetworkClient.authenticationService.logout()
+//            .enqueue(object : Callback<Void>{
+//                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+//                    if (response.isSuccessful){ // 로그아웃 성공(일단 토스트 먼저 띄우기)
+//                        StyleableToast.makeText(this@MainActivity, "로그아웃", R.style.logoutToast).show()
+//                        val intent = Intent(this@MainActivity, FirstActivity::class.java) // 로그아웃 시 초기화면으로 이동
+//                        startActivity(intent)
+//                        finishAffinity() // 쌓였던 모든 프래그먼트 스택 삭제
+//                    }else {
+//                        StyleableToast.makeText(this@MainActivity, "로그아웃 실패", R.style.errorToast).show()
+//                        Log.e(TAG, response.toString())
+//                    }
+//                }
+//                override fun onFailure(call: Call<Void>, t: Throwable) {
+//                    Log.e(TAG, t.toString())
+//                }
+//            })
     }
 
     override fun onStart() {
         super.onStart()
-//        viewModel.userData.observe(this, Observer { info ->
-//            if (info.hashtagCategory == 1){
+        lifecycleScope.launch {
+            val result = NetworkClient.userInfoService.getUserInfo()
+            if (result.isSuccess){
+                val body = result.getOrNull()
+                body?.let {
+                    if (it.hashtagCategory==1){ // 카테고리화 비활성화
+                        categoryType = 1
+                        changeFragment(MainPage())
+                    }else{ // 카테고리화 활성화
+                        categoryType = 0
+                        changeFragment(MainCategorizedPage())
+                    }
+                }
+            }else {
+                Log.e(TAG, result.toString())
+            }
+        }
+
+        // livedata 사용하기에 적합하지 않음
+//        viewModel.userData.observe(this, Observer {
+//            if (it.hashtagCategory == 1){
 //                categoryType = 1
 //                changeFragment(MainPage())
 //            }else {
@@ -101,29 +139,29 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), OnClickListener 
 //                changeFragment(MainCategorizedPage())
 //            }
 //        })
-        // livedata 사용하기에 적합하지 않음
-        NetworkClient.userInfoService.getUserInfo()
-            .enqueue(object: Callback<UserInfo> {
-                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
-                    if (response.isSuccessful.not()){
-                        Log.e(TAG, response.toString())
-                    }else{
-                        response.body()?.let {
-                            //카테고리화 활성화 유무
-                            if (it.hashtagCategory==1){ // 카테고리화 비활성화
-                                categoryType = 1
-                                changeFragment(MainPage())
-                            }else{ // 카테고리화 활성화
-                                categoryType = 0
-                                changeFragment(MainCategorizedPage())
-                            }
-                        }
-                    }
-                }
-                override fun onFailure(call: Call<UserInfo>, t: Throwable){
-                    Log.e(TAG, t.toString())
-                }
-            })
+
+//        NetworkClient.userInfoService.getUserInfo()
+//            .enqueue(object: Callback<UserInfo> {
+//                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
+//                    if (response.isSuccessful.not()){
+//                        Log.e(TAG, response.toString())
+//                    }else{
+//                        response.body()?.let {
+//                            //카테고리화 활성화 유무
+//                            if (it.hashtagCategory==1){ // 카테고리화 비활성화
+//                                categoryType = 1
+//                                changeFragment(MainPage())
+//                            }else{ // 카테고리화 활성화
+//                                categoryType = 0
+//                                changeFragment(MainCategorizedPage())
+//                            }
+//                        }
+//                    }
+//                }
+//                override fun onFailure(call: Call<UserInfo>, t: Throwable){
+//                    Log.e(TAG, t.toString())
+//                }
+//            })
     }
 
     override fun onBackPressed() { //뒤로가기 버튼 클릭 시 종료

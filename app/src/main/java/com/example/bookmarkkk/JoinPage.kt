@@ -8,14 +8,17 @@ import android.view.View.OnClickListener
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.bookmarkkk.databinding.JoinBinding
 import io.github.muddz.styleabletoast.StyleableToast
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 
 class JoinPage : Fragment(R.layout.join), OnClickListener { // 회원가입 페이지
 
@@ -25,7 +28,6 @@ class JoinPage : Fragment(R.layout.join), OnClickListener { // 회원가입 페�
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.idOkBtn.setOnClickListener(this)
         binding.nicknameOkBtn.setOnClickListener(this)
         binding.joinOkBtn.setOnClickListener(this)
@@ -66,71 +68,88 @@ class JoinPage : Fragment(R.layout.join), OnClickListener { // 회원가입 페�
     }
 
     private fun register(data: SignUpData){
-        NetworkClient.signUpService.signUp(data)
-            .enqueue(object: Callback<Void> {
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful){ // 이미 존재하는 아이디 또는 닉네임을 입력했을 경우
-                        StyleableToast.makeText(requireContext(), "가입되었습니다. 다시 로그인 해주세요", R.style.joinToast).show()
-                        Navigation.findNavController(binding.root).navigate(R.id.join_to_first)
-                    }else{
-                        Toast.makeText(context, "아이디 또는 닉네임은 중복확인이 필수입니다.", Toast.LENGTH_SHORT).show()
-                    }
+        lifecycleScope.launch {
+            try {
+                val response = NetworkClient.signUpService.signUp(data)
+                if (response.isSuccessful){
+                    StyleableToast.makeText(requireContext(), "가입되었습니다. 다시 로그인 해주세요", R.style.joinToast).show()
+                    Navigation.findNavController(binding.root).navigate(R.id.join_to_first)
+                }else {
+                    Toast.makeText(context, "아이디 또는 닉네임은 중복확인이 필수입니다.", Toast.LENGTH_SHORT).show()
                 }
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.e(TAG, t.toString() )
-                }
-            })
+            }catch (e: Exception){
+                Log.e(TAG, e.toString())
+            }
+        }
+//        NetworkClient.signUpService.signUp(data)
+//            .enqueue(object: Callback<Void> {
+//                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+//                    if (response.isSuccessful){ // 이미 존재하는 아이디 또는 닉네임을 입력했을 경우
+//                        StyleableToast.makeText(requireContext(), "가입되었습니다. 다시 로그인 해주세요", R.style.joinToast).show()
+//                        Navigation.findNavController(binding.root).navigate(R.id.join_to_first)
+//                    }else{
+//                        Toast.makeText(context, "아이디 또는 닉네임은 중복확인이 필수입니다.", Toast.LENGTH_SHORT).show()
+//                    }
+//                }
+//                override fun onFailure(call: Call<Void>, t: Throwable) {
+//                    Log.e(TAG, t.toString() )
+//                }
+//            })
     }
 
+    // response보다 result를 사용하는게 서버와의 통신 결과 성공 유무를 나타내는데 더 직관적인 듯 하다!!
     private fun idCheck(user_id : String){ // id 중복체크
-        NetworkClient.signUpService.idCheck(user_id)
-            .enqueue(object : Callback<IdCheckData>{
-                override fun onResponse(call: Call<IdCheckData>, response: Response<IdCheckData>) {
-                    if (response.isSuccessful.not()){
-                        Log.e("id check", response.message())
-                    }else{
-                        response.body()?.let {
-                            Log.i("id check", it.valid.toString())
-                            if (it.valid){
-                                binding.idCheckShowText.text = "사용 가능한 아이디입니다."
-                                binding.idCheckShowText.setTextColor(Color.BLACK)
-                                idCheckValue = 1
-                            }else{
-                                binding.idCheckShowText.text = "사용 불가능한 아이디입니다."
-                                binding.idCheckShowText.setTextColor(Color.RED)
-                            }
-                        }
+        lifecycleScope.launch {
+            val result = NetworkClient.signUpService.idCheck(user_id)
+            if (result.isSuccess) {
+                val body = result.getOrNull()
+                body?.let {
+                    if (it.valid) {
+                        binding.idCheckShowText.text = "사용 가능한 아이디입니다."
+                        binding.idCheckShowText.setTextColor(Color.BLACK)
+                        idCheckValue = 1
+                    } else {
+                        binding.idCheckShowText.text = "사용 불가능한 아이디입니다."
+                        binding.idCheckShowText.setTextColor(Color.RED)
                     }
                 }
-                override fun onFailure(call: Call<IdCheckData>, t: Throwable) {
-                   Log.e("id check", t.toString())
-                }
-            })
+            } else {
+                Log.e(TAG, result.toString())
+            }
+        }
+
+//            lifecycleScope.launch {
+//                try {
+//                    val response = NetworkClient.signUpService.idCheck(user_id)
+//                    val body = response.body()
+//                    body?.let {
+//                        //
+//                    }
+//                }catch (e: Exception) {
+//                    Log.e(TAG, e.toString())
+//                }
+//            }
     }
 
-    private fun nickNameCheck(nickname : String) { // pw 중복체크
-        NetworkClient.signUpService.nicknameCheck(nickname)
-            .enqueue(object : Callback<NicknameCheckData>{
-                override fun onResponse(call: Call<NicknameCheckData>, response: Response<NicknameCheckData>) {
-                    if (response.isSuccessful.not()){
-                        Log.e("nickname check", response.message())
-                    }else{
-                        response.body()?.let {
-                            if (it.valid){
-                                binding.nickCheckText.text = "사용 가능한 닉네임입니다."
-                                binding.nickCheckText.setTextColor(Color.BLACK)
-                                nameCheckValue = 1
-                            }else{
-                                binding.nickCheckText.text = "사용 불가능한 닉네임입니다."
-                                binding.nickCheckText.setTextColor(Color.RED)
-                            }
-                        }
+    private fun nickNameCheck(nickname : String) { // 닉네임 중복체크
+        lifecycleScope.launch {
+            val result = NetworkClient.signUpService.nicknameCheck(nickname)
+            if (result.isSuccess) {
+                val body = result.getOrNull()
+                body?.let {
+                    if (it.valid) {
+                        binding.nickCheckText.text = "사용 가능한 닉네임입니다."
+                        binding.nickCheckText.setTextColor(Color.BLACK)
+                        nameCheckValue = 1
+                    }else {
+                        binding.nickCheckText.text = "사용 불가능한 닉네임입니다."
+                        binding.nickCheckText.setTextColor(Color.RED)
                     }
                 }
-                override fun onFailure(call: Call<NicknameCheckData>, t: Throwable) {
-                    Log.e("nickname check", t.toString())
-                }
-            })
+            }else {
+                Log.e(TAG, result.toString())
+            }
+        }
     }
 
     companion object{
