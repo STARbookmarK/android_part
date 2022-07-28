@@ -1,4 +1,4 @@
-package com.example.bookmarkkk
+package com.example.bookmarkkk.ui
 
 import android.graphics.Color
 import android.os.Bundle
@@ -7,22 +7,22 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.bookmarkkk.R
+import com.example.bookmarkkk.api.request.SignUpService
+import com.example.bookmarkkk.api.model.SignUpData
 import com.example.bookmarkkk.databinding.JoinBinding
 import io.github.muddz.styleabletoast.StyleableToast
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.lang.Exception
 
 class JoinPage : Fragment(R.layout.join), OnClickListener { // 회원가입 페이지
 
     private val binding by viewBinding(JoinBinding::bind)
+    private val signUp : SignUpService by inject()
     private var idCheckValue = 0 // id 중복체크를 위한 변수
     private var nameCheckValue = 0 // 닉네임 중복체크를 위한 변수
 
@@ -70,9 +70,12 @@ class JoinPage : Fragment(R.layout.join), OnClickListener { // 회원가입 페�
     private fun register(data: SignUpData){
         lifecycleScope.launch {
             try {
-                val response = NetworkClient.signUpService.signUp(data)
+                //val response = NetworkClient.signUpService.signUp(data)
+                val response = signUp.signUp(data)
                 if (response.isSuccessful){
-                    StyleableToast.makeText(requireContext(), "가입되었습니다. 다시 로그인 해주세요", R.style.joinToast).show()
+                    StyleableToast.makeText(requireContext(), "가입되었습니다. 다시 로그인 해주세요",
+                        R.style.joinToast
+                    ).show()
                     Navigation.findNavController(binding.root).navigate(R.id.join_to_first)
                 }else {
                     Toast.makeText(context, "아이디 또는 닉네임은 중복확인이 필수입니다.", Toast.LENGTH_SHORT).show()
@@ -100,7 +103,8 @@ class JoinPage : Fragment(R.layout.join), OnClickListener { // 회원가입 페�
     // response보다 result를 사용하는게 서버와의 통신 결과 성공 유무를 나타내는데 더 직관적인 듯 하다!!
     private fun idCheck(user_id : String){ // id 중복체크
         lifecycleScope.launch {
-            val result = NetworkClient.signUpService.idCheck(user_id)
+            //val result = NetworkClient.signUpService.idCheck(user_id)
+            val result = signUp.idCheck(user_id)
             if (result.isSuccess) {
                 val body = result.getOrNull()
                 body?.let {
@@ -133,7 +137,8 @@ class JoinPage : Fragment(R.layout.join), OnClickListener { // 회원가입 페�
 
     private fun nickNameCheck(nickname : String) { // 닉네임 중복체크
         lifecycleScope.launch {
-            val result = NetworkClient.signUpService.nicknameCheck(nickname)
+            //val result = NetworkClient.signUpService.nicknameCheck(nickname)
+            val result = signUp.nicknameCheck(nickname)
             if (result.isSuccess) {
                 val body = result.getOrNull()
                 body?.let {

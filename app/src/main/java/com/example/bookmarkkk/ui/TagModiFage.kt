@@ -1,4 +1,4 @@
-package com.example.bookmarkkk
+package com.example.bookmarkkk.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
+import com.example.bookmarkkk.R
 import com.example.bookmarkkk.databinding.TagModifyBinding
 
 class TagModiFage : Fragment(){

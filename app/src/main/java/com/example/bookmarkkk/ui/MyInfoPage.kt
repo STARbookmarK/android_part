@@ -1,12 +1,13 @@
-package com.example.bookmarkkk
+package com.example.bookmarkkk.ui
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.bookmarkkk.R
 import com.example.bookmarkkk.databinding.MyinfoBinding
-import org.koin.android.ext.android.inject
+import com.example.bookmarkkk.viewModel.ViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MyInfoPage : Fragment(R.layout.myinfo) {

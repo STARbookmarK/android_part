@@ -15,10 +15,10 @@
         android:theme="@style/Theme.Bookmarkkk"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".FirstActivity"
+            android:name=".ui.FirstActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

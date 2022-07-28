@@ -1,21 +1,21 @@
-package com.example.bookmarkkk
+package com.example.bookmarkkk.viewModel
 
-import android.content.Context
-import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
+import com.example.bookmarkkk.*
+import com.example.bookmarkkk.api.model.Bookmark
+import com.example.bookmarkkk.api.model.BookmarkForAdd
+import com.example.bookmarkkk.api.model.BookmarkForModify
+import com.example.bookmarkkk.api.model.BookmarkId
+import com.example.bookmarkkk.api.model.HashTag
+import com.example.bookmarkkk.api.model.UserInfo
+import com.example.bookmarkkk.repository.UserRepository
 import kotlinx.coroutines.launch
-import retrofit2.Response
-import kotlin.math.log
 
 class ViewModel(private val repository: UserRepository) : ViewModel() {
 
     var userData : MutableLiveData<UserInfo> = MutableLiveData()
-    //var bookmarkList : MutableLiveData<List<Bookmark>> = MutableLiveData()
     var bookmarkList : MutableLiveData<List<Bookmark>> = MutableLiveData()
     var tagList : MutableLiveData<List<HashTag>> = MutableLiveData()
     var urlList : MutableLiveData<List<String>> = MutableLiveData()
@@ -56,5 +56,4 @@ class ViewModel(private val repository: UserRepository) : ViewModel() {
             repository.changeBio(info)
         }
     }
-
 }

@@ -1,4 +1,4 @@
-package com.example.bookmarkkk
+package com.example.bookmarkkk.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,25 +7,22 @@ import android.view.View
 import android.view.View.OnClickListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.bookmarkkk.*
+import com.example.bookmarkkk.api.request.AuthenticationService
+import com.example.bookmarkkk.api.request.UserInfoService
 import com.example.bookmarkkk.databinding.ActivityMainBinding
 import io.github.muddz.styleabletoast.StyleableToast
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.lang.Exception
 
 
 class MainActivity : AppCompatActivity(R.layout.activity_main), OnClickListener {
     private val binding by viewBinding(ActivityMainBinding::bind)
-    private val viewModel : ViewModel by viewModel()
+    private val auth : AuthenticationService by inject()
+    private val user : UserInfoService by inject()
     private var categoryType = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,17 +36,17 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), OnClickListener 
         //changeFragment(MainPage())
         binding.bottomBar.onTabSelected={
             when(it.id){
-                R.id.bookmarkShowBtn->{
+                R.id.bookmarkShowBtn ->{
                     if (categoryType == 1){ // 카테고리화 타입에 따라 화면 이동
                         changeFragment(MainPage())
                     }else{
                         changeFragment(MainCategorizedPage())
                     }
                 }
-                R.id.tagShowBtn->{
+                R.id.tagShowBtn ->{
                     changeFragment(TagPage())
                 }
-                R.id.myInfoBtn->{
+                R.id.myInfoBtn ->{
                     changeFragment(MyInfoPage())
                 }
             }
@@ -76,7 +73,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), OnClickListener 
     private fun logout(){
         lifecycleScope.launch {
             try {
-                val response = NetworkClient.authenticationService.logout()
+                //val response = NetworkClient.authenticationService.logout()
+                val response = auth.logout()
                 if (response.isSuccessful) {
                     StyleableToast.makeText(this@MainActivity, "로그아웃", R.style.logoutToast).show()
                     val intent = Intent(this@MainActivity, FirstActivity::class.java) // 로그아웃 시 초기화면으로 이동
@@ -112,7 +110,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), OnClickListener 
     override fun onStart() {
         super.onStart()
         lifecycleScope.launch {
-            val result = NetworkClient.userInfoService.getUserInfo()
+            //val result = NetworkClient.userInfoService.getUserInfo()
+            val result = user.getUserInfo()
             if (result.isSuccess){
                 val body = result.getOrNull()
                 body?.let {

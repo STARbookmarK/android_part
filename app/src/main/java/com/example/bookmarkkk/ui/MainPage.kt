@@ -1,4 +1,4 @@
-package com.example.bookmarkkk
+package com.example.bookmarkkk.ui
 
 import android.content.Context
 import android.content.Intent
@@ -7,42 +7,57 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
-import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.example.bookmarkkk.databinding.MainCategorizedBinding
+import com.example.bookmarkkk.BookMarkAdapter
+import com.example.bookmarkkk.R
+import com.example.bookmarkkk.api.model.Bookmark
+import com.example.bookmarkkk.api.request.UserInfoService
+import com.example.bookmarkkk.databinding.MainNotCategorizedBinding
+import com.example.bookmarkkk.viewModel.ViewModel
 import com.google.android.material.chip.Chip
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
-class MainCategorizedPage : Fragment(R.layout.main_categorized), OnClickListener {
-    private val binding by viewBinding(MainCategorizedBinding::bind,
-    onViewDestroyed = { binding ->
-        binding.bookmarkView.adapter = null
-    })
+class MainPage : Fragment(R.layout.main_not_categorized), OnClickListener { //카테고리화를 선택하지 않았을 때 화면(기본값)
+
+    private val binding by viewBinding(MainNotCategorizedBinding::bind,
+        onViewDestroyed = { binding ->
+            binding.bookmarkView.adapter = null
+        }
+    )
+    private val user: UserInfoService by inject()
     private lateinit var spinner: Spinner
     private val viewModel : ViewModel by viewModel()
+    //private val adapter by lazy { BookMarkAdapter(requireContext()) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.listTypeBtn.setOnClickListener(this)
+        binding.gridTypeBtn.setOnClickListener(this)
         binding.bookmarkAddBtn.setOnClickListener(this)
 
         val adapter = BookMarkAdapter(requireContext())
-        val list = arrayListOf("java", "kotlin", "android", "spring", "react") // 태그 예시
+        val list = arrayListOf("java", "kotlin") // 태그 예시
+        //val states = arrayListOf("기말고사", "코딩테스트") // 즐겨찾기 상태 예시
 
         // 뷰 정렬방식(별점순, 최신순) 선택 스피너
         context?.let {
             spinner = Spinner(it)
             binding.rankSpinner.adapter = spinner.setRankSpinner()
         }
+
+        // 즐겨찾기 상태 스피너에 동적으로 추가
+//        val stateAdapter = ArrayAdapter(requireContext(), R.layout.state_spinner_style, states)
+//        stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//        binding.stateSpinner.adapter = stateAdapter
 
         //태그 동적으로 추가
         list.forEach { tagName ->
@@ -54,12 +69,40 @@ class MainCategorizedPage : Fragment(R.layout.main_categorized), OnClickListener
         }
 
         // 북마크 클릭 시 해당 주소로 이동
-        adapter.itemClick = object : BookMarkAdapter.ItemClick{
+        adapter.itemClick = object : BookMarkAdapter.ItemClick {
             override fun onClick(v: View, pos: Int, list: ArrayList<Bookmark>) {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(list[pos].address))
                 startActivity(intent)
             }
         }
+
+        // 북마크 보기방식 지정
+        lifecycleScope.launch {
+            //val result = NetworkClient.userInfoService.getUserInfo()
+            val result = user.getUserInfo()
+            if (result.isSuccess) {
+                val body = result.getOrNull()
+                body?.let {
+                    if (it.bookmarkShow==1) { // 리스트형
+                        binding.bookmarkView.layoutManager = LinearLayoutManager(context)
+                    } else { // 격자형
+                        binding.bookmarkView.layoutManager = GridLayoutManager(context, 2)
+                    }
+                }
+            } else {
+                Log.e(TAG, result.toString())
+            }
+        }
+
+        // if문을 사용하면서 livedata를 관찰하는 것은 옳지 않은 듯 하다..
+        // 그냥 정보를 실시간으로 조회하는 것에만 쓰는 게 좋을 듯 하다
+//        viewModel.userData.observe(viewLifecycleOwner, Observer {
+//            if (it.bookmarkShow == 1){ // 리스트형
+//                binding.bookmarkView.layoutManager = LinearLayoutManager(context)
+//            }else { // 격자형
+//                binding.bookmarkView.layoutManager = GridLayoutManager(context, 2)
+//            }
+//        })
 
 //        NetworkClient.userInfoService.getUserInfo() // 북마크 보기방식 지정
 //            .enqueue(object: Callback<UserInfo> {
@@ -80,20 +123,18 @@ class MainCategorizedPage : Fragment(R.layout.main_categorized), OnClickListener
 //                    Log.e(TAG, t.toString())
 //                }
 //            })
-        //북마크 보기방식 지정
-//        viewModel.userData.observe(viewLifecycleOwner, Observer { info ->
-//            if (info.bookmarkShow == 1){
-//                binding.bookmarkView.layoutManager = LinearLayoutManager(context)
-//            }else {
-//                binding.bookmarkView.layoutManager = GridLayoutManager(context, 2)
-//            }
-//        })
 
         // 북마크 조회
         viewModel.bookmarkList.observe(viewLifecycleOwner, Observer { items ->
             adapter.removeAll()
             adapter.add(items)
             binding.bookmarkView.adapter = adapter
+        })
+
+        viewModel.urlList.observe(viewLifecycleOwner, Observer { items ->
+            adapter.removeAllUrl()
+            Log.e(TAG, items.toString())
+            adapter.addUrl(items)
         })
     }
 
@@ -124,36 +165,15 @@ class MainCategorizedPage : Fragment(R.layout.main_categorized), OnClickListener
 
     override fun onStart() {
         super.onStart()
-        viewModel.userData.observe(this, Observer {
-            if (it.bookmarkShow == 1){ // 리스트형
-                binding.bookmarkView.layoutManager = LinearLayoutManager(context)
-            }else { // 격자형
-                binding.bookmarkView.layoutManager = GridLayoutManager(context, 2)
-            }
-        })
-        //북마크 보기방식 지정
-//        NetworkClient.userInfoService.getUserInfo() // 북마크 보기방식 지정
-//            .enqueue(object: Callback<UserInfo> {
-//                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
-//                    if (response.isSuccessful){
-//                        response.body()?.let {
-//                            if (it.bookmarkShow==1){ // 리스트형
-//                                binding.bookmarkView.layoutManager = LinearLayoutManager(context)
-//                            }else{ // 격자형
-//                                binding.bookmarkView.layoutManager = GridLayoutManager(context, 2)
-//                            }
-//                        }
-//                    }else{
-//                        Log.e(TAG, response.toString())
-//                    }
-//                }
-//                override fun onFailure(call: Call<UserInfo>, t: Throwable){
-//                    Log.e(TAG, t.toString())
-//                }
-//            })
+        Log.e(TAG, "onStart()")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.e(TAG, "onPause()")
     }
 
     companion object{
-        const val TAG = "MainCategorizedPage"
+        const val TAG = "MainPage"
     }
 }

@@ -1,4 +1,4 @@
-package com.example.bookmarkkk
+package com.example.bookmarkkk.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,7 +9,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.bookmarkkk.R
+import com.example.bookmarkkk.api.model.BookmarkForModify
+import com.example.bookmarkkk.api.model.BookmarkId
 import com.example.bookmarkkk.databinding.MenuDialogBinding
+import com.example.bookmarkkk.viewModel.ViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

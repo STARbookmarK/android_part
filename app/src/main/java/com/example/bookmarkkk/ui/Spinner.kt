@@ -1,9 +1,8 @@
-package com.example.bookmarkkk
+package com.example.bookmarkkk.ui
 
-import android.content.AbstractThreadedSyncAdapter
 import android.content.Context
 import android.widget.ArrayAdapter
-import androidx.fragment.app.Fragment
+import com.example.bookmarkkk.R
 
 class Spinner(private val context: Context) {
 

@@ -1,19 +1,18 @@
-package com.example.bookmarkkk
+package com.example.bookmarkkk.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.bookmarkkk.R
 import com.example.bookmarkkk.databinding.ModifyDialogBinding
+import com.example.bookmarkkk.viewModel.ViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.bookmarkkk.api.model.BookmarkForModify
 
 class BookmarkModifyDialog( // 북마크 내용 수정하기
     private val data: BookmarkForModify

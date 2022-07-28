@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/mainNotCategorized"
-        android:name="com.example.bookmarkkk.MainPage"
+        android:name="com.example.bookmarkkk.ui.MainPage"
         tools:layout="@layout/main_not_categorized">
 
         <action
@@ -24,14 +24,14 @@
 
     <fragment
         android:id="@+id/myInfoFragment"
-        android:name="com.example.bookmarkkk.MyInfoPage"
+        android:name="com.example.bookmarkkk.ui.MyInfoPage"
         tools:layout="@layout/myinfo">
 
     </fragment>
 
     <fragment
         android:id="@+id/tagFragment"
-        android:name="com.example.bookmarkkk.TagPage"
+        android:name="com.example.bookmarkkk.ui.TagPage"
         tools:layout="@layout/tag_page">
         <action
             android:id="@+id/action_tagFragment_to_tagModiFragment"
@@ -40,7 +40,7 @@
 
     <fragment
         android:id="@+id/tagModiFragment"
-        android:name="com.example.bookmarkkk.TagModiFage"
+        android:name="com.example.bookmarkkk.ui.TagModiFage"
         android:label="TagModiFragment" />
 
 </navigation>

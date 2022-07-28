@@ -1,24 +1,24 @@
-package com.example.bookmarkkk
+package com.example.bookmarkkk.ui
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.KeyEvent.KEYCODE_ENTER
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
-import android.view.View.OnKeyListener
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.fragment.app.DialogFragment
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.bookmarkkk.R
+import com.example.bookmarkkk.api.model.BookmarkForAdd
 import com.example.bookmarkkk.databinding.AddBookmarkBinding
 import com.google.android.material.chip.Chip
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.example.bookmarkkk.viewModel.ViewModel
 
 class AddBookmarkDialog : DialogFragment(), OnClickListener{
 
