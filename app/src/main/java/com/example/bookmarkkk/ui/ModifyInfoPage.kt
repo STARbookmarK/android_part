@@ -1,40 +1,52 @@
-package com.example.bookmarkkk
+package com.example.bookmarkkk.ui
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.Toast
-import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.bookmarkkk.DataStoreModule
+import com.example.bookmarkkk.R
+import com.example.bookmarkkk.api.request.AuthenticationService
+import com.example.bookmarkkk.api.request.UserInfoService
 import com.example.bookmarkkk.databinding.ModifyInfoBinding
+import com.example.bookmarkkk.viewModel.ViewModel
 import io.github.muddz.styleabletoast.StyleableToast
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
+import com.example.bookmarkkk.api.model.Password
+import com.example.bookmarkkk.api.model.BookmarkViewInfo
 
 class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
 
     private val binding by viewBinding(ModifyInfoBinding::bind)
     private lateinit var originPw : String
     private val infoSaveModule : DataStoreModule by inject()
-    private val viewModel : ViewModel by inject()
-    private val coroutineScope by lazy{ CoroutineScope(Dispatchers.IO) }
+    private val viewModel : ViewModel by viewModel()
+    private val auth : AuthenticationService by inject()
+    private val user : UserInfoService by inject()
     private var bookmarkShow = 0
     private var hashtagShow = 0
     private var hashtagCategory = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.viewSettingOkBtn.setOnClickListener(this)
+        binding.infoModifyOkBtn.setOnClickListener(this)
+        binding.pwChangeOkBtn.setOnClickListener(this)
+        binding.viewSettingOkBtn.setOnClickListener(this)
 
         viewModel.userData.observe(viewLifecycleOwner, Observer { user ->
             user?.let {
@@ -43,11 +55,6 @@ class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
                 binding.msgEditText.setText(user.info)
             }
         })
-
-        binding.viewSettingOkBtn.setOnClickListener(this)
-        binding.infoModifyOkBtn.setOnClickListener(this)
-        binding.pwChangeOkBtn.setOnClickListener(this)
-        binding.viewSettingOkBtn.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -86,14 +93,16 @@ class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
     }
 
     private fun changePassword(data: Password){ // 비밀번호 변경
-        NetworkClient.userInfoService.changePassword(data)
+        user.changePassword(data)
             .enqueue(object : Callback<Void>{
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     if (response.isSuccessful.not()){
                         Log.e(TAG, response.toString())
                     }else{
                         logout()
-                        StyleableToast.makeText(requireContext(), "비밀번호 변경, 다시 로그인해주세요", R.style.passwordToast).show()
+                        StyleableToast.makeText(requireContext(), "비밀번호 변경, 다시 로그인해주세요",
+                            R.style.passwordToast
+                        ).show()
                     }
                 }
                 override fun onFailure(call: Call<Void>, t: Throwable) {
@@ -103,8 +112,7 @@ class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
     }
 
     private fun changeViewType(data: BookmarkViewInfo){
-        //viewModel.changeViewType(data)
-        NetworkClient.userInfoService.changeViewType(data)
+        user.changeViewType(data)
             .enqueue(object : Callback<Void>{
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     if (response.isSuccessful.not()){
@@ -123,59 +131,84 @@ class ModifyInfoPage : Fragment(R.layout.modify_info), OnClickListener {
 
     //로그아웃
     private fun logout(){
-        NetworkClient.authenticationService.logout()
-            .enqueue(object : Callback<Void>{
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful){ // 로그아웃 성공
-                        StyleableToast.makeText(requireContext(), "로그아웃", R.style.logoutToast).show()
-                        val intent = Intent(requireContext(), FirstActivity::class.java) // 로그아웃 시 초기화면으로 이동
-                        startActivity(intent)
-                    }else {
-                        StyleableToast.makeText(requireContext(), "로그아웃 실패", R.style.errorToast).show()
-                        Log.e(TAG, response.toString())
-                    }
+        lifecycleScope.launch {
+            try {
+                //val response = NetworkClient.authenticationService.logout()
+                val response = auth.logout()
+                if (response.isSuccessful) {
+                    StyleableToast.makeText(requireContext(), "로그아웃", R.style.logoutToast).show()
+                    val intent = Intent(requireContext(), FirstActivity::class.java) // 로그아웃 시 초기화면으로 이동
+                    startActivity(intent)
+                }else {
+                    StyleableToast.makeText(requireContext(), "로그아웃 실패", R.style.errorToast).show()
+                    Log.e(TAG, response.toString())
                 }
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.e(TAG, t.toString())
-                }
-            })
+            }catch (e: Exception){
+                Log.e(TAG, e.toString())
+            }
+        }
     }
 
     override fun onStart() {
         super.onStart()
         // 아이디, 닉네임, 소개글, 보기방식
-        NetworkClient.userInfoService.getUserInfo()
-            .enqueue(object: Callback<UserInfo> {
-                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
-                    if (response.isSuccessful.not()){
-                        Log.e(TAG, response.toString())
+        lifecycleScope.launch {
+            // val result = NetworkClient.userInfoService.getUserInfo()
+            val result = user.getUserInfo()
+            if (result.isSuccess) {
+                val body = result.getOrNull()
+                body?.let {
+                    if (it.bookmarkShow==1){
+                        binding.radioGroup.check(R.id.listCheck)
                     }else{
-                        response.body()?.let {
-                            if (it.bookmarkShow==1){
-                                binding.radioGroup.check(R.id.listCheck)
-                            }else{
-                                binding.radioGroup.check(R.id.gridCheck)
-                            }
-                            if (it.hashtagShow==1){
-                                binding.radioGroup2.check(R.id.invisibleCheck)
-                            }else{
-                                binding.radioGroup2.check(R.id.visibleCheck)
-                            }
-                            if (it.hashtagCategory==1){
-                                binding.radioGroup3.check(R.id.inActiveCheck)
-                            }else{
-                                binding.radioGroup3.check(R.id.activeCheck)
-                            }
-                        }
-                        coroutineScope.launch {
-                            originPw = infoSaveModule.password.first() // 비밀번호 변경에 사용됨
-                        }
+                        binding.radioGroup.check(R.id.gridCheck)
+                    }
+                    if (it.hashtagShow==1){
+                        binding.radioGroup2.check(R.id.invisibleCheck)
+                    }else{
+                        binding.radioGroup2.check(R.id.visibleCheck)
+                    }
+                    if (it.hashtagCategory==1){
+                        binding.radioGroup3.check(R.id.inActiveCheck)
+                    }else{
+                        binding.radioGroup3.check(R.id.activeCheck)
                     }
                 }
-                override fun onFailure(call: Call<UserInfo>, t: Throwable){
-                    Log.e(TAG, t.toString())
-                }
-            })
+            }
+            originPw = infoSaveModule.password.first() // 비밀번호 변경에 사용됨
+        }
+//        NetworkClient.userInfoService.getUserInfo()
+//            .enqueue(object: Callback<UserInfo> {
+//                override fun onResponse(call: Call<UserInfo>, response: Response<UserInfo>){
+//                    if (response.isSuccessful.not()){
+//                        Log.e(TAG, response.toString())
+//                    }else{
+//                        response.body()?.let {
+//                            if (it.bookmarkShow==1){
+//                                binding.radioGroup.check(R.id.listCheck)
+//                            }else{
+//                                binding.radioGroup.check(R.id.gridCheck)
+//                            }
+//                            if (it.hashtagShow==1){
+//                                binding.radioGroup2.check(R.id.invisibleCheck)
+//                            }else{
+//                                binding.radioGroup2.check(R.id.visibleCheck)
+//                            }
+//                            if (it.hashtagCategory==1){
+//                                binding.radioGroup3.check(R.id.inActiveCheck)
+//                            }else{
+//                                binding.radioGroup3.check(R.id.activeCheck)
+//                            }
+//                        }
+//                        coroutineScope.launch {
+//                            originPw = infoSaveModule.password.first() // 비밀번호 변경에 사용됨
+//                        }
+//                    }
+//                }
+//                override fun onFailure(call: Call<UserInfo>, t: Throwable){
+//                    Log.e(TAG, t.toString())
+//                }
+//            })
     }
     companion object{
         const val TAG = "ModifyInfoPage"

@@ -1,24 +1,25 @@
-package com.example.bookmarkkk
+package com.example.bookmarkkk.ui
 
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.bookmarkkk.R
+import com.example.bookmarkkk.api.request.AuthenticationService
 import com.example.bookmarkkk.databinding.FirstPageBinding
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 //앱 실행 시 가장 먼저 보게되는 화면으로, 로그인과 회원가입 메뉴 선택 가능(자동 로그인 설정 시 바로 메인화면으로 진입)
 class FirstPage : Fragment(R.layout.first_page), OnClickListener{
 
     // no reflection API is used under the hood
     private val binding by viewBinding(FirstPageBinding::bind)
+    private val auth : AuthenticationService by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,20 +44,15 @@ class FirstPage : Fragment(R.layout.first_page), OnClickListener{
     }
 
     private fun runAutoLogin(){ // 자동 로그인
-        NetworkClient.authenticationService.autoLogin()
-            .enqueue(object: Callback<UserId> {
-                override fun onResponse(call: Call<UserId>, response: Response<UserId>){
-                    if (response.isSuccessful){ // 자동 로그인 성공
-                        Log.e(TAG, response.toString())
-                        Navigation.findNavController(binding.root).navigate(R.id.main_to_mainPage_action)
-                    }else{
-                        Log.i(TAG, response.toString())
-                    }
-                }
-                override fun onFailure(call: Call<UserId>, t: Throwable){
-                    Log.e(TAG, t.toString())
-                }
-            })
+        lifecycleScope.launch{
+            //val result = NetworkClient.authenticationService.autoLogin()
+            val result = auth.autoLogin()
+            if (result.isSuccess){
+                Navigation.findNavController(binding.root).navigate(R.id.main_to_mainPage_action)
+            }else {
+                Log.e(TAG, result.toString())
+            }
+        }
     }
 
     companion object{

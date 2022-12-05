@@ -1,5 +1,10 @@
 package com.example.bookmarkkk
 
+import com.example.bookmarkkk.di.networkModule
+import com.example.bookmarkkk.di.apiModule
+import com.example.bookmarkkk.di.repositoryModule
+import com.example.bookmarkkk.di.viewModelModule
+import com.example.bookmarkkk.di.dataStoreModule
 import android.app.Application
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -16,9 +21,11 @@ class App : Application() {
         startKoin {
             androidContext(this@App)
             modules(
-                module,
+                apiModule,
+                networkModule,
                 repositoryModule,
-                viewModelModule
+                viewModelModule,
+                dataStoreModule
             )
         }
     }

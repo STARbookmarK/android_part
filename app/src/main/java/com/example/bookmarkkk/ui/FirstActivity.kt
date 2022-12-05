@@ -1,9 +1,8 @@
-package com.example.bookmarkkk
+package com.example.bookmarkkk.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.navigation.Navigation
-import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.example.bookmarkkk.R
 
 class FirstActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
